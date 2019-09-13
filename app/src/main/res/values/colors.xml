@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="grey">#a9a9a9</color>
+
+    <color name="colorPrimary">#4074B2</color>
+    <color name="colorPrimaryDark">#014085</color>
+    <color name="colorAccent">#ADCDF0</color>
+
+    <color name="normal">#000000</color>
+    <color name="pressed">#000000</color>
+    <color name="selected">#000000</color>
+
+    <color name="bg_two_normal">#FFFFFFFF</color>
+    <color name="bg_two_pressed">#D7D7D7D7</color>
+    <color name="bg_two_selected">#D7D7D7D7</color>
+
+    <color name="bg_three_normal">#FFFFFFFF</color>
+    <color name="bg_three_pressed">#D7D7D7D7</color>
+    <color name="bg_three_selected">#D7D7D7D7</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="alpha70_white">#b0ffffff</color>
+    <color name="login_white">#ffffff</color>
+
+</resources>

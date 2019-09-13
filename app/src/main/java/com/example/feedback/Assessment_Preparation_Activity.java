@@ -1,0 +1,464 @@
+package com.example.feedback;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
+import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+
+public class Assessment_Preparation_Activity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+
+    private ListView listView;
+    private AllFunctions allFunctions = AllFunctions.getObject();
+    private ArrayList<ProjectInfo> projectList;
+    private MyAdapter_for_listView myAdapter;
+    private MyAdapterForAssessors adapterForAssessors;
+    int index_to_send = -999;
+    private Handler handler;
+    private Toolbar mToolbar;
+    private CheckBox mDeleteCheckbox;
+    private Button button_about;
+    private Button button_criteria;
+    private Button button_student;
+    private Button button_assessor;
+    private Button button_project_add;
+    private Button button_sync_projectlist;
+    private TextView textView_projectName;
+    private TextView textView_aboutDetail;
+    private TextView textView_criteriaDetail;
+    private TextView textView_asseccorDetail;
+    private TextView student_detail__inpreparation;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(R.layout.activity_assessment__preparation_);
+        init();
+        System.out.println("Preparation: onCreate has been called!");
+
+    }
+
+    protected void onNewIntent(Intent intent) {
+        init();
+        System.out.println("Preparation: onNewIntent has been called!");
+    }
+
+    private void init() {
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 201: //创建新项目成功
+                        break;
+                    case 207: //邀请assessor成功
+                        adapterForAssessors.notifyDataSetChanged();
+                        break;
+                    case 208: //邀请assessor失败
+                        Toast.makeText(Assessment_Preparation_Activity.this,
+                                "The email has not been registered. Please check and try again.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 209: //删除assessor失败
+                        Toast.makeText(Assessment_Preparation_Activity.this,
+                                "There is anything wrong on server. Please try later.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 210:
+                        updateProjectList();
+                    default:
+                        break;
+                }
+            }
+        };
+        AllFunctions.getObject().setHandler(handler);
+        textView_projectName = findViewById(R.id.project_name_inpreparation);
+        textView_aboutDetail = findViewById(R.id.about_detail__inpreparation);
+        textView_criteriaDetail = findViewById(R.id.criteria_detail__inpreparation);
+        textView_asseccorDetail = findViewById(R.id.asseccor_detail__inpreparation);
+        student_detail__inpreparation = findViewById(R.id.student_detail__inpreparation);
+        button_about = findViewById(R.id.button_about_inpreparation);
+        button_criteria = findViewById(R.id.button_criteria_inpreparation);
+        button_student = findViewById(R.id.button_studentmanagement__inpreparation);
+        button_assessor = findViewById(R.id.button_asseccor__inpreparation);
+        button_sync_projectlist = findViewById(R.id.button_sync_projectlist);
+        resetDetailView();
+
+        projectList = allFunctions.getProjectList();
+
+        mToolbar = findViewById(R.id.toolbar_assessment_presentation);
+        mToolbar.setTitle("Projects");
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                finish();
+            }
+        });
+//        mToolbar.inflateMenu(R.menu.menu_toolbar);
+        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_logout:
+                        Toast.makeText(Assessment_Preparation_Activity.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Assessment_Preparation_Activity.this,
+                                Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+
+        button_project_add = findViewById(R.id.button_plus_inpreparation);
+        MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
+                (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
+        listView = findViewById(R.id.listView_inpreparation);
+        listView.setAdapter(myAdapterDefaultlistView);
+        listView.setOnItemClickListener(this);
+
+        mDeleteCheckbox = findViewById(R.id.cb_delete_project);
+        mDeleteCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    projectList = allFunctions.getProjectList();
+                    myAdapter = new MyAdapter_for_listView(projectList, Assessment_Preparation_Activity.this);
+
+                    Log.d("EEEE", this.getClass().getSimpleName());
+
+                    listView.setAdapter(myAdapter);
+                    listView.setOnItemClickListener(Assessment_Preparation_Activity.this);
+                    button_about.setEnabled(false);
+                    button_criteria.setEnabled(false);
+                    button_student.setEnabled(false);
+                    button_assessor.setEnabled(false);
+                    button_project_add.setEnabled(false);
+                    Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_add_disabled, null);
+                    button_project_add.setBackground(drawable);
+                    button_sync_projectlist.setEnabled(false);
+                    button_sync_projectlist.setBackgroundResource(R.drawable.ic_sync_disabled);
+                } else {
+                    init();
+                    button_project_add.setEnabled(true);
+                    button_project_add.setBackgroundResource(R.drawable.ic_add);
+                    button_sync_projectlist.setEnabled(true);
+                    button_sync_projectlist.setBackgroundResource(R.drawable.ic_sync);
+                }
+            }
+        });
+
+//        button_sync_projectlist = findViewById(R.id.button_sync_projectlist);
+//        button_sync_projectlist.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                allFunctions.syncProjectList();
+//                projectList = allFunctions.getProjectList();
+//                Log.d("EEEE", projectList.toString());
+//
+//                MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
+//                        (Assessment_Preparation_Activity.this, projectList);
+//                listView.setAdapter(myAdapterDefaultlistView);
+//                listView.setOnItemClickListener(Assessment_Preparation_Activity.this);
+//
+//                Log.d("EEEE", this.getClass().getSimpleName());
+//            }
+//        });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
+
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // TODO Auto-generated method stub
+        index_to_send = position;
+        for (int i = 0; i < parent.getChildCount(); i++)
+            parent.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+        view.setBackgroundColor(Color.parseColor("#dbdbdb"));
+        showOtherInfo(position);
+        button_about.setEnabled(true);
+        button_criteria.setEnabled(true);
+        button_student.setEnabled(true);
+        button_assessor.setEnabled(true);
+    }
+
+    public void showOtherInfo(int index) {
+        ProjectInfo projectInfo = allFunctions.getProjectList().get(index);
+        TextView textView_projectName = findViewById(R.id.project_name_inpreparation);
+        textView_projectName.setText(projectInfo.getProjectName());
+        TextView textView_aboutDetail = findViewById(R.id.about_detail__inpreparation);
+        textView_aboutDetail.setText("Subject Name: " + projectInfo.getSubjectName() + "\n" +
+                "Subject Code: " + projectInfo.getSubjectCode() + "\n" +
+                "Description: " + projectInfo.getDescription() + "\n" +
+                "Assessment duration: " + projectInfo.getDurationMin() + ":" + projectInfo.getDurationSec() + "\n" +
+                "Warning time: " + projectInfo.getWarningMin() + ":" + projectInfo.getWarningSec() + "\n");
+        TextView textView_criteriaDetail = findViewById(R.id.criteria_detail__inpreparation);
+        String criteriaDetailString = "Mark Section\n";
+        for (Criteria c : projectInfo.getCriteria()) {
+            criteriaDetailString = criteriaDetailString + c.getName() + "\n";
+            criteriaDetailString = criteriaDetailString + "Maximum mark: " + c.getMaximunMark() + "\n";
+            criteriaDetailString = criteriaDetailString + "Mark increments: " + c.getMarkIncrement() + "\n\n";
+        }
+        criteriaDetailString += "\nComments Only\n";
+        for (Criteria c : projectInfo.getCommentList()) {
+            criteriaDetailString = criteriaDetailString + c.getName() + "\n";
+        }
+        textView_criteriaDetail.setText(criteriaDetailString);
+        TextView textView_asseccorDetail = findViewById(R.id.asseccor_detail__inpreparation);
+        String assessorDetailString = new String();
+        for (int i = 0; i < projectInfo.getAssistant().size(); i++)
+            assessorDetailString = assessorDetailString + projectInfo.getAssistant().get(i) + "\n";
+        textView_asseccorDetail.setText(assessorDetailString);
+    }
+
+    private void resetDetailView() {
+        textView_projectName.setText("Please select or add a project");
+        textView_aboutDetail.setText("Project details");
+        textView_criteriaDetail.setText("Criteria details");
+        textView_asseccorDetail.setText("Click the subtitle to manage markers");
+        student_detail__inpreparation.setText("Click the subtitle to manage students");
+        button_about.setEnabled(false);
+        button_criteria.setEnabled(false);
+        button_student.setEnabled(false);
+        button_assessor.setEnabled(false);
+    }
+
+    //plus button click function
+    public void plus_AssessmentPreparation(View view) {
+        Intent intent = new Intent(this, Activity_About.class);
+        intent.putExtra("index", "-999");
+        startActivity(intent);
+    }
+
+    public void about_AssessmentPreparation(View view) {
+        Intent intent = new Intent(this, Activity_About.class);
+        intent.putExtra("index", String.valueOf(index_to_send));
+        startActivity(intent);
+    }
+
+    public void studentManagement_AssessmentPreparation(View view) {
+        Intent intent = new Intent(this, Activity_Student_Group.class);
+        intent.putExtra("index", String.valueOf(index_to_send));
+        startActivity(intent);
+    }
+
+    public void criteriaManagement_AssessmentPreparation(View view) {
+        Intent intent = new Intent(this, Activity_CriteriaList.class);
+        intent.putExtra("index", String.valueOf(index_to_send));
+        startActivity(intent);
+    }
+
+    public void assessors_AssessmentPreparation(View view) {
+        AllFunctions.getObject().setHandler(handler);
+        LayoutInflater layoutInflater = LayoutInflater.from(this);//获得layoutInflater对象
+        final View view2 = layoutInflater.from(this).inflate(R.layout.dialog_asseccors, null);//获得view对象
+
+        ListView listView_assessors = view2.findViewById(R.id.listView_assessors_dialogAssessor);
+        adapterForAssessors = new MyAdapterForAssessors(projectList.get(index_to_send).getAssistant(), this);
+        listView_assessors.setAdapter(adapterForAssessors);
+        Dialog dialog = new android.app.AlertDialog.Builder(this).setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showOtherInfo(index_to_send);
+            }
+        }).create();
+
+        dialog.show();
+
+        EditText editText_assessorName = view2.findViewById(R.id.editText_inviteAssessor_dialogAssessor);
+        Button button_invite = view2.findViewById(R.id.button_invite_dialogAssessor);
+        button_invite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (editText_assessorName.getText().toString().equals(""))
+                    ;
+                else {
+                    //projectList.get(index_to_send).getAssistant().add(editText_assessorName.getText().toString());
+                    allFunctions.inviteAssessor(projectList.get(index_to_send), editText_assessorName.getText().toString());
+                    editText_assessorName.setText("");
+                    Toast.makeText(Assessment_Preparation_Activity.this,
+                            "The invitation has been sent.", Toast.LENGTH_SHORT).show();
+
+                    // adapterForAssessors.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
+    public class MyAdapterDefaultlistView extends BaseAdapter {
+
+        private ArrayList<ProjectInfo> mProjectList;
+        private Context mContext;
+
+        public MyAdapterDefaultlistView(Context context, ArrayList<ProjectInfo> projectList) {
+            this.mProjectList = projectList;
+            this.mContext = context;
+        }
+
+        @Override
+        public int getCount() {
+            return mProjectList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_projectlist_default, parent, false);
+            TextView textView_listItem = convertView.findViewById(R.id.textView_defaultView);
+            textView_listItem.setText(mProjectList.get(position).getProjectName());
+            return convertView;
+        }
+    }
+
+
+    public class MyAdapter_for_listView extends BaseAdapter {
+
+        private ArrayList<ProjectInfo> mProjectList;
+        private Context mContext;
+
+        public MyAdapter_for_listView(ArrayList<ProjectInfo> projectList, Context context) {
+            this.mProjectList = projectList;
+            this.mContext = context;
+        }
+
+        @Override
+        public int getCount() {
+            return mProjectList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_projectlist_withdelete, parent, false);
+            TextView textView_listItem = (TextView) convertView.findViewById(R.id.textView_inlistView);
+            textView_listItem.setText(mProjectList.get(position).getProjectName());
+            Button button = convertView.findViewById(R.id.Bt_delete_inlist);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    myAdapter.notifyDataSetChanged();
+                    allFunctions.deleteProject(position);
+                }
+            });
+            return convertView;
+        }
+    }
+
+
+    public class MyAdapterForAssessors extends BaseAdapter {
+
+        private ArrayList<String> mAssessorList;
+        private Context mContext;
+
+        public MyAdapterForAssessors(ArrayList<String> assessorList, Context context) {
+            this.mAssessorList = assessorList;
+            this.mContext = context;
+        }
+
+        @Override
+        public int getCount() {
+            return mAssessorList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_assessors, parent, false);
+            TextView textView_listItem = (TextView) convertView.findViewById(R.id.textView_assessorName);
+            textView_listItem.setText(mAssessorList.get(position));
+            Button button = convertView.findViewById(R.id.button_deleteAssessor);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    allFunctions.deleteAssessor(projectList.get(index_to_send), mAssessorList.get(position));
+                    mAssessorList.remove(position);
+                    adapterForAssessors.notifyDataSetChanged();
+                }
+            });
+            if (position == 0) {
+                button.setVisibility(View.INVISIBLE);
+                button.setEnabled(false);
+            }
+            return convertView;
+        }
+    }
+
+    public void syncProjectList(View view) {
+        allFunctions.syncProjectList();
+    }
+
+    public void updateProjectList(){
+        projectList = allFunctions.getProjectList();
+        Log.d("EEEE", projectList.toString() + "wtf");
+
+        MyAdapterDefaultlistView mSyncAdapter = new MyAdapterDefaultlistView
+                (Assessment_Preparation_Activity.this, projectList);
+        listView.setAdapter(mSyncAdapter);
+        listView.setOnItemClickListener(this);
+
+        Log.d("EEEE", this.getClass().getSimpleName());
+    }
+}
