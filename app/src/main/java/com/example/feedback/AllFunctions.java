@@ -1,17 +1,21 @@
 package com.example.feedback;
 
+import android.inputmethodservice.Keyboard;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.alibaba.fastjson.JSON;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 
 public class AllFunctions {
 
@@ -130,6 +134,7 @@ public class AllFunctions {
 
         ProjectInfo project = new ProjectInfo();
         projectList.add(project);
+        project.setUsername(myEmail);
         project.setProjectName(projectName);
         project.setSubjectName(subjectName);
         project.setSubjectCode(subjectCode);
@@ -141,10 +146,9 @@ public class AllFunctions {
             public void run() {
                 communication.updateProject_About(projectName, subjectName,
                         subjectCode, description);
-                Log.d("createProject", "success");
+                Log.d("createProject", "create new project success");
             }
         }).start();
-
     }
 
     public void updateProject(ProjectInfo project, String projectName, String subjectName,
@@ -160,10 +164,21 @@ public class AllFunctions {
             public void run() {
                 communication.updateProject_About(projectName, subjectName,
                         subjectCode, description);
-                Log.d("createProject", "success");
+                Log.d("createProject", "update old project success");
             }
         }).start();
 
+    }
+
+    public void setAboutACK(String ack) {
+        Log.d("EEEE", "set about ack");
+        if(ack.equals("true")) {
+            Log.d("EEEE", "set about ack true");
+            handlerAllfunction.sendEmptyMessage(201);
+        } else {
+            Log.d("EEEE", "set about ack false");
+            handlerAllfunction.sendEmptyMessage(202);
+        }
     }
 
     public void getMarks(ProjectInfo project, int groupNum, String studentID) {
@@ -198,6 +213,15 @@ public class AllFunctions {
         projectList.remove(index);
     }
 
+    public void deleteACK(String ack) {
+        if(ack.equals("true")) {
+            Log.d("EEEE", "delete ack!!!");
+            handlerAllfunction.sendEmptyMessage(205);
+        } else {
+            handlerAllfunction.sendEmptyMessage(206);
+        }
+    }
+
     public void syncProjectList() {
         new Thread(new Runnable() {
             @Override
@@ -207,7 +231,6 @@ public class AllFunctions {
             }
         }).start();
     }
-
 
     public void projectTimer(ProjectInfo project, int durationMin, int durationSec,
                              int warningMin, int warningSec) {
@@ -225,6 +248,14 @@ public class AllFunctions {
                 Log.d("projectTimer", "success");
             }
         }).start();
+    }
+
+    public void setTimeACK(String ack) {
+        if(ack.equals("true")) {
+            handlerAllfunction.sendEmptyMessage(203);
+        } else {
+            handlerAllfunction.sendEmptyMessage(204);
+        }
     }
 
     public void inviteAssessor(ProjectInfo project, String assessorEmail) {
@@ -276,11 +307,11 @@ public class AllFunctions {
     }
 
     public void readExcel(ProjectInfo project, String path) {
-        System.out.println("project name in allfunction for readExcel: " + project.getProjectName());
+        Log.d("EEEE", "project name in allfunction for readExcel: " + project.getProjectName());
         ReadExcel read = new ReadExcel();
         read.setInputFile(path);
         project.addStudentList(read.read());
-        System.out.println("student list in allFunction: " + read.read().size());
+        Log.d("EEEE", "student list in allFunction: " + read.read().size());
 
         new Thread(new Runnable() {
             @Override
@@ -291,6 +322,132 @@ public class AllFunctions {
             }
         }).start();
 
+    }
+
+    public void readCriteriaExcel(ProjectInfo project, String path) {
+        Log.d("EEEE", "path: " + path);
+        if (path.endsWith(".xls")) {
+            Log.d("EEEE", "read xls file.");
+            readXlsCriteria(path);
+        } else if (path.endsWith(".xlsx")) {
+            Log.d("EEEE", "read xlsx file.");
+            readXlsxCriteria(path);
+        }
+    }
+
+    public void readXlsCriteria(String path) {
+//        try {
+//            // Creating Input Stream
+//            InputStream myInput;
+//
+//            File file = new File(path);
+//
+//            //  Don't forget to Change to your assets folder excel sheet
+//            myInput = new FileInputStream(file);
+//
+//            // Create a POIFSFileSystem object
+//            POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
+//
+//            // Create a workbook using the File System
+//            HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
+//
+//            // Get the first sheet from workbook
+//            HSSFSheet mySheet = myWorkBook.getSheetAt(0);
+//
+//            /** We now need something to iterate through the cells. **/
+//            Iterator<Row> rowIter = mySheet.rowIterator();
+//
+//            ArrayList<CustomisedCriteria> criteriaList = new ArrayList<>();
+//
+//            while (rowIter.hasNext()) {
+//                HSSFRow myRow = (HSSFRow) rowIter.next();
+//                Iterator<Cell> cellIter = myRow.cellIterator();
+//
+//                CustomisedCriteria newCriteria = new CustomisedCriteria();
+//
+//                while (cellIter.hasNext()) {
+//                    HSSFCell myCell = (HSSFCell) cellIter.next();
+//                    if (myCell.getColumnIndex() == 0) {
+//                        newCriteria.setCriteria(myCell.toString());
+//                    }
+//
+//                    if (myCell.getColumnIndex() == 1) {
+//                        newCriteria.setSubSection(myCell.toString());
+//                    }
+//
+//                    if (myCell.getColumnIndex() == 2) {
+//                        newCriteria.setShortText(myCell.toString());
+//                    }
+//
+//                    if (myCell.getColumnIndex() == 3) {
+//                        newCriteria.setLongText(myCell.toString());
+//                    }
+//
+//                    Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myCell.getColumnIndex());
+//
+//                }
+//                criteriaList.add(newCriteria);
+//            }
+//            Log.d("EEEE", criteriaList.toString());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return;
+    }
+
+    public void readXlsxCriteria(String path) {
+//        try {
+//            // Creating Input Stream
+//            InputStream myInput;
+//
+//            File file = new File(path);
+//
+//            //  Don't forget to Change to your assets folder excel sheet
+//            myInput = new FileInputStream(file);
+//
+//            XSSFWorkbook workbook = new XSSFWorkbook(myInput);
+//            XSSFSheet mySheet = workbook.getSheetAt(0);
+//
+//
+//            /** We now need something to iterate through the cells. **/
+//            Iterator<Row> rowIter = mySheet.rowIterator();
+//
+//            ArrayList<CustomisedCriteria> criteriaList = new ArrayList<>();
+//
+//            while (rowIter.hasNext()) {
+//                Row myRow = (Row) rowIter.next();
+//                Iterator<Cell> cellIter = myRow.cellIterator();
+//
+//                CustomisedCriteria newCriteria = new CustomisedCriteria();
+//
+//                while (cellIter.hasNext()) {
+//                    XSSFCell myCell = (XSSFCell) cellIter.next();
+//                    if (myCell.getColumnIndex() == 0) {
+//                        newCriteria.setCriteria(myCell.toString());
+//                    }
+//
+//                    if (myCell.getColumnIndex() == 1) {
+//                        newCriteria.setSubSection(myCell.toString());
+//                    }
+//
+//                    if (myCell.getColumnIndex() == 2) {
+//                        newCriteria.setShortText(myCell.toString());
+//                    }
+//
+//                    if (myCell.getColumnIndex() == 3) {
+//                        newCriteria.setLongText(myCell.toString());
+//                    }
+//
+//                    Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myCell.getColumnIndex());
+//
+//                }
+//                criteriaList.add(newCriteria);
+//            }
+//            Log.d("EEEE", criteriaList.toString());
+//        } catch (Exception e) {
+//             e.printStackTrace();
+//        }
+//        return;
     }
 
     public void addStudent(ProjectInfo project, String number, String firstName,

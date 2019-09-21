@@ -1,7 +1,6 @@
 package com.example.feedback;
 
 import android.util.Log;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ public class ReadExcel {
         Scanner in;
 
         try {
-
             fileInputStream = new FileInputStream(inputFile);
             in = new Scanner(fileInputStream, "UTF-8");
             in.nextLine();
@@ -38,15 +36,11 @@ public class ReadExcel {
                 studentList.add(studentInfo);
 
                 Log.d("ReadExcel", "the content is " + studentInfo.getNumber());
-
             }
             System.out.println(studentList.size());
         } catch (Exception e) {
-
             Log.e("ReadExcel", "read error=" + e, e);
-
         }
-
         return studentList;
     }
 

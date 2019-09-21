@@ -1,14 +1,21 @@
 package com.example.feedback;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -19,7 +26,10 @@ public class Activity_About extends AppCompatActivity {
     private int durationMin, durationSec, warningMin, warningSec;
     private String projectName, subjectName, subjectCode, projectDes;
     private String index;
+    private String buttonFlag;
     private ProjectInfo project;
+    private Handler handler;
+    private AlertDialog dialog;
     private EditText editText_projectName;
     private EditText editText_subjectName;
     private EditText editText_subjectCode;
@@ -40,19 +50,17 @@ public class Activity_About extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("EEEE", "RRRRRRRRRRRRRRRRRRRRRRR");
+        Log.d("EEEE", "about edition start!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__about);
-        initToolbar();
-        bindView();
         Intent intent = getIntent();
         index = intent.getStringExtra("index");
-        Log.d("EEEE", index);
+        Log.d("EEEE", "index: " + index);
         if (index.equals("-999")) {
+            init();
             Log.d("EEEE", "-999");
-            ;
         } else {
-            Log.d("EEEE", index);
+            Log.d("EEEE", "index: " + index);
             init(Integer.parseInt(index));
         }
     }
@@ -64,10 +72,10 @@ public class Activity_About extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                finish();
+                discardWarning();
             }
         });
-        mToolbar.inflateMenu(R.menu.menu_toolbar);
+//        mToolbar.inflateMenu(R.menu.menu_toolbar);
         mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -83,6 +91,52 @@ public class Activity_About extends AppCompatActivity {
                         break;
                 }
                 return true;
+            }
+        });
+    }
+
+    public void discardWarning() {
+        AllFunctions.getObject().setHandler(handler);
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_About.this);//获得layoutInflater对象
+        final View view = layoutInflater.from(Activity_About.this).
+                inflate(R.layout.dialog_quit_editing, null);//获得view对象
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_About.this);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+
+        dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setView(view);
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!index.equals("-999")) {
+                    Log.d("EEEE", "The name of project to be removed is "
+                            + AllFunctions.getObject().getProjectList().get(Integer.parseInt(index)).getProjectName() + " with index " + index);
+                    AllFunctions.getObject().deleteProject(Integer.parseInt(index));
+                } else {
+                    finish();
+                }
+                dialog.dismiss();
+            }
+        });
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
             }
         });
     }
@@ -105,7 +159,7 @@ public class Activity_About extends AppCompatActivity {
             @Override
             public void onFocusChange(View view, boolean isFocused) {
                 if(isFocused) {
-                    Log.d("EEEE", "Focus");
+                    Log.d("EEEE", "focus");
                     button_plus_duration_minutes.setEnabled(false);
                     button_plus_duration_minutes.setBackgroundResource(R.drawable.ic_add_disabled);
                     button_minus_duration_minutes.setEnabled(false);
@@ -172,8 +226,19 @@ public class Activity_About extends AppCompatActivity {
         });
     }
 
+    private void init() {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        bindHandler();
+        initToolbar();
+        bindView();
+    }
+
     private void init(int index) {
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         project = AllFunctions.getObject().getProjectList().get(index);
+        bindHandler();
+        initToolbar();
+        bindView();
         getTimeOfProject();
         mToolbar.setTitle(project.getProjectName());
         editText_projectName.setText(project.getProjectName());
@@ -185,6 +250,71 @@ public class Activity_About extends AppCompatActivity {
         editText_durationSec.setText(String.valueOf(durationSec));
         editText_warningMin.setText(String.valueOf(warningMin));
         editText_warningSec.setText(String.valueOf(warningSec));
+    }
+
+    private void bindHandler() {
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 201:
+                        Log.d("EEEE", "Successfully update the information of the project.");
+                        Toast.makeText(Activity_About.this,
+                                "Successfully update the information of the project.", Toast.LENGTH_SHORT).show();
+                        AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
+                        break;
+                    case 202:
+                        Log.d("EEEE", "Fail to update the information of the project.");
+                        Toast.makeText(Activity_About.this,
+                                "Fail to update the information of the project.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 203:
+                        Log.d("EEEE", "Successfully update the time setting of the project.");
+                        Toast.makeText(Activity_About.this,
+                                "Successfully update the time setting of the project.", Toast.LENGTH_SHORT).show();
+                        if(buttonFlag.equals("save")) {
+                            setResult(Activity.RESULT_OK);
+//                            Intent intent = new Intent(Activity_About.this,
+//                            Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            startActivity(intent);
+                            finish( );
+                        } else if(buttonFlag.equals("next")) {
+                            Intent intent = new Intent(Activity_About.this, Activity_CriteriaList.class);
+                            intent.putExtra("index", String.valueOf(index));
+                            startActivity(intent);
+                        }
+                        break;
+                    case 204:
+                        Log.d("EEEE", "Fail to update the time setting of the project.");
+                        Toast.makeText(Activity_About.this,
+                                "Fail to update the time setting of the project.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 205:
+                        Log.d("EEEE", "Successfully delete the project.");
+                        Toast.makeText(Activity_About.this,
+                                "Successfully delete the project.", Toast.LENGTH_SHORT).show();
+                        setResult(Activity.RESULT_OK);
+//                        Intent intent1 = new Intent(Activity_About.this,
+//                                Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent1);
+                        finish();
+                        break;
+                    case 206:
+                        Log.d("EEEE", "Fail to delete the project.");
+                        Toast.makeText(Activity_About.this,
+                                "Fail to delete the project.", Toast.LENGTH_SHORT).show();
+                        Intent intent2 = new Intent(Activity_About.this,
+                                Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent2);
+                        finish();
+                    default:
+                        break;
+                }
+            }
+        };
+
+        AllFunctions.getObject().setHandler(handler);
+        Log.d("EEEE", "bindhandler");
     }
 
     public void addDurationMin(View view) {
@@ -266,6 +396,8 @@ public class Activity_About extends AppCompatActivity {
 
     //save button click
     public void save_About(View view) {
+        bindHandler();
+        buttonFlag = "save";
         projectName = editText_projectName.getText().toString();
         subjectName = editText_subjectName.getText().toString();
         subjectCode = editText_subjectCode.getText().toString();
@@ -280,31 +412,35 @@ public class Activity_About extends AppCompatActivity {
         } else {
             if (index.equals("-999")) {
                 if(checkTimeSetting()) {
+                    Log.d("EEEE", "save with index = -999 " + Integer.parseInt(index));
                     AllFunctions.getObject().createProject(projectName, subjectName, subjectCode, projectDes);
                     int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
                     project = AllFunctions.getObject().getProjectList().get(indextToSend);
-                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-                    Intent intent = new Intent(this,
-                            Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
+                    index = String.valueOf(indextToSend);
+//                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
+//                    Intent intent = new Intent(this,
+//                            Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish( );
                 }
             } else {
                 if(checkTimeSetting()) {
+                    Log.d("EEEE", "save with index != -999 " + Integer.parseInt(index));
+                    project = AllFunctions.getObject().getProjectList().get(Integer.parseInt(index));
                     AllFunctions.getObject().updateProject(project, projectName, subjectName, subjectCode, projectDes);
-                    int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
-                    project = AllFunctions.getObject().getProjectList().get(indextToSend);
-                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-                    Intent intent = new Intent(this,
-                            Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
+//                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
+//                    Intent intent = new Intent(this,
+//                            Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
                 }
             }
         }
     }
 
     public void next_About(View view) {
+        bindHandler();
+        buttonFlag = "next";
         projectName = editText_projectName.getText().toString();
         subjectName = editText_subjectName.getText().toString();
         subjectCode = editText_subjectCode.getText().toString();
@@ -319,23 +455,24 @@ public class Activity_About extends AppCompatActivity {
         } else {
             if (index.equals("-999")) {
                 if(checkTimeSetting()) {
+                    Log.d("EEEE", "next with index = -999 " + Integer.parseInt(index));
                     AllFunctions.getObject().createProject(projectName, subjectName, subjectCode, projectDes);
                     int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
                     project = AllFunctions.getObject().getProjectList().get(indextToSend);
-                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-                    Intent intent = new Intent(this, Activity_CriteriaList.class);
-                    intent.putExtra("index", String.valueOf(indextToSend));
-                    startActivity(intent);
+                    index = String.valueOf(indextToSend);
+//                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
+//                    Intent intent = new Intent(this, Activity_CriteriaList.class);
+//                    intent.putExtra("index", String.valueOf(index));
+//                    startActivity(intent);
                 }
             } else {
                 if(checkTimeSetting()) {
+                    Log.d("EEEE", "next with index != -999 " + Integer.parseInt(index));
                     AllFunctions.getObject().updateProject(project, projectName, subjectName, subjectCode, projectDes);
-                    int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
-                    project = AllFunctions.getObject().getProjectList().get(indextToSend);
-                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-                    Intent intent = new Intent(this, Activity_CriteriaList.class);
-                    intent.putExtra("index", index);
-                    startActivity(intent);
+//                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
+//                    Intent intent = new Intent(this, Activity_CriteriaList.class);
+//                    intent.putExtra("index", index);
+//                    startActivity(intent);
                 }
             }
         }
@@ -365,5 +502,12 @@ public class Activity_About extends AppCompatActivity {
             return true;
         }
         return false;
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

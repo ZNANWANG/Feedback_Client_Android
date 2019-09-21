@@ -29,13 +29,8 @@ public class Activity_assessment_comment extends Activity {
     private int indexOfProject;
     private int indexOfCriteria;
     private int indexOfComment;
-
-
     private ThreeAdapter threeListAdapter;
-
     private List<ThreeBean> threeBeans;
-
-
     static int subsectionIndex;
     static int shortTextIndex;
     static int longTextIndex;
@@ -134,8 +129,6 @@ public class Activity_assessment_comment extends Activity {
                 }
             }
             threeListAdapter.notifyDataSetChanged(threeBeans, groupId, childId);
-
-
         }
     };
 
@@ -150,7 +143,6 @@ public class Activity_assessment_comment extends Activity {
                 shortTextIndex = threeListAdapter.getTwoItemSelect();
                 longTextIndex = Integer.valueOf(TextUtils.join(", ", threeSelect));
 
-
                 if(indexOfCriteria == -999){
 
                     Activity_Assessment.saveCommentToMatrixCommentOnly(indexOfComment, threeListAdapter.getOneItemSelect(), threeListAdapter.getTwoItemSelect(), Integer.valueOf(TextUtils.join(", ", threeSelect)));
@@ -159,8 +151,6 @@ public class Activity_assessment_comment extends Activity {
                 }
 
                 refreshComment();
-
-
 
                 Log.d("10000000000", subsectionIndex +" " + shortTextIndex + " " + longTextIndex);
             }
@@ -190,10 +180,6 @@ public class Activity_assessment_comment extends Activity {
 
            }
        }
-
-
-
-
    }
 
    public void refreshComment(){

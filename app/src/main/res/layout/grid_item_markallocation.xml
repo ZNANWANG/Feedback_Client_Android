@@ -16,18 +16,19 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="5dp"
         android:text="TextView"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@id/button_commentsDetail_gridItem"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
     <Button
         android:id="@+id/button_commentsDetail_gridItem"
-        android:layout_width="40dp"
+        android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="5dp"
-        android:background="@drawable/ic_comment" />
+        android:background="@drawable/ic_pencil" />
 
     <View
         android:id="@+id/divider12"
@@ -49,43 +50,45 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
-            android:layout_toLeftOf="@id/button_minus_gridItem"
+            android:layout_toStartOf="@id/button_plus_gridItem"
             android:text="Maximum Mark"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Button
             android:id="@+id/button_plus_gridItem"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="1dp"
-            android:layout_toLeftOf="@id/editText_maxMark_gridItem"
-            android:text="+" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="1dp"
+            android:layout_toStartOf="@id/editText_maxMark_gridItem"
+            android:background="@drawable/ic_add" />
 
         <EditText
             android:id="@+id/editText_maxMark_gridItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="1dp"
+            android:layout_marginEnd="1dp"
+            android:layout_alignParentTop="true"
             android:layout_toLeftOf="@id/button_minus_gridItem"
             android:ems="3"
-            android:enabled="false"
             android:gravity="center"
-            android:inputType="textPersonName"
+            android:inputType="number"
             android:text="Mark"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:background="@drawable/project_description_focus"/>
 
         <Button
             android:id="@+id/button_minus_gridItem"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="10dp"
             android:layout_marginBottom="5dp"
-            android:text="-" />
+            android:background="@drawable/ic_delete" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -100,6 +103,7 @@
             android:layout_alignParentStart="true"
             android:layout_marginLeft="10dp"
             android:layout_marginBottom="10dp"
+            android:layout_toStartOf="@id/radioGroup_markIncrement_gridItem"
             android:text="Mark Increments"
             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -107,6 +111,7 @@
             android:id="@+id/radioGroup_markIncrement_gridItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:layout_alignParentEnd="true"
             android:orientation="horizontal">
 
@@ -116,7 +121,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
+                android:checked="true"
                 android:text="1/4"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <RadioButton
@@ -126,6 +133,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:text="1/2"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
             <RadioButton
@@ -135,6 +143,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_weight="1"
                 android:text="1"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </RadioGroup>
     </RelativeLayout>

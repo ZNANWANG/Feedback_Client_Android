@@ -62,7 +62,6 @@ public class CommunicationForClient {
         } catch (Exception e1) {
             AllFunctions.getObject().exceptionWithServer();
         }
-
     }
 
     public void login(String username, String password) {
@@ -123,6 +122,7 @@ public class CommunicationForClient {
             System.out.println("Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String updateProject_ACK = jsonReceive.get("updateProject_ACK").toString();
+            functions.setAboutACK(updateProject_ACK);
             if (updateProject_ACK.equals("true")) {
                 ;
             } else {
@@ -189,6 +189,7 @@ public class CommunicationForClient {
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String updateStudent_ACK = jsonReceive.get("updateProject_ACK").toString();
+            functions.deleteACK(updateStudent_ACK);
             if (updateStudent_ACK.equals("true")) {
                 ;
             } else {
@@ -254,6 +255,7 @@ public class CommunicationForClient {
             System.out.println("Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String updateProject_ACK = jsonReceive.get("updateProject_ACK").toString();
+            functions.setTimeACK(updateProject_ACK);
             if (updateProject_ACK.equals("true")) {
                 ;
             } else {

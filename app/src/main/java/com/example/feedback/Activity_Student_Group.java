@@ -9,9 +9,13 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,12 +24,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class Activity_Student_Group extends Activity {
+public class Activity_Student_Group extends AppCompatActivity {
 
     private MyAdapter myAdapter;
     private ArrayList<StudentInfo> students;
@@ -34,34 +37,30 @@ public class Activity_Student_Group extends Activity {
     private int indexOfProject;
     private ProjectInfo project;
     private String path;
-
     private String studentID;
     private String firstName;
     private String middleName;
     private String surname;
     private String email;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__student__group);
 
-        Intent intent =getIntent();
+        Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
-        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
-        listView = (ListView) findViewById(R.id.listView_ingroupStudent);
+
         init();
-
-
+        initToolbar();
     }
 
-    public void init()
-    {
-
+    public void init() {
+        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        listView = (ListView) findViewById(R.id.listView_ingroupStudent);
         students = project.getStudentInfo();
-
         myAdapter = new MyAdapter(students, this);
-
         listView.setAdapter(myAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -69,32 +68,51 @@ public class Activity_Student_Group extends Activity {
                 myAdapter.notifyDataSetChanged();
             }
         });
-        TextView textView_projectName = findViewById(R.id.textView_projectName_studentManagement);
-        textView_projectName.setText(project.getProjectName());
-        TextView textView_helloUser = findViewById(R.id.textView_helloUser_studentManagement);
-        textView_helloUser.setText("Hello, "+AllFunctions.getObject().getUsername());
-        TextView textView_logout = findViewById(R.id.textView_logout_studentManagement);
-        textView_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
+    }
+
+    private void initToolbar() {
+        mToolbar = findViewById(R.id.toolbar_project_studetn_group);
+        mToolbar.setTitle(project.getProjectName());
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_Student_Group.this, Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
                 finish();
+            }
+        });
+//        mToolbar.inflateMenu(R.menu.menu_toolbar);
+        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_logout:
+                        Toast.makeText(Activity_Student_Group.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Student_Group.this,
+                                Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
             }
         });
     }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
     //button delete click.
-    public void deleteStudent(View view)
-    {
+    public void deleteStudent(View view) {
         if (listView.getCheckedItemCount() == 1) {
             SparseBooleanArray checkedItemsStudents = listView.getCheckedItemPositions();
             int studentIndex = -1;
             if (checkedItemsStudents != null) {
-                for(int i=0; i<project.getStudentInfo().size(); i++)
-                {
-                    if(checkedItemsStudents.get(i) == true)
-                    {
+                for (int i = 0; i < project.getStudentInfo().size(); i++) {
+                    if (checkedItemsStudents.get(i) == true) {
                         studentIndex = i;
                         break;
                     }
@@ -103,9 +121,7 @@ public class Activity_Student_Group extends Activity {
                 students.remove(studentIndex);
                 init();
             }
-        }
-        else
-        {
+        } else {
             Toast.makeText(getApplicationContext(),
                     "Please choose only 1 student to delete.",
                     Toast.LENGTH_SHORT).show();
@@ -113,20 +129,17 @@ public class Activity_Student_Group extends Activity {
 
     }
 
-    public void back_studentManagement(View view)
-    {
+    public void back_studentManagement(View view) {
         finish();
     }
 
-    public void save_studentManagement(View view)
-    {
+    public void save_studentManagement(View view) {
         Intent intent = new Intent(this, Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
 
-    public void group_studentManagement(View v)
-    {
+    public void group_studentManagement(View v) {
         if (listView.getCheckedItemCount() > 1) {
             SparseBooleanArray checkedItemsStudents = listView.getCheckedItemPositions();
             if (checkedItemsStudents != null) {
@@ -140,23 +153,19 @@ public class Activity_Student_Group extends Activity {
                     }
                 }
                 Collections.sort(project.getStudentInfo(), new SortByGroup());
-                for(int i=0; i<project.getStudentInfo().size(); i++)
-                    listView.setItemChecked(i,false);
+                for (int i = 0; i < project.getStudentInfo().size(); i++)
+                    listView.setItemChecked(i, false);
                 myAdapter.notifyDataSetChanged();
             }
-        }
-        else
-        {
+        } else {
             Toast.makeText(getApplicationContext(),
                     "Please choose more than 1 students to form a group.",
                     Toast.LENGTH_SHORT).show();
-
         }
     }
 
 
-    public void unGroup_studentManagement(View v)
-    {
+    public void unGroup_studentManagement(View v) {
         if (listView.getCheckedItemCount() > 0) {
             SparseBooleanArray checkedItemsStudents = listView.getCheckedItemPositions();
             if (checkedItemsStudents != null) {
@@ -169,20 +178,17 @@ public class Activity_Student_Group extends Activity {
                     }
                 }
                 Collections.sort(project.getStudentInfo(), new SortByGroup());
-                for(int i=0; i<project.getStudentInfo().size(); i++)
-                    listView.setItemChecked(i,false);
+                for (int i = 0; i < project.getStudentInfo().size(); i++)
+                    listView.setItemChecked(i, false);
                 myAdapter.notifyDataSetChanged();
             }
-        }
-        else
-        {
+        } else {
             Toast.makeText(getApplicationContext(),
                     "Please choose at least 1 student to unGroup.",
                     Toast.LENGTH_SHORT).show();
 
         }
     }
-
 
 
     public class MyAdapter extends BaseAdapter {
@@ -215,7 +221,7 @@ public class Activity_Student_Group extends Activity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_student_group, parent, false);
             TextView textView_groupNum = (TextView) convertView.findViewById(R.id.textView_groupnum_instudentlist);
-            if(studentList.get(position).getGroup() == -999)
+            if (studentList.get(position).getGroup() == -999)
                 textView_groupNum.setText("");
             else
                 textView_groupNum.setText(String.valueOf(studentList.get(position).getGroup()));
@@ -223,12 +229,12 @@ public class Activity_Student_Group extends Activity {
             TextView textView_studentID = convertView.findViewById(R.id.textView_studentID_instudentlist);
             textView_studentID.setText(studentList.get(position).getNumber());
             TextView textView_studentName = convertView.findViewById(R.id.textView_fullname_instudentlist);
-            textView_studentName.setText(studentList.get(position).getFirstName()+" "+studentList.get(position).getMiddleName()+" "+studentList.get(position).getSurname());
+            textView_studentName.setText(studentList.get(position).getFirstName() + " " + studentList.get(position).getMiddleName() + " " + studentList.get(position).getSurname());
             TextView textView_studentEmail = convertView.findViewById(R.id.textView_email_instudentlist);
             textView_studentEmail.setText(studentList.get(position).getEmail());
 
 
-            if(listView.isItemChecked(position))
+            if (listView.isItemChecked(position))
                 convertView.setBackgroundColor(Color.parseColor("#D2EBF7"));
             else
                 convertView.setBackgroundColor(Color.TRANSPARENT);
@@ -244,9 +250,7 @@ public class Activity_Student_Group extends Activity {
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         try {
             startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
-        }
-        catch (android.content.ActivityNotFoundException ex)
-        {
+        } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
         }
 
@@ -265,8 +269,8 @@ public class Activity_Student_Group extends Activity {
                     // Get the path
 
                     path = FileUtils.getPath(this, uri);
-                    AllFunctions.getObject().readExcel(project,path);
-                    System.out.println("call the readExcel method: "+path);
+                    AllFunctions.getObject().readExcel(project, path);
+                    System.out.println("call the readExcel method: " + path);
                     init();
                     // Get the file instance
                     // File file = new File(path);
@@ -278,68 +282,59 @@ public class Activity_Student_Group extends Activity {
     }
 
 
-        //button addStudent click.
-        public void addStudent(View v) {
+    //button addStudent click.
+    public void addStudent(View v) {
 
-            LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Group.this);//获得layoutInflater对象
-            final View view = layoutInflater.from(Activity_Student_Group.this).inflate(R.layout.dialog_add_student, null);//获得view对象
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Group.this);//获得layoutInflater对象
+        final View view = layoutInflater.from(Activity_Student_Group.this).inflate(R.layout.dialog_add_student, null);//获得view对象
 
-            Dialog dialog = new AlertDialog.Builder(Activity_Student_Group.this).setTitle("Add Student").setView(view).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        Dialog dialog = new AlertDialog.Builder(Activity_Student_Group.this).setTitle("Add Student").setView(view).setPositiveButton("Done", new DialogInterface.OnClickListener() {
 
-                public void onClick(DialogInterface dialog, int which) {
+            public void onClick(DialogInterface dialog, int which) {
 
-                    EditText editText_studentID_addStudent = (EditText) view.findViewById(R.id.editText_studentID_addStudent);//获取控件
-                    EditText editText_firstName_addStudent = (EditText) view.findViewById(R.id.editText_firstName_addStudent);//获取控件
-                    EditText editText_middleName_addStudent = (EditText) view.findViewById(R.id.editText_middleName_addStudent);//获取控件
-                    EditText editText_surname_addStudent = (EditText) view.findViewById(R.id.editText_surname_addStudent);//获取控件
-                    EditText editText_email_addStudent = (EditText) view.findViewById(R.id.editText_email_addStudent);//获取控件
+                EditText editText_studentID_addStudent = (EditText) view.findViewById(R.id.editText_studentID_addStudent);//获取控件
+                EditText editText_firstName_addStudent = (EditText) view.findViewById(R.id.editText_firstName_addStudent);//获取控件
+                EditText editText_middleName_addStudent = (EditText) view.findViewById(R.id.editText_middleName_addStudent);//获取控件
+                EditText editText_surname_addStudent = (EditText) view.findViewById(R.id.editText_surname_addStudent);//获取控件
+                EditText editText_email_addStudent = (EditText) view.findViewById(R.id.editText_email_addStudent);//获取控件
 
-                    studentID = editText_studentID_addStudent.getText().toString();
-                    firstName = editText_firstName_addStudent.getText().toString();
-                    middleName = editText_middleName_addStudent.getText().toString();
-                    surname = editText_surname_addStudent.getText().toString();
-                    email = editText_email_addStudent.getText().toString();
+                studentID = editText_studentID_addStudent.getText().toString();
+                firstName = editText_firstName_addStudent.getText().toString();
+                middleName = editText_middleName_addStudent.getText().toString();
+                surname = editText_surname_addStudent.getText().toString();
+                email = editText_email_addStudent.getText().toString();
 
-                    String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.+[a-z]+";
+                String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.+[a-z]+";
 
-                    if(studentID.equals("")) {
-                        Toast.makeText(getApplicationContext(), "StudentID cannot be empty", Toast.LENGTH_SHORT).show();
+                if (studentID.equals("")) {
+                    Toast.makeText(getApplicationContext(), "StudentID cannot be empty", Toast.LENGTH_SHORT).show();
+                } else if (firstName.equals("")) {
+                    Toast.makeText(getApplicationContext(), "FirstName cannot be empty", Toast.LENGTH_SHORT).show();
+
+                } else if (surname.equals("")) {
+                    Toast.makeText(getApplicationContext(), "LastName cannot be empty", Toast.LENGTH_SHORT).show();
+                } else if (!email.matches(emailPattern)) {
+                    Toast.makeText(getApplicationContext(), "Please input a valid Email", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (AllFunctions.getObject().searchStudent(project, studentID) == -999) {
+                        AllFunctions.getObject().addStudent(project, studentID, firstName, middleName, surname, email);
+                        init();
+                    } else {
+                        Toast.makeText(getApplicationContext(), "student with ID:" + studentID + " is already exits.", Toast.LENGTH_SHORT).show();
                     }
-                    else if(firstName.equals(""))
-                    {
-                        Toast.makeText(getApplicationContext(), "FirstName cannot be empty", Toast.LENGTH_SHORT).show();
-
-                    }
-                    else if(surname.equals(""))
-                    {
-                        Toast.makeText(getApplicationContext(), "LastName cannot be empty", Toast.LENGTH_SHORT).show();
-                    }
-                    else if(!email.matches(emailPattern))
-                    {
-                        Toast.makeText(getApplicationContext(), "Please input a valid Email", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        if (AllFunctions.getObject().searchStudent(project, studentID) == -999) {
-                            AllFunctions.getObject().addStudent(project, studentID, firstName, middleName, surname, email);
-                            init();
-                        } else {
-                            Toast.makeText(getApplicationContext(), "student with ID:" + studentID + " is already exits.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
                 }
-            }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    // TODO Auto-generated method stub
+            }
+        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
-                }
-            }).create();
-            dialog.show();
-        }
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // TODO Auto-generated method stub
 
+            }
+        }).create();
+        dialog.show();
+    }
 
 
     public void editStudent_inStudentManagement(View v) {
@@ -407,12 +402,11 @@ public class Activity_Student_Group extends Activity {
                 dialog.show();
 
             }
+        } else {
+            Toast.makeText(getApplicationContext(),
+                    "Please choose only 1 student to edit.",
+                    Toast.LENGTH_SHORT).show();
         }
-            else {
-                Toast.makeText(getApplicationContext(),
-                        "Please choose only 1 student to edit.",
-                        Toast.LENGTH_SHORT).show();
-            }
     }
 
     public class SortByGroup implements Comparator {
@@ -424,13 +418,13 @@ public class Activity_Student_Group extends Activity {
 
                 return -1;
 
-            }else if(s1.getGroup() < s2.getGroup() && s1.getGroup() == -999){
+            } else if (s1.getGroup() < s2.getGroup() && s1.getGroup() == -999) {
                 return 1;
-            }else if(s1.getGroup() > s2.getGroup()){
+            } else if (s1.getGroup() > s2.getGroup()) {
                 return 1;
-            }else if(s1.getGroup() == s2.getGroup()){
+            } else if (s1.getGroup() == s2.getGroup()) {
                 return 1;
-            }else return -1;
+            } else return -1;
         }
 
     }

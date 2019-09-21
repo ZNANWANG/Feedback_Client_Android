@@ -11,7 +11,7 @@
             android:layout_height="wrap_content"
             android:paddingLeft="72dp"
             android:text="TextView"
-            android:textSize="16dp"
+            android:textSize="23sp"
             android:textStyle="bold"
-            android:textColor="#000000"/>
+            android:textColor="@color/black"/>
     </RelativeLayout>

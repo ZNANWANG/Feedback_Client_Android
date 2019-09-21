@@ -8,12 +8,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.DragEvent;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,33 +29,88 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 
-public class Activity_CriteriaList extends Activity {
+public class Activity_CriteriaList extends AppCompatActivity {
 
-    ProjectInfo project;
-    int indexOfProject;
-    ArrayList<Criteria> defaultCriteriaList;
-    ListView listView_criteriaDefault;
-    ListView listView_marketCriteria;
-    ListView listView_commentOnly;
-    Handler handler;
+    private ProjectInfo project;
+    private int indexOfProject;
+    private String path;
+    private ArrayList<Criteria> copyMarkingCriteria;
+    private ArrayList<Criteria> defaultCriteriaList;
+    private ListView listView_criteriaDefault;
+    private ListView listView_marketCriteria;
+    private Handler handler;
+    private Toolbar mToolbar;
+    private AlertDialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__criteria_list);
-        System.out.println("criteriaList界面onCreate");
-        Intent intent =getIntent();
+        Log.d("EEEE", "criteriaList interface onCreate");
+        Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
+        copyMarkingCriteria = new ArrayList<>();
+        copyMarkingCriteria.addAll(AllFunctions.getObject().getProjectList().get(indexOfProject).getCriteria());
+        Log.d("EEEE", copyMarkingCriteria.toString());
         init();
-        handler = new Handler(){
-            public void handleMessage(Message msg)
-            {
-                switch (msg.what)
-                {
+    }
+
+    private void initToolbar() {
+        mToolbar = findViewById(R.id.toolbar_project_criteria);
+        mToolbar.setTitle(project.getProjectName());
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                discardWarning();
+            }
+        });
+        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_logout:
+                        Toast.makeText(Activity_CriteriaList.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_CriteriaList.this,
+                                Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
+    protected void onNewIntent(Intent intent) {
+        Log.d("EEEE", "criteriaList interface onNewIntent");
+        Intent intent2 = getIntent();
+        indexOfProject = Integer.parseInt(intent2.getStringExtra("index"));
+        init();
+    }
+
+    private void init() {
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
                     case 0:
-                        Intent intent = new Intent(Activity_CriteriaList.this, Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        Intent intent = new Intent(Activity_CriteriaList.this,
+                                Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
                         break;
@@ -58,90 +120,54 @@ public class Activity_CriteriaList extends Activity {
             }
         };
         AllFunctions.getObject().setHandler(handler);
-
-    }
-
-    protected void onNewIntent(Intent intent) {
-        System.out.println("criteriaList界面onNewIntent");
-        Intent intent2 =getIntent();
-        indexOfProject = Integer.parseInt(intent2.getStringExtra("index"));
-        init();
-        AllFunctions.getObject().setHandler(handler);
-    }
-
-
-    private void init()
-    {
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         defaultCriteriaList = DefaultCriteriaList.getDefaultCriteriaList();
         defaultCriteriaList.removeAll(project.getCriteria());
         defaultCriteriaList.removeAll(project.getCommentList());
         listView_criteriaDefault = findViewById(R.id.listView_CriteriaList_inCriteriaList);
-        listView_marketCriteria = findViewById(R.id.listView_marketCriteria_inCriteriaList);
-        listView_commentOnly = findViewById(R.id.listView_commentOnly_inCriteriaList);
-        MyAdapter_criteriaListDefault myAdapter1 = new MyAdapter_criteriaListDefault(defaultCriteriaList,this);
-        MyAdapter_criteriaListDefault myAdapter2 = new MyAdapter_criteriaListDefault(project.getCriteria(),this);
-        MyAdapter_criteriaListDefault myAdapter3 = new MyAdapter_criteriaListDefault(project.getCommentList(),this);
+        listView_marketCriteria = findViewById(R.id.listView_markingCriteria_inCriteriaList);
+
+        MyAdapter_criteriaListDefault myAdapter1 = new MyAdapter_criteriaListDefault(defaultCriteriaList, this);
+        MyAdapter_criteriaListDefault myAdapter2 = new MyAdapter_criteriaListDefault(project.getCriteria(), this);
+
         listView_criteriaDefault.setAdapter(myAdapter1);
         listView_marketCriteria.setAdapter(myAdapter2);
-        listView_commentOnly.setAdapter(myAdapter3);
+
         listView_criteriaDefault.setOnDragListener(dragListenerForDefaultListview);
-        listView_marketCriteria.setOnDragListener(dragListenerForMarketCriteriaList);
-        listView_commentOnly.setOnDragListener(dragListenerForCommentOnlyCriteria);
-        TextView textView_projectName = findViewById(R.id.textView_projectName_CriteriaList);
-        textView_projectName.setText(project.getProjectName());
-        TextView textView_helloUser = findViewById(R.id.textView_helloUser_criteriaList);
-        textView_helloUser.setText("Hello, "+AllFunctions.getObject().getUsername());
-        TextView textView_logout = findViewById(R.id.textView_logout_criteriaList);
-        textView_logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Activity_CriteriaList.this, Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            }
-        });
+        listView_marketCriteria.setOnDragListener(dragListenerForMarkingCriteriaList);
 
-    }
-
-    //button ic_back.
-    public void back_inCriteriaList(View view)
-    {
-        finish();
+        initToolbar();
     }
 
     //button next.
-    public void next_inCriteriaList(View view)
-    {
+    public void next_inCriteriaList(View view) {
         Intent intent = new Intent(this, Activity_MarkAllocation.class);
         intent.putExtra("index", String.valueOf(indexOfProject));
         startActivity(intent);
+        Log.d("EEEE", "Go to mark allocation.");
     }
 
 
-    public void addMarkedCriteria(View view)
-    {
+    public void addMarkedCriteria(View view) {
         LayoutInflater layoutInflater = LayoutInflater.from(this);//获得layoutInflater对象
         final View view2 = layoutInflater.from(this).inflate(R.layout.dialog_add_criteria, null);//获得view对象
 
-        Dialog dialog = new android.app.AlertDialog.Builder(this).setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                EditText editText_newCriteriaName = view2.findViewById(R.id.editText_criteriaName_dialogAddCriteria);//获取控件
-                String newCriteriaName = editText_newCriteriaName.getText().toString();
+        Dialog dialog = new android.app.AlertDialog.Builder(this).setView(view2).
+                setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        EditText editText_newCriteriaName = view2.findViewById(R.id.editText_criteriaName_dialogAddCriteria);//获取控件
+                        String newCriteriaName = editText_newCriteriaName.getText().toString();
 
-                if(findWhichCriteriaList_itbelongs(newCriteriaName) == -999)
-                {
-                    Criteria criteria = new Criteria();
-                    criteria.setName(newCriteriaName);
-                    project.getCriteria().add(criteria);
-                    init();
-                }
-                else
-                {
-                    Toast.makeText(Activity_CriteriaList.this, "Criteria "+newCriteriaName+" has been existed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        if (findWhichCriteriaList_itbelongs(newCriteriaName) == -999) {
+                            Criteria criteria = new Criteria();
+                            criteria.setName(newCriteriaName);
+                            project.getCriteria().add(criteria);
+                            init();
+                        } else {
+                            Toast.makeText(Activity_CriteriaList.this, "Criteria " + newCriteriaName + " has been existed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -151,40 +177,32 @@ public class Activity_CriteriaList extends Activity {
         dialog.show();
     }
 
-    public void addCommentCriteria(View view)
-    {
-        LayoutInflater layoutInflater = LayoutInflater.from(this);//获得layoutInflater对象
-        final View view2 = layoutInflater.from(this).inflate(R.layout.dialog_add_criteria, null);//获得view对象
-
-        Dialog dialog = new android.app.AlertDialog.Builder(this).setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                EditText editText_newCriteriaName = view2.findViewById(R.id.editText_criteriaName_dialogAddCriteria);//获取控件
-                String newCriteriaName = editText_newCriteriaName.getText().toString();
-
-                if(findWhichCriteriaList_itbelongs(newCriteriaName) == -999)
-                {
-                    Criteria criteria = new Criteria();
-                    criteria.setName(newCriteriaName);
-                    project.getCommentList().add(criteria);
-                    init();
-                }
-                else
-                {
-                    Toast.makeText(Activity_CriteriaList.this, "Criteria "+newCriteriaName+" has been existed.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-            }
-        }).create();
-        dialog.show();
-    }
-
-
-
+//    public void addCommentCriteria(View view) {
+//        LayoutInflater layoutInflater = LayoutInflater.from(this);//获得layoutInflater对象
+//        final View view2 = layoutInflater.from(this).inflate(R.layout.dialog_add_criteria, null);//获得view对象
+//
+//        Dialog dialog = new android.app.AlertDialog.Builder(this).setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int which) {
+//                EditText editText_newCriteriaName = view2.findViewById(R.id.editText_criteriaName_dialogAddCriteria);//获取控件
+//                String newCriteriaName = editText_newCriteriaName.getText().toString();
+//
+//                if (findWhichCriteriaList_itbelongs(newCriteriaName) == -999) {
+//                    Criteria criteria = new Criteria();
+//                    criteria.setName(newCriteriaName);
+//                    project.getCommentList().add(criteria);
+//                    init();
+//                } else {
+//                    Toast.makeText(Activity_CriteriaList.this, "Criteria " + newCriteriaName + " has been existed.", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                // TODO Auto-generated method stub
+//            }
+//        }).create();
+//        dialog.show();
+//    }
 
     public class MyAdapter_criteriaListDefault extends BaseAdapter {
         private Context mContext;
@@ -213,7 +231,7 @@ public class Activity_CriteriaList extends Activity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_criterialist_default, parent, false);
-            TextView textView_criteriaName =  convertView.findViewById(R.id.textView_criterialistDefault_inCriteriaList);
+            TextView textView_criteriaName = convertView.findViewById(R.id.textView_criterialistDefault_inCriteriaList);
             textView_criteriaName.setText(criteriaList.get(position).getName());
 
             final View dragView = convertView;
@@ -224,9 +242,7 @@ public class Activity_CriteriaList extends Activity {
                     ClipData.Item item1 = new ClipData.Item(criteriaList.get(position).getName());
                     ClipData.Item item2 = new ClipData.Item(String.valueOf(position));
 
-                    ClipData clipData = new ClipData("", new String[] {
-                            ClipDescription.MIMETYPE_TEXT_PLAIN
-                    }, item1);
+                    ClipData clipData = new ClipData("", new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}, item1);
                     clipData.addItem(item2);
 
                     // 开始当前View的拖动操作，将当前拖动对象的position当作localState传递到拖动事件中
@@ -234,294 +250,339 @@ public class Activity_CriteriaList extends Activity {
                     return true;
                 }
             });
-
             return convertView;
         }
     }
 
 
-        View.OnDragListener dragListenerForDefaultListview = new View.OnDragListener()
-        {
-                @Override
-                public boolean onDrag(View v, DragEvent event) {
-
-                    // Defines a variable to store the action type for the incoming event
-                    final int action = event.getAction();
-                    System.out.println("default listView ondrag listener启动");
-
-                    // Handles each of the expected events
-                    switch(action) {
-                        case DragEvent.ACTION_DRAG_STARTED:
-                            // Determines if this View can accept the dragged data
-                            if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                                v.invalidate();
-                                return true;
-                            }
-                            return false;
-                        case DragEvent.ACTION_DRAG_ENTERED:
-
-                            v.setBackgroundColor(Color.parseColor("#dbdbdb"));
-                            v.invalidate();
-
-                            return true;
-
-                        case DragEvent.ACTION_DRAG_LOCATION:
-                            return true;
-
-                        case DragEvent.ACTION_DRAG_EXITED:
-                            v.setBackgroundColor(Color.TRANSPARENT);
-                            v.invalidate();
-                            return true;
-
-                        case DragEvent.ACTION_DROP:
-
-                            v.setBackgroundColor(Color.TRANSPARENT);
-                            // Gets the item containing the dragged data
-                            ClipData.Item item1 = event.getClipData().getItemAt(0);
-                            ClipData.Item item2 = event.getClipData().getItemAt(1);
-                            String source_criteriaName = item1.getText().toString();
-                            int source_criteriaIndex = Integer.parseInt(item2.getText().toString());
-
-
-                            int whichList = findWhichCriteriaList_itbelongs(source_criteriaName);
-                            switch (whichList)
-                            {
-                                case 0:
-                                    break;
-                                case 1:
-                                    Criteria criteria_Temporary = project.getCriteria().get(source_criteriaIndex);
-                                    project.getCriteria().remove(source_criteriaIndex);
-                                    defaultCriteriaList.add(criteria_Temporary);
-                                    break;
-                                case 2:
-                                    Criteria criteria_Temporary2 = project.getCommentList().get(source_criteriaIndex);
-                                    project.getCommentList().remove(source_criteriaIndex);
-                                    defaultCriteriaList.add(criteria_Temporary2);
-                                    break;
-                                default:
-                                    ;
-                            }
-
-                            init();
-
-                            // Invalidates the view to force a redraw
-                            v.invalidate();
-
-                            // Returns true. DragEvent.getResult() will return true.
-                            return true;
-
-                        case DragEvent.ACTION_DRAG_ENDED:
-
-                            // Turns off any color tinting
-                            // Invalidates the view to force a redraw
-                            v.invalidate();
-
-                            // returns true; the value is ignored.
-                            return true;
-                        // An unknown action type was received.
-                        default:
-                            Log.e("DragDrop Example","Unknown action type received by OnDragListener.");
-                            break;
+    private View.OnDragListener dragListenerForDefaultListview = new View.OnDragListener() {
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            // Defines a variable to store the action type for the incoming event
+            final int action = event.getAction();
+            Log.d("EEEE", "default listView ondrag listener start");
+            // Handles each of the expected events
+            switch (action) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // Determines if this View can accept the dragged data
+                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+                        v.invalidate();
+                        return true;
                     }
                     return false;
-                }
-            };
-
-        View.OnDragListener dragListenerForMarketCriteriaList =  new View.OnDragListener() {
-
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-
-                // Defines a variable to store the action type for the incoming event
-                final int action = event.getAction();
-
-                // Handles each of the expected events
-                switch(action) {
-
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        // Determines if this View can accept the dragged data
-                        if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                            v.invalidate();
-                            return true;
-                        }
-                        return false;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-
-                        v.setBackgroundColor(Color.parseColor("#dbdbdb"));
-                        v.invalidate();
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        v.setBackgroundColor(Color.TRANSPARENT);
-                        v.invalidate();
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-
-                        v.setBackgroundColor(Color.TRANSPARENT);
-                        // Gets the item containing the dragged data
-                        ClipData.Item item1 = event.getClipData().getItemAt(0);
-                        ClipData.Item item2 = event.getClipData().getItemAt(1);
-                        String source_criteriaName = item1.getText().toString();
-                        int source_criteriaIndex = Integer.parseInt(item2.getText().toString());
-
-
-                        int whichList = findWhichCriteriaList_itbelongs(source_criteriaName);
-                        switch (whichList)
-                        {
-                            case 0:
-                                Criteria criteria_Temporary = defaultCriteriaList.get(source_criteriaIndex);
-                                defaultCriteriaList.remove(source_criteriaIndex);
-                                project.getCriteria().add(criteria_Temporary);
-                                break;
-                            case 1:
-                                break;
-                            case 2:
-                                Criteria criteria_Temporary2 = project.getCommentList().get(source_criteriaIndex);
-                                project.getCommentList().remove(source_criteriaIndex);
-                                project.getCriteria().add(criteria_Temporary2);
-                                break;
-                            default:
-                                ;
-                        }
-
-                        init();
-
-                        // Invalidates the view to force a redraw
-                        v.invalidate();
-
-                        // Returns true. DragEvent.getResult() will return true.
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_ENDED:
-
-                        // Turns off any color tinting
-                        // Invalidates the view to force a redraw
-                        v.invalidate();
-
-                        // returns true; the value is ignored.
-                        return true;
-                    // An unknown action type was received.
-                    default:
-                        Log.e("DragDrop Example","Unknown action type received by OnDragListener.");
-                        break;
-                }
-                return false;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    v.setBackgroundColor(Color.parseColor("#dbdbdb"));
+                    v.invalidate();
+                    return true;
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    return true;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                    v.invalidate();
+                    return true;
+                case DragEvent.ACTION_DROP:
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                    // Gets the item containing the dragged data
+                    ClipData.Item item1 = event.getClipData().getItemAt(0);
+                    ClipData.Item item2 = event.getClipData().getItemAt(1);
+                    String source_criteriaName = item1.getText().toString();
+                    int source_criteriaIndex = Integer.parseInt(item2.getText().toString());
+                    int whichList = findWhichCriteriaList_itbelongs(source_criteriaName);
+                    switch (whichList) {
+                        case 0:
+                            break;
+                        case 1:
+                            Log.d("EEEE", "1->0");
+                            Criteria criteria_Temporary = project.getCriteria().get(source_criteriaIndex);
+                            project.getCriteria().remove(source_criteriaIndex);
+                            defaultCriteriaList.add(criteria_Temporary);
+                            break;
+                        case 2:
+                            Log.d("EEEE", "2->0");
+                            Criteria criteria_Temporary2 = project.getCommentList().get(source_criteriaIndex);
+                            project.getCommentList().remove(source_criteriaIndex);
+                            defaultCriteriaList.add(criteria_Temporary2);
+                            break;
+                        default:
+                            break;
+                    }
+                    init();
+                    // Invalidates the view to force a redraw
+                    v.invalidate();
+                    // Returns true. DragEvent.getResult() will return true.
+                    return true;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    // Turns off any color tinting
+                    // Invalidates the view to force a redraw
+                    v.invalidate();
+                    // returns true; the value is ignored.
+                    return true;
+                // An unknown action type was received.
+                default:
+                    Log.e("DragDrop Example", "Unknown action type received by OnDragListener.");
+                    break;
             }
-        };
+            return false;
+        }
+    };
 
-        View.OnDragListener dragListenerForCommentOnlyCriteria = new View.OnDragListener() {
-
-            @Override
-            public boolean onDrag(View v, DragEvent event) {
-
-                // Defines a variable to store the action type for the incoming event
-                final int action = event.getAction();
-
-                // Handles each of the expected events
-                switch(action) {
-
-                    case DragEvent.ACTION_DRAG_STARTED:
-                        // Determines if this View can accept the dragged data
-                        if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-                            v.invalidate();
-                            return true;
-                        }
-                        return false;
-                    case DragEvent.ACTION_DRAG_ENTERED:
-
-                        v.setBackgroundColor(Color.parseColor("#dbdbdb"));
+    private View.OnDragListener dragListenerForMarkingCriteriaList = new View.OnDragListener() {
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            // Defines a variable to store the action type for the incoming event
+            final int action = event.getAction();
+            // Handles each of the expected events
+            switch (action) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // Determines if this View can accept the dragged data
+                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
                         v.invalidate();
                         return true;
-
-                    case DragEvent.ACTION_DRAG_LOCATION:
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_EXITED:
-                        v.setBackgroundColor(Color.TRANSPARENT);
-                        v.invalidate();
-                        return true;
-
-                    case DragEvent.ACTION_DROP:
-
-                        v.setBackgroundColor(Color.TRANSPARENT);
-                        // Gets the item containing the dragged data
-                        ClipData.Item item1 = event.getClipData().getItemAt(0);
-                        ClipData.Item item2 = event.getClipData().getItemAt(1);
-                        String source_criteriaName = item1.getText().toString();
-                        int source_criteriaIndex = Integer.parseInt(item2.getText().toString());
-
-
-                        int whichList = findWhichCriteriaList_itbelongs(source_criteriaName);
-                        switch (whichList)
-                        {
-                            case 0:
-                                Criteria criteria_Temporary = defaultCriteriaList.get(source_criteriaIndex);
-                                defaultCriteriaList.remove(source_criteriaIndex);
-                                project.getCommentList().add(criteria_Temporary);
-                                break;
-                            case 1:
-                                Criteria criteria_Temporary2 = project.getCriteria().get(source_criteriaIndex);
-                                project.getCriteria().remove(source_criteriaIndex);
-                                project.getCommentList().add(criteria_Temporary2);
-                                break;
-                            case 2:
-                                break;
-                            default:
-                                ;
-                        }
-
-                        init();
-
-                        // Invalidates the view to force a redraw
-                        v.invalidate();
-
-                        // Returns true. DragEvent.getResult() will return true.
-                        return true;
-
-                    case DragEvent.ACTION_DRAG_ENDED:
-
-                        // Turns off any color tinting
-                        // Invalidates the view to force a redraw
-                        v.invalidate();
-
-                        // returns true; the value is ignored.
-                        return true;
-                    // An unknown action type was received.
-                    default:
-                        Log.e("DragDrop Example","Unknown action type received by OnDragListener.");
-                        break;
-                }
-                return false;
+                    }
+                    return false;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    v.setBackgroundColor(Color.parseColor("#dbdbdb"));
+                    v.invalidate();
+                    return true;
+                case DragEvent.ACTION_DRAG_LOCATION:
+                    return true;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                    v.invalidate();
+                    return true;
+                case DragEvent.ACTION_DROP:
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                    // Gets the item containing the dragged data
+                    ClipData.Item item1 = event.getClipData().getItemAt(0);
+                    ClipData.Item item2 = event.getClipData().getItemAt(1);
+                    String source_criteriaName = item1.getText().toString();
+                    int source_criteriaIndex = Integer.parseInt(item2.getText().toString());
+                    int whichList = findWhichCriteriaList_itbelongs(source_criteriaName);
+                    switch (whichList) {
+                        case 0:
+                            Log.d("EEEE", "0->1");
+                            Criteria criteria_Temporary = defaultCriteriaList.get(source_criteriaIndex);
+                            defaultCriteriaList.remove(source_criteriaIndex);
+                            project.getCriteria().add(criteria_Temporary);
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            Log.d("EEEE", "2->1");
+                            Criteria criteria_Temporary2 = project.getCommentList().get(source_criteriaIndex);
+                            project.getCommentList().remove(source_criteriaIndex);
+                            project.getCriteria().add(criteria_Temporary2);
+                            break;
+                        default:
+                            break;
+                    }
+                    init();
+                    // Invalidates the view to force a redraw
+                    v.invalidate();
+                    // Returns true. DragEvent.getResult() will return true.
+                    return true;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    // Turns off any color tinting
+                    // Invalidates the view to force a redraw
+                    v.invalidate();
+                    // returns true; the value is ignored.
+                    return true;
+                // An unknown action type was received.
+                default:
+                    Log.e("DragDrop Example", "Unknown action type received by OnDragListener.");
+                    break;
             }
-        };
+            return false;
+        }
+    };
+
+//    private View.OnDragListener dragListenerForCommentOnlyCriteria = new View.OnDragListener() {
+//
+//        @Override
+//        public boolean onDrag(View v, DragEvent event) {
+//
+//            // Defines a variable to store the action type for the incoming event
+//            final int action = event.getAction();
+//
+//            // Handles each of the expected events
+//            switch (action) {
+//
+//                case DragEvent.ACTION_DRAG_STARTED:
+//                    // Determines if this View can accept the dragged data
+//                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+//                        v.invalidate();
+//                        return true;
+//                    }
+//                    return false;
+//                case DragEvent.ACTION_DRAG_ENTERED:
+//
+//                    v.setBackgroundColor(Color.parseColor("#dbdbdb"));
+//                    v.invalidate();
+//                    return true;
+//
+//                case DragEvent.ACTION_DRAG_LOCATION:
+//                    return true;
+//
+//                case DragEvent.ACTION_DRAG_EXITED:
+//                    v.setBackgroundColor(Color.TRANSPARENT);
+//                    v.invalidate();
+//                    return true;
+//
+//                case DragEvent.ACTION_DROP:
+//
+//                    v.setBackgroundColor(Color.TRANSPARENT);
+//                    // Gets the item containing the dragged data
+//                    ClipData.Item item1 = event.getClipData().getItemAt(0);
+//                    ClipData.Item item2 = event.getClipData().getItemAt(1);
+//                    String source_criteriaName = item1.getText().toString();
+//                    int source_criteriaIndex = Integer.parseInt(item2.getText().toString());
+//
+//
+//                    int whichList = findWhichCriteriaList_itbelongs(source_criteriaName);
+//                    switch (whichList) {
+//                        case 0:
+//                            Criteria criteria_Temporary = defaultCriteriaList.get(source_criteriaIndex);
+//                            defaultCriteriaList.remove(source_criteriaIndex);
+//                            project.getCommentList().add(criteria_Temporary);
+//                            break;
+//                        case 1:
+//                            Criteria criteria_Temporary2 = project.getCriteria().get(source_criteriaIndex);
+//                            project.getCriteria().remove(source_criteriaIndex);
+//                            project.getCommentList().add(criteria_Temporary2);
+//                            break;
+//                        case 2:
+//                            break;
+//                        default:
+//                            ;
+//                    }
+//
+//                    init();
+//
+//                    // Invalidates the view to force a redraw
+//                    v.invalidate();
+//
+//                    // Returns true. DragEvent.getResult() will return true.
+//                    return true;
+//
+//                case DragEvent.ACTION_DRAG_ENDED:
+//
+//                    // Turns off any color tinting
+//                    // Invalidates the view to force a redraw
+//                    v.invalidate();
+//
+//                    // returns true; the value is ignored.
+//                    return true;
+//                // An unknown action type was received.
+//                default:
+//                    Log.e("DragDrop Example", "Unknown action type received by OnDragListener.");
+//                    break;
+//            }
+//            return false;
+//        }
+//    };
 
 
-    //0 means defaultCriteriaList, 1 means market criteriaList, 2 means commentOnly criteriaList
-    private int findWhichCriteriaList_itbelongs(String criteriaName)
-    {
-        for(Criteria c : defaultCriteriaList)
-        {
-            if(c.getName().equals(criteriaName))
+    //0 means defaultCriteriaList, 1 means marking criteriaList, 2 means commentOnly criteriaList
+    private int findWhichCriteriaList_itbelongs(String criteriaName) {
+        for (Criteria c : defaultCriteriaList) {
+            if (c.getName().equals(criteriaName))
                 return 0;
         }
-        for(Criteria c : project.getCriteria())
-        {
-            if(c.getName().equals(criteriaName))
+        for (Criteria c : project.getCriteria()) {
+            if (c.getName().equals(criteriaName))
                 return 1;
         }
-        for(Criteria c : project.getCommentList())
-        {
-            if(c.getName().equals(criteriaName))
+        for (Criteria c : project.getCommentList()) {
+            if (c.getName().equals(criteriaName))
                 return 2;
         }
         return -999;
     }
 
+    public void discardWarning() {
+        AllFunctions.getObject().setHandler(handler); // attention!!!!!!!
 
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_CriteriaList.this);//获得layoutInflater对象
+        final View view = layoutInflater.from(Activity_CriteriaList.this).
+                inflate(R.layout.dialog_quit_editing, null);//获得view对象
+        TextView warning = view.findViewById(R.id.textView_dialog_query_waring_editing);
+        warning.setText("Are you sure you want to discard all changes ?");
+        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_CriteriaList.this);
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
+            }
+        });
+
+        dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setView(view);
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("EEEE", "exit: " + copyMarkingCriteria.toString());
+                project.setCriteriaList(copyMarkingCriteria);
+                dialog.dismiss();
+                finish();
+            }
+        });
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK) {
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    private static final int FILE_SELECT_CODE = 0;
+
+    public void uploadCriteria(View view) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        try {
+            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
+        } catch (android.content.ActivityNotFoundException ex) {
+            // Potentially direct the user to the Market with a Dialog
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FILE_SELECT_CODE:
+                if (resultCode == RESULT_OK) {
+                    // Get the Uri of the selected file
+                    Uri uri = data.getData();
+                    Log.d("EEEE", "File Uri: " + uri.toString());
+                    // Get the path
+
+                    path = FileUtils.getPath(this, uri);
+                    AllFunctions.getObject().readCriteriaExcel(project, path);
+                    Log.d("EEEE", "call the readCriteriaExcel method: " + path);
+                    init();
+                    // Get the file instance
+                    // File file = new File(path);
+                    // Initiate the upload
+                }
+                break;
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 }

@@ -74,7 +74,6 @@ public class ProjectInfo {
         this.criteriaList.add(criteria);
     }
 
-
     public void setDurationMin(int durationMin) {
         this.durationMin = durationMin;
     }
