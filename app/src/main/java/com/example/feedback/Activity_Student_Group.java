@@ -134,7 +134,8 @@ public class Activity_Student_Group extends AppCompatActivity {
     }
 
     public void save_studentManagement(View view) {
-        Intent intent = new Intent(this, Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent(this, Assessment_Preparation_Activity.class).
+                setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
         finish();
     }
@@ -379,7 +380,6 @@ public class Activity_Student_Group extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "StudentID cannot be empty", Toast.LENGTH_SHORT).show();
                         } else if (firstName.equals("")) {
                             Toast.makeText(getApplicationContext(), "FirstName cannot be empty", Toast.LENGTH_SHORT).show();
-
                         } else if (surname.equals("")) {
                             Toast.makeText(getApplicationContext(), "LastName cannot be empty", Toast.LENGTH_SHORT).show();
                         } else if (!email.matches(emailPattern)) {
@@ -415,9 +415,7 @@ public class Activity_Student_Group extends AppCompatActivity {
             StudentInfo s1 = (StudentInfo) o1;
             StudentInfo s2 = (StudentInfo) o2;
             if (s1.getGroup() > s2.getGroup() && s2.getGroup() == -999) {
-
                 return -1;
-
             } else if (s1.getGroup() < s2.getGroup() && s1.getGroup() == -999) {
                 return 1;
             } else if (s1.getGroup() > s2.getGroup()) {

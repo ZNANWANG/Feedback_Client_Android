@@ -274,9 +274,6 @@ public class Activity_About extends AppCompatActivity {
                                 "Successfully update the time setting of the project.", Toast.LENGTH_SHORT).show();
                         if(buttonFlag.equals("save")) {
                             setResult(Activity.RESULT_OK);
-//                            Intent intent = new Intent(Activity_About.this,
-//                            Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            startActivity(intent);
                             finish( );
                         } else if(buttonFlag.equals("next")) {
                             Intent intent = new Intent(Activity_About.this, Activity_CriteriaList.class);
@@ -293,10 +290,7 @@ public class Activity_About extends AppCompatActivity {
                         Log.d("EEEE", "Successfully delete the project.");
                         Toast.makeText(Activity_About.this,
                                 "Successfully delete the project.", Toast.LENGTH_SHORT).show();
-                        setResult(Activity.RESULT_OK);
-//                        Intent intent1 = new Intent(Activity_About.this,
-//                                Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        startActivity(intent1);
+                        setResult(Activity.RESULT_CANCELED);
                         finish();
                         break;
                     case 206:
@@ -417,22 +411,12 @@ public class Activity_About extends AppCompatActivity {
                     int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
                     project = AllFunctions.getObject().getProjectList().get(indextToSend);
                     index = String.valueOf(indextToSend);
-//                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-//                    Intent intent = new Intent(this,
-//                            Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(intent);
-//                    finish( );
                 }
             } else {
                 if(checkTimeSetting()) {
                     Log.d("EEEE", "save with index != -999 " + Integer.parseInt(index));
                     project = AllFunctions.getObject().getProjectList().get(Integer.parseInt(index));
                     AllFunctions.getObject().updateProject(project, projectName, subjectName, subjectCode, projectDes);
-//                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-//                    Intent intent = new Intent(this,
-//                            Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(intent);
-//                    finish();
                 }
             }
         }
@@ -460,19 +444,11 @@ public class Activity_About extends AppCompatActivity {
                     int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
                     project = AllFunctions.getObject().getProjectList().get(indextToSend);
                     index = String.valueOf(indextToSend);
-//                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-//                    Intent intent = new Intent(this, Activity_CriteriaList.class);
-//                    intent.putExtra("index", String.valueOf(index));
-//                    startActivity(intent);
                 }
             } else {
                 if(checkTimeSetting()) {
                     Log.d("EEEE", "next with index != -999 " + Integer.parseInt(index));
                     AllFunctions.getObject().updateProject(project, projectName, subjectName, subjectCode, projectDes);
-//                    AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-//                    Intent intent = new Intent(this, Activity_CriteriaList.class);
-//                    intent.putExtra("index", index);
-//                    startActivity(intent);
                 }
             }
         }
@@ -487,6 +463,12 @@ public class Activity_About extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Warning minutes cannot be empty", Toast.LENGTH_SHORT).show();
         } else if(editText_warningSec.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(), "Warning seconds cannot be empty", Toast.LENGTH_SHORT).show();
+        } else if(Integer.parseInt(editText_durationMin.getText().toString()) == 0
+                && Integer.parseInt(editText_durationSec.getText().toString()) == 0) {
+            Toast.makeText(getApplicationContext(), "Duration time cannot be zero", Toast.LENGTH_SHORT).show();
+        } else if(Integer.parseInt(editText_warningMin.getText().toString()) == 0
+                && Integer.parseInt(editText_warningSec.getText().toString()) == 0) {
+            Toast.makeText(getApplicationContext(), "Warning time cannot be zero", Toast.LENGTH_SHORT).show();
         } else {
             durationMin = Integer.parseInt(editText_durationMin.getText().toString());
             durationSec = Integer.parseInt(editText_durationSec.getText().toString());
@@ -504,10 +486,14 @@ public class Activity_About extends AppCompatActivity {
         return false;
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if(keyCode == KeyEvent.KEYCODE_BACK) {
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
+    public void onBackPressed() {
+        discardWarning();
     }
 }

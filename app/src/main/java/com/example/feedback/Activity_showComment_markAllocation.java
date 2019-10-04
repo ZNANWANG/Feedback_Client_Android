@@ -70,6 +70,16 @@ public class Activity_showComment_markAllocation extends Activity {
                 }
             }
         });
+        expandableListView_comments_left.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView expandableListView, View view, int i, int i1, long l) {
+                Log.d("EEEE", "comment child to gray");
+                for (int j = 0; j < expandableListView.getChildCount(); j++)
+                    expandableListView.getChildAt(j).setBackgroundColor(Color.TRANSPARENT);
+                view.setBackgroundColor(Color.GRAY);
+                return false;
+            }
+        });
         listView_longText = findViewById(R.id.listView_longText_showComment);
     }
 
@@ -271,7 +281,6 @@ public class Activity_showComment_markAllocation extends Activity {
                     indexOfSubsection = groupPosition;
                     indexOfShortText = childPosition;
                     convertView2.setSelected(true);
-
                 }
             });
             if (convertView.isSelected())

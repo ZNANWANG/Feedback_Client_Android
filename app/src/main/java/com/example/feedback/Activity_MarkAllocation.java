@@ -1,10 +1,8 @@
 package com.example.feedback;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,11 +15,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.GridView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
@@ -32,12 +28,9 @@ public class Activity_MarkAllocation extends AppCompatActivity {
     private GridView gridView;
     //private ListView listView;
     private ProjectInfo project;
-    private ArrayList<Criteria> markedCriteriaList;
-    private ArrayList<Criteria> copyMarkingCriteria;
+    private ArrayList<Criteria> markingCriteriaList;
     ArrayList<Criteria> allCriteriaList;
     private int markedCriteriaNum;
-    private ExpandableListView expandableListView;
-    private ExpandableListView eList;
     private Toolbar mToolbar;
 
     @Override
@@ -46,20 +39,16 @@ public class Activity_MarkAllocation extends AppCompatActivity {
         setContentView(R.layout.activity__mark_allocation);
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
-        copyMarkingCriteria = new ArrayList<>();
-        copyMarkingCriteria.addAll(AllFunctions.getObject().getProjectList().get(indexOfProject).getCriteria());
-        Log.d("EEEE", copyMarkingCriteria.toString());
         init();
         Log.d("EEEE", "mark allocation start!");
     }
 
     public void init() {
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
-        markedCriteriaList = project.getCriteria();
-        initIncremnetAndMark();
+        markingCriteriaList = project.getCriteria();
         markedCriteriaNum = project.getCriteria().size();
         allCriteriaList = new ArrayList<>();
-        allCriteriaList.addAll(markedCriteriaList);
+        allCriteriaList.addAll(markingCriteriaList);
         allCriteriaList.addAll(project.getCommentList());
         initToolbar();
         MyAdapter myAdapter = new MyAdapter(allCriteriaList, this);
@@ -104,27 +93,42 @@ public class Activity_MarkAllocation extends AppCompatActivity {
         return true;
     }
 
-    public void initIncremnetAndMark() {
-        for(Criteria criteria: markedCriteriaList) {
-            criteria.setMarkIncrement("1/4");
-            criteria.setMaximunMark(0);
+    public boolean isValidIncrementAndMaxMark() {
+        for(int i = 0; i < markingCriteriaList.size(); i++){
+            if(markingCriteriaList.get(i).getMarkIncrement() == null) {
+                markingCriteriaList.get(i).setMarkIncrement("1/4");
+            }
+
+            if(markingCriteriaList.get(i).getMaximunMark() == 0) {
+                Toast.makeText(Activity_MarkAllocation.this, "Maximum mark cannot be zero.", Toast.LENGTH_SHORT).show();
+                return false;
+            }
         }
+        return true;
     }
 
     //button 'save'.
     public void save_markAllocation(View view) {
-        AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
-        Intent intent = new Intent(this, Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+        if(isValidIncrementAndMaxMark() == true) {
+            AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
+            Intent intent = new Intent(this, Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        } else {
+            return;
+        }
     }
 
     //button 'next'.
     public void next_markAllocation(View view) {
-        AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
-        Intent intent = new Intent(this, Activity_Marker_Management.class);
-        intent.putExtra("index", String.valueOf(indexOfProject));
-        startActivity(intent);
+        if(isValidIncrementAndMaxMark() == true) {
+            AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
+            Intent intent = new Intent(this, Activity_Marker_Management.class);
+            intent.putExtra("index", String.valueOf(indexOfProject));
+            startActivity(intent);
+        } else {
+            return;
+        }
     }
 
 
@@ -193,15 +197,15 @@ public class Activity_MarkAllocation extends AppCompatActivity {
                         switch (checkID) {
                             case R.id.radioButton_quarter_gridItem:
 //                            criteriaList.get(position).setMarkIncrement("quarter");
-                                markedCriteriaList.get(position).setMarkIncrement("1/4");
+                                markingCriteriaList.get(position).setMarkIncrement("1/4");
                                 break;
                             case R.id.radioButton_half_gridItem:
 //                            criteriaList.get(position).setMarkIncrement("half");
-                                markedCriteriaList.get(position).setMarkIncrement("1/2");
+                                markingCriteriaList.get(position).setMarkIncrement("1/2");
                                 break;
                             case R.id.radioButton_full_gridItem:
 //                            criteriaList.get(position).setMarkIncrement("full");
-                                markedCriteriaList.get(position).setMarkIncrement("1");
+                                markingCriteriaList.get(position).setMarkIncrement("1");
                                 break;
                             default:
                                 break;
@@ -215,7 +219,7 @@ public class Activity_MarkAllocation extends AppCompatActivity {
                     public void onClick(View view) {
                         int mark = Integer.parseInt(editText_maxMark.getText().toString());
                         Log.d("EEEE", Integer.parseInt(editText_maxMark.getText().toString()) + "");
-                        markedCriteriaList.get(position).setMaximunMark(mark + 1);
+                        markingCriteriaList.get(position).setMaximunMark(mark + 1);
                         editText_maxMark.setText(String.valueOf(mark + 1));
                     }
                 });
@@ -226,7 +230,7 @@ public class Activity_MarkAllocation extends AppCompatActivity {
                     public void onClick(View view) {
                         int mark = Integer.parseInt(editText_maxMark.getText().toString());
                         if(mark > 0) {
-                            markedCriteriaList.get(position).setMaximunMark(mark - 1);
+                            markingCriteriaList.get(position).setMaximunMark(mark - 1);
                             editText_maxMark.setText(String.valueOf(mark - 1));
                         }
                     }

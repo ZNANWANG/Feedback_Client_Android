@@ -7,10 +7,6 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -324,130 +320,17 @@ public class AllFunctions {
 
     }
 
-    public void readCriteriaExcel(ProjectInfo project, String path) {
+    public ArrayList<Criteria> readCriteriaExcel(ProjectInfo project, String path) {
+        ExcelParser excelParser = new ExcelParser();
         Log.d("EEEE", "path: " + path);
         if (path.endsWith(".xls")) {
             Log.d("EEEE", "read xls file.");
-            readXlsCriteria(path);
+            return excelParser.readXlsCriteria(path);
         } else if (path.endsWith(".xlsx")) {
             Log.d("EEEE", "read xlsx file.");
-            readXlsxCriteria(path);
+            return excelParser.readXlsxCriteria(path);
         }
-    }
-
-    public void readXlsCriteria(String path) {
-//        try {
-//            // Creating Input Stream
-//            InputStream myInput;
-//
-//            File file = new File(path);
-//
-//            //  Don't forget to Change to your assets folder excel sheet
-//            myInput = new FileInputStream(file);
-//
-//            // Create a POIFSFileSystem object
-//            POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
-//
-//            // Create a workbook using the File System
-//            HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
-//
-//            // Get the first sheet from workbook
-//            HSSFSheet mySheet = myWorkBook.getSheetAt(0);
-//
-//            /** We now need something to iterate through the cells. **/
-//            Iterator<Row> rowIter = mySheet.rowIterator();
-//
-//            ArrayList<CustomisedCriteria> criteriaList = new ArrayList<>();
-//
-//            while (rowIter.hasNext()) {
-//                HSSFRow myRow = (HSSFRow) rowIter.next();
-//                Iterator<Cell> cellIter = myRow.cellIterator();
-//
-//                CustomisedCriteria newCriteria = new CustomisedCriteria();
-//
-//                while (cellIter.hasNext()) {
-//                    HSSFCell myCell = (HSSFCell) cellIter.next();
-//                    if (myCell.getColumnIndex() == 0) {
-//                        newCriteria.setCriteria(myCell.toString());
-//                    }
-//
-//                    if (myCell.getColumnIndex() == 1) {
-//                        newCriteria.setSubSection(myCell.toString());
-//                    }
-//
-//                    if (myCell.getColumnIndex() == 2) {
-//                        newCriteria.setShortText(myCell.toString());
-//                    }
-//
-//                    if (myCell.getColumnIndex() == 3) {
-//                        newCriteria.setLongText(myCell.toString());
-//                    }
-//
-//                    Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myCell.getColumnIndex());
-//
-//                }
-//                criteriaList.add(newCriteria);
-//            }
-//            Log.d("EEEE", criteriaList.toString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return;
-    }
-
-    public void readXlsxCriteria(String path) {
-//        try {
-//            // Creating Input Stream
-//            InputStream myInput;
-//
-//            File file = new File(path);
-//
-//            //  Don't forget to Change to your assets folder excel sheet
-//            myInput = new FileInputStream(file);
-//
-//            XSSFWorkbook workbook = new XSSFWorkbook(myInput);
-//            XSSFSheet mySheet = workbook.getSheetAt(0);
-//
-//
-//            /** We now need something to iterate through the cells. **/
-//            Iterator<Row> rowIter = mySheet.rowIterator();
-//
-//            ArrayList<CustomisedCriteria> criteriaList = new ArrayList<>();
-//
-//            while (rowIter.hasNext()) {
-//                Row myRow = (Row) rowIter.next();
-//                Iterator<Cell> cellIter = myRow.cellIterator();
-//
-//                CustomisedCriteria newCriteria = new CustomisedCriteria();
-//
-//                while (cellIter.hasNext()) {
-//                    XSSFCell myCell = (XSSFCell) cellIter.next();
-//                    if (myCell.getColumnIndex() == 0) {
-//                        newCriteria.setCriteria(myCell.toString());
-//                    }
-//
-//                    if (myCell.getColumnIndex() == 1) {
-//                        newCriteria.setSubSection(myCell.toString());
-//                    }
-//
-//                    if (myCell.getColumnIndex() == 2) {
-//                        newCriteria.setShortText(myCell.toString());
-//                    }
-//
-//                    if (myCell.getColumnIndex() == 3) {
-//                        newCriteria.setLongText(myCell.toString());
-//                    }
-//
-//                    Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myCell.getColumnIndex());
-//
-//                }
-//                criteriaList.add(newCriteria);
-//            }
-//            Log.d("EEEE", criteriaList.toString());
-//        } catch (Exception e) {
-//             e.printStackTrace();
-//        }
-//        return;
+        return null;
     }
 
     public void addStudent(ProjectInfo project, String number, String firstName,

@@ -40,7 +40,8 @@
         <activity android:name=".Activity_Student_Group" />
 
         <activity android:name=".Activity_Login"
-            android:launchMode="singleTask">
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,9 +49,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity_assessment_comment"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:name=".Activity_assessment_comment">
         </activity>
 
         <meta-data

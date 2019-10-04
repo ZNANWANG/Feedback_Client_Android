@@ -75,10 +75,10 @@
             android:ems="3"
             android:gravity="center"
             android:inputType="number"
-            android:text="Mark"
+            android:text="0"
+            android:enabled="false"
             android:textColor="@color/black"
-            android:textSize="20sp"
-            android:background="@drawable/project_description_focus"/>
+            android:textSize="20sp"/>
 
         <Button
             android:id="@+id/button_minus_gridItem"

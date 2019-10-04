@@ -144,10 +144,6 @@ public class Activity_Assessment extends Activity implements View.OnClickListene
                 }
             }
 
-
-
-
-
             for(int j = 0; j < project.getCriteria().size(); j++){
                 totalWeighting = totalWeighting + project.getCriteria().get(j).getMaximunMark();
 

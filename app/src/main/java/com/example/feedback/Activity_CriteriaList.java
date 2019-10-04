@@ -7,11 +7,13 @@ import android.content.ClipDescription;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -42,25 +44,42 @@ public class Activity_CriteriaList extends AppCompatActivity {
     private ProjectInfo project;
     private int indexOfProject;
     private String path;
-    private ArrayList<Criteria> copyMarkingCriteria;
     private ArrayList<Criteria> defaultCriteriaList;
     private ListView listView_criteriaDefault;
     private ListView listView_marketCriteria;
     private Handler handler;
     private Toolbar mToolbar;
     private AlertDialog dialog;
+    private MyAdapter_criteriaListDefault myAdapter1;
+    private MyAdapter_criteriaListDefault myAdapter2;
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
+    "android.permission.WRITE_EXTERNAL_STORAGE"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__criteria_list);
         Log.d("EEEE", "criteriaList interface onCreate");
+        verifyStoragePermissions(Activity_CriteriaList.this);
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
-        copyMarkingCriteria = new ArrayList<>();
-        copyMarkingCriteria.addAll(AllFunctions.getObject().getProjectList().get(indexOfProject).getCriteria());
-        Log.d("EEEE", copyMarkingCriteria.toString());
         init();
+    }
+
+    public static void verifyStoragePermissions(Activity activity) {
+
+        try {
+            //检测是否有写的权限
+            int permission = ActivityCompat.checkSelfPermission(activity,
+                    "android.permission.READ_EXTERNAL_STORAGE");
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                // 没有写的权限，去申请写的权限，会弹出对话框
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initToolbar() {
@@ -114,6 +133,11 @@ public class Activity_CriteriaList extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         break;
+                    case 210:
+                        Toast.makeText(Activity_CriteriaList.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        finish();
                     default:
                         break;
                 }
@@ -127,8 +151,8 @@ public class Activity_CriteriaList extends AppCompatActivity {
         listView_criteriaDefault = findViewById(R.id.listView_CriteriaList_inCriteriaList);
         listView_marketCriteria = findViewById(R.id.listView_markingCriteria_inCriteriaList);
 
-        MyAdapter_criteriaListDefault myAdapter1 = new MyAdapter_criteriaListDefault(defaultCriteriaList, this);
-        MyAdapter_criteriaListDefault myAdapter2 = new MyAdapter_criteriaListDefault(project.getCriteria(), this);
+        myAdapter1 = new MyAdapter_criteriaListDefault(defaultCriteriaList, this);
+        myAdapter2 = new MyAdapter_criteriaListDefault(project.getCriteria(), this);
 
         listView_criteriaDefault.setAdapter(myAdapter1);
         listView_marketCriteria.setAdapter(myAdapter2);
@@ -141,10 +165,16 @@ public class Activity_CriteriaList extends AppCompatActivity {
 
     //button next.
     public void next_inCriteriaList(View view) {
-        Intent intent = new Intent(this, Activity_MarkAllocation.class);
-        intent.putExtra("index", String.valueOf(indexOfProject));
-        startActivity(intent);
-        Log.d("EEEE", "Go to mark allocation.");
+        Log.d("EEEE", project.getCriteria() + "");
+        if(project.getCriteria().size() == 0){
+            Log.d("EEEE", "empty criteria list.");
+            Toast.makeText(Activity_CriteriaList.this, "Marking criteria cannot be empty", Toast.LENGTH_SHORT).show();
+        } else {
+            Intent intent = new Intent(this, Activity_MarkAllocation.class);
+            intent.putExtra("index", String.valueOf(indexOfProject));
+            startActivityForResult(intent, 1);
+            Log.d("EEEE", "Go to mark allocation.");
+        }
     }
 
 
@@ -529,10 +559,7 @@ public class Activity_CriteriaList extends AppCompatActivity {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("EEEE", "exit: " + copyMarkingCriteria.toString());
-                project.setCriteriaList(copyMarkingCriteria);
-                dialog.dismiss();
-                finish();
+                AllFunctions.getObject().syncProjectList();
             }
         });
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
@@ -543,12 +570,12 @@ public class Activity_CriteriaList extends AppCompatActivity {
         });
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK) {
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if(keyCode == KeyEvent.KEYCODE_BACK) {
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 
     private static final int FILE_SELECT_CODE = 0;
 
@@ -574,15 +601,18 @@ public class Activity_CriteriaList extends AppCompatActivity {
                     // Get the path
 
                     path = FileUtils.getPath(this, uri);
-                    AllFunctions.getObject().readCriteriaExcel(project, path);
+                    ArrayList<Criteria> uploadCriteriaList = new ArrayList<>();
+                    uploadCriteriaList = AllFunctions.getObject().readCriteriaExcel(project, path);
                     Log.d("EEEE", "call the readCriteriaExcel method: " + path);
-                    init();
-                    // Get the file instance
-                    // File file = new File(path);
-                    // Initiate the upload
+                    defaultCriteriaList.addAll(uploadCriteriaList);
+                    myAdapter1.notifyDataSetChanged();
                 }
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void onBackPressed() {
+        discardWarning();
     }
 }

@@ -118,7 +118,7 @@
                 android:paddingRight="16dp"
                 android:layout_marginTop="8dp"
                 android:choiceMode="singleChoice"
-                android:dividerHeight="1dp"/>
+                android:dividerHeight="2dp"/>
 
         </LinearLayout>
     </RelativeLayout>

@@ -55,6 +55,7 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
     private TextView student_detail__inpreparation;
     private EditText editText_assessorName;
     private AlertDialog dialog;
+    private MyAdapterDefaultlistView myAdapterDefaultlistView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +68,13 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
 
     protected void onNewIntent(Intent intent) {
 //        init();
-        Log.d("EEEE", "Preparation: onNewIntent has been called!");
+        Log.d("EEEE", "Preparation: onNewIntent has been called! newnewnewnewnewnewnewnew");
+        myAdapterDefaultlistView.notifyDataSetChanged();
+        if(index_to_send == -999) {
+            resetDetailView();
+        } else {
+            showOtherInfo(index_to_send);
+        }
     }
 
     private void init() {
@@ -101,7 +108,7 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
         projectList = allFunctions.getProjectList();
 
         button_project_add = findViewById(R.id.button_plus_inpreparation);
-        MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
+        myAdapterDefaultlistView = new MyAdapterDefaultlistView
                 (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
         listView = findViewById(R.id.listView_inpreparation);
         listView.setAdapter(myAdapterDefaultlistView);
@@ -130,7 +137,7 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
                     button_sync_projectlist.setBackgroundResource(R.drawable.ic_sync_disabled);
                 } else {
                     resetDetailView();
-                    MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
+                    myAdapterDefaultlistView = new MyAdapterDefaultlistView
                             (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
                     listView = findViewById(R.id.listView_inpreparation);
                     listView.setAdapter(myAdapterDefaultlistView);
@@ -213,10 +220,10 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
             criteriaDetailString = criteriaDetailString + "Maximum mark: " + c.getMaximunMark() + "\n";
             criteriaDetailString = criteriaDetailString + "Mark increments: " + c.getMarkIncrement() + "\n\n";
         }
-        criteriaDetailString += "\nComments Only\n";
-        for (Criteria c : projectInfo.getCommentList()) {
-            criteriaDetailString = criteriaDetailString + c.getName() + "\n";
-        }
+//        criteriaDetailString += "\nComments Only\n";
+//        for (Criteria c : projectInfo.getCommentList()) {
+//            criteriaDetailString = criteriaDetailString + c.getName() + "\n";
+//        }
         textView_criteriaDetail.setText(criteriaDetailString);
         textView_asseccorDetail = findViewById(R.id.asseccor_detail__inpreparation);
         String assessorDetailString = new String();
@@ -289,10 +296,38 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
         textView_criteriaDetail.setText("Criteria details");
         textView_asseccorDetail.setText("Click the subtitle to manage markers");
         student_detail__inpreparation.setText("Click the subtitle to manage students");
-        button_about.setEnabled(false);
-        button_criteria.setEnabled(false);
-        button_student.setEnabled(false);
-        button_assessor.setEnabled(false);
+        button_about.setEnabled(true);
+        button_criteria.setEnabled(true);
+        button_student.setEnabled(true);
+        button_assessor.setEnabled(true);
+        button_about.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Assessment_Preparation_Activity.this,
+                        "Please select or add a project.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        button_criteria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Assessment_Preparation_Activity.this,
+                        "Please select or add a project.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        button_student.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Assessment_Preparation_Activity.this,
+                        "Please select or add a project.", Toast.LENGTH_SHORT).show();
+            }
+        });
+        button_assessor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(Assessment_Preparation_Activity.this,
+                        "Please select or add a project.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     //plus button click function
@@ -443,7 +478,7 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_projectlist_withdelete, parent, false);
-            TextView textView_listItem = (TextView) convertView.findViewById(R.id.textView_inlistView);
+            TextView textView_listItem = convertView.findViewById(R.id.textView_inlistView);
             textView_listItem.setText(mProjectList.get(position).getProjectName());
             Button button = convertView.findViewById(R.id.Bt_delete_inlist);
             button.setOnClickListener(new View.OnClickListener() {
@@ -528,23 +563,26 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
         } else if(requestCode == 2) {
             if(resultCode == Activity.RESULT_OK) {
                 Log.d("EEEE", "new project in assessment preparation.");
-                MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
-                        (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
-                listView.setAdapter(myAdapterDefaultlistView);
-                listView.setOnItemClickListener(this);
-                if(!(index_to_send == -999)) {
-                    showOtherInfo(index_to_send);
-                } else {
-                    resetDetailView();
-                }
+//                MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
+//                        (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
+//                listView.setAdapter(myAdapterDefaultlistView);
+//                listView.setOnItemClickListener(this);
+//                if(!(index_to_send == -999)) {
+//                    showOtherInfo(index_to_send);
+//                } else {
+//                    resetDetailView();
+//                }
+
+                myAdapterDefaultlistView.notifyDataSetChanged();
+                resetDetailView();
             }
         } else if(requestCode == 3) {
             if(resultCode == Activity.RESULT_OK) {
                 Log.d("EEEE", "edit about of old project.");
-                MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
-                        (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
-                listView.setAdapter(myAdapterDefaultlistView);
-                listView.setOnItemClickListener(this);
+                showOtherInfo(index_to_send);
+            } else if(resultCode == Activity.RESULT_CANCELED) {
+                Log.d("EEEE", "delete old project.");
+                myAdapterDefaultlistView.notifyDataSetChanged();
                 resetDetailView();
             }
         }
