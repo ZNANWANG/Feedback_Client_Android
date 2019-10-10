@@ -43,27 +43,21 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/textView_assessorName_gridItemMark">
-
-
-    </ListView>
-
-
+        android:scrollbars="vertical"
+        android:layout_below="@+id/textView_assessorName_gridItemMark" />
 
     <Button
         android:id="@+id/button_viewReport_gridItemMark"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/ic_button_background"
+        android:background="@color/colorPrimary"
         android:text="View Report"
-        android:textColor="#ffffff" />
-
-
-
+        android:textSize="20sp"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

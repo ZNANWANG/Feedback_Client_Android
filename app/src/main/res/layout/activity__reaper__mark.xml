@@ -1,164 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:toolbar="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:fillViewport="true" >
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="7"
-            android:background="@drawable/ic_header_background"
-            android:elevation="40dp">
-
-            <Button
-                android:id="@+id/button_back_title"
-                android:layout_width="34dp"
-                android:layout_height="25dp"
-                android:layout_centerVertical="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="15dp"
-                android:background="@drawable/ic_back" />
-
-            <TextView
-                android:id="@+id/textView_projectName_Title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="sans-serif-medium"
-                android:text="Projects Name"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:textColor="#ffffff"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/textView_projectName_Timer"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
-
-                <TextView
-                    android:id="@+id/textView_helloUser_Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="100"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="right|center_vertical"
-                    android:text="Hello, Xxxxxx Xxxxxx"
-                    android:textColor="#ffffff"
-                    android:layout_marginLeft="5dp"
-                    android:singleLine="true"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="10dp"
-                    app:autoSizeMaxTextSize="14dp"
-                    app:autoSizeStepGranularity="2dp" />
-
-                <View
-                    android:id="@+id/divider13"
-                    android:layout_width="1dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff"/>
-
-                <TextView
-                    android:id="@+id/textView10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:gravity="right|center_vertical"
-                    android:text="Help"
-                    android:textColor="#ffffff"
-                    android:singleLine="true"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="10dp"
-                    app:autoSizeMaxTextSize="14dp"
-                    app:autoSizeStepGranularity="2dp" />
-
-                <View
-                    android:id="@+id/divider14"
-                    android:layout_width="1dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_height="match_parent"
-                    android:background="#ffffff" />
-
-                <TextView
-                    android:id="@+id/textView_logout_Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="5dp"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Log Out"
-                    android:textColor="#ffffff"
-                    android:singleLine="true"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="10dp"
-                    app:autoSizeMaxTextSize="14dp"
-                    app:autoSizeStepGranularity="2dp" />
-
-            </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="7">
+            android:orientation="vertical">
 
-            <ImageView
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar_reaper_mark"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                toolbar:titleTextColor="@color/white"
+                app:titleTextAppearance="@style/ActionBarTitle">
+            </android.support.v7.widget.Toolbar>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_back" />
+                android:layout_weight="7">
 
-            <Button
-                android:id="@+id/button_fresh_markPage"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="6dp"
-                android:layout_marginRight="16dp"
-                android:background="@drawable/ic_refresh_button"
-                android:onClick="refresh_MarkPage"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
-                android:text="Refresh"
-                android:textColor="#ffffff"
-                android:textSize="14dp" />
-        </RelativeLayout>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/back" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1">
+                <Button
+                    android:id="@+id/button_fresh_markPage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/colorPrimary"
+                    android:onClick="refresh_MarkPage"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:text="Refresh"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </RelativeLayout>
 
-            <ImageView
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_back" />
+                android:layout_weight="1">
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/back" />
 
-            <GridView
-                android:id="@+id/listView_markItem_markPage"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:numColumns="3"
-                android:padding="30dp"
-                android:scrollbars="horizontal" />
+                <GridView
+                    android:id="@+id/listView_markItem_markPage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:numColumns="3"
+                    android:padding="30dp"
+                    android:scrollbars="horizontal" />
 
-        </RelativeLayout>
-    </LinearLayout>
-
-
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

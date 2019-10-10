@@ -6,7 +6,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,31 +19,32 @@ import android.widget.GridView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class Activity_Reaper_Mark extends Activity {
+public class Activity_Reaper_Mark extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfStudent;
     private int indexOfGroup;
     private ArrayList<Mark> marks;
     private Handler handler;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__reaper__mark);
 
+        initToolbar();
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
 
-        handler = new Handler(){
-            public void handleMessage(Message msg)
-            {
-                switch (msg.what)
-                {
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
                     case 301: //means getMark success
                         init();
                         break;
@@ -50,39 +55,48 @@ public class Activity_Reaper_Mark extends Activity {
         };
 
         AllFunctions.getObject().setHandler(handler);
+        AllFunctions.getObject().getMarks(AllFunctions.getObject().getProjectList().get(indexOfProject),
+                indexOfGroup, AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent).getNumber());
+    }
 
-        Button button_back_title = findViewById(R.id.button_back_title);
-        button_back_title.setOnClickListener(new View.OnClickListener() {
-            @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
+    private void initToolbar() {
+        mToolbar = findViewById(R.id.toolbar_reaper_mark);
+        mToolbar.setTitle("Assessment");
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 finish();
             }
         });
-
-
-            AllFunctions.getObject().getMarks(AllFunctions.getObject().getProjectList().get(indexOfProject),
-                    indexOfGroup, AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent).getNumber());
-        TextView textView_projectName = findViewById(R.id.textView_projectName_Title);
-        textView_projectName.setText(AllFunctions.getObject().getProjectList().get(indexOfProject).getProjectName());
-        TextView textView_helloUser = findViewById(R.id.textView_helloUser_Title);
-        textView_helloUser.setText("Hello, "+AllFunctions.getObject().getUsername());
-        TextView textView_logout = findViewById(R.id.textView_logout_Title);
-        textView_logout.setOnClickListener(new View.OnClickListener() {
+        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
             @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_logout:
+                        Toast.makeText(Activity_Reaper_Mark.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Reaper_Mark.this,
+                                Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
             }
         });
     }
 
-    private void init()
-    {
+    private void init() {
         marks = AllFunctions.getObject().getMarkListForMarkPage();
-        for(int i=0; i<marks.size(); i++)
-        {
-            System.out.println("第"+i+"个Mark的lectureName是"+marks.get(i).getLecturerName());
+        for (int i = 0; i < marks.size(); i++) {
+            System.out.println("第" + i + "个Mark的lectureName是" + marks.get(i).getLecturerName());
             for (int j = 0; j < marks.get(i).getCriteriaList().size(); j++)
                 System.out.println("第" + i + "个Mark的第" + j + "个criteria叫" + marks.get(i).getCriteriaList().get(j).getName());
         }
@@ -92,8 +106,7 @@ public class Activity_Reaper_Mark extends Activity {
 
     }
 
-    public void refresh_MarkPage(View v)
-    {
+    public void refresh_MarkPage(View v) {
         AllFunctions.getObject().setHandler(handler);
         AllFunctions.getObject().getMarks(AllFunctions.getObject().getProjectList().get(indexOfProject),
                 indexOfGroup, AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent).getNumber());
@@ -130,12 +143,11 @@ public class Activity_Reaper_Mark extends Activity {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.grid_item_mark_markpage, parent, false);
 
             TextView textView_totalMark = convertView.findViewById(R.id.textView_totalMark_gridItemMark);
-            textView_totalMark.setText(String.valueOf(markList.get(position).getTotalMark())+"%");
+            textView_totalMark.setText(String.valueOf(markList.get(position).getTotalMark()) + "%");
             TextView textView_assessorName = convertView.findViewById(R.id.textView_assessorName_gridItemMark);
             textView_assessorName.setText(markList.get(position).getLecturerName());
 
             //System.out.println("第"+position+"个Mark里面有"+markList.get(position).getCriteriaList().size()+"个criteria");
-
 
             ListView listView_gridCriteria = convertView.findViewById(R.id.listView_criteriaMark_gridItemMark);
             MyAdapterForGridItem myAdapterForGridItem = new MyAdapterForGridItem(markList.get(position), convertView.getContext());
@@ -146,15 +158,13 @@ public class Activity_Reaper_Mark extends Activity {
             button_viewReport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(indexOfGroup == -999) {
+                    if (indexOfGroup == -999) {
                         Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_editable_individual_report.class);
                         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                         intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                         intent.putExtra("indexOfMark", String.valueOf(position));
                         startActivity(intent);
-                    }
-                    else
-                    {
+                    } else {
                         Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_Editable_group_report.class);
                         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                         intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
@@ -164,15 +174,12 @@ public class Activity_Reaper_Mark extends Activity {
                 }
             });
 
-
             return convertView;
         }
     }
 
 
-
     public class MyAdapterForGridItem extends BaseAdapter {
-
         private Context mContext;
         private Mark markItem;
 
@@ -198,11 +205,11 @@ public class Activity_Reaper_Mark extends Activity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-          //  System.out.println("这是第"+position+"个criteria");
+            //  System.out.println("这是第"+position+"个criteria");
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_criteria_andmark, parent, false);
 
             TextView textView_markWithTotalMark = convertView.findViewById(R.id.textView_markTotalMark_listItemCriteriaMark);
-            textView_markWithTotalMark.setText(markItem.getMarkList().get(position)+"/"+
+            textView_markWithTotalMark.setText(markItem.getMarkList().get(position) + "/" +
                     markItem.getCriteriaList().get(position).getMaximunMark());
             TextView textView_criteriaName = convertView.findViewById(R.id.textView_criteriaName_listItemCriteriaMark);
             textView_criteriaName.setText(markItem.getCriteriaList().get(position).getName());
