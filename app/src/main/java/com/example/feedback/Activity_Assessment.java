@@ -837,8 +837,5 @@ public class Activity_Assessment extends Activity implements View.OnClickListene
                 }
             }
         }
-
     }
-
-
 }

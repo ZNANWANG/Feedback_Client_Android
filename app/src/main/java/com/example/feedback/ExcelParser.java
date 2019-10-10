@@ -1,5 +1,6 @@
 package com.example.feedback;
 
+import android.content.Intent;
 import android.util.Log;
 
 import org.apache.poi.hssf.usermodel.HSSFCell;
@@ -69,6 +70,10 @@ public class ExcelParser {
                     if (myCell.getColumnIndex() == 3) {
                         newCriteria.setLongText(myCell.toString());
                     }
+
+                    if (myCell.getColumnIndex() == 4) {
+                        newCriteria.setGrade(Double.valueOf(myCell.toString()).intValue());
+                    }
                 }
                 Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myRow.getRowNum());
                 criteriaList.add(newCriteria);
@@ -92,6 +97,7 @@ public class ExcelParser {
             String newSubsectionName = criteriaList.get(i).getSubSection().trim();
             String newShortText = criteriaList.get(i).getShortText().trim();
             String newLongText = criteriaList.get(i).getLongText().trim();
+            int newGrade = criteriaList.get(i).getGrade();
             if(!(newCriteriaName.equals("") || newSubsectionName.equals("") || newShortText.equals("") || newLongText.equals(""))) {
 //                Log.d("EEEE", newCriteriaName);
                 int criteriaIndex = checkCriteriaName(newCriteriaName, customisedCriteriaList);
@@ -111,6 +117,7 @@ public class ExcelParser {
                     customisedLongTextList.add(newLongText);
 
                     customisedShortText.setLongtext(customisedLongTextList);
+                    customisedShortText.setGrade(newGrade);
                     customisedShortTextList.add(customisedShortText);
 
                     customisedSubsection.setShortTextList(customisedShortTextList);
@@ -129,6 +136,7 @@ public class ExcelParser {
                         ArrayList<ShortText> customisedShortTextList = new ArrayList<>();
                         ShortText customisedShortText = new ShortText();
                         customisedShortText.setName(newShortText);
+                        customisedShortText.setGrade(newGrade);
 
                         ArrayList<String> customisedLongTextList = new ArrayList<>();
                         customisedLongTextList.add(newLongText);
@@ -141,10 +149,12 @@ public class ExcelParser {
                     } else {
 //                        Log.d("EEEE", newShortText);
                         ArrayList<ShortText> customisedShortTextList = customisedSubSectionList.get(subsectionIndex).getShortTextList();
-                        int shortTextIndex = checkShortText(newShortText, customisedShortTextList);
+                        int shortTextIndex = checkShortText(newShortText, newGrade, customisedShortTextList);
+                        Log.d("EEEE", newGrade + "");
                         if(shortTextIndex == -1) {
                             ShortText customisedShortText = new ShortText();
                             customisedShortText.setName(newShortText);
+                            customisedShortText.setGrade(newGrade);
 
                             ArrayList<String> customisedLongTextList = new ArrayList<>();
                             customisedLongTextList.add(newLongText);
@@ -174,6 +184,7 @@ public class ExcelParser {
                 Log.d("EEEE", "subsection: " + customisedCriteriaList.get(i).getSubsectionList().get(a).getName());
                 for(int b = 0; b < customisedCriteriaList.get(i).getSubsectionList().get(a).getShortTextList().size(); b++) {
                     Log.d("EEEE", "shorttext: " + customisedCriteriaList.get(i).getSubsectionList().get(a).getShortTextList().get(b).getName());
+                    Log.d("EEEE", "shorttext grade: " + customisedCriteriaList.get(i).getSubsectionList().get(a).getShortTextList().get(b).getGrade());
                     for(int c = 0; c < customisedCriteriaList.get(i).getSubsectionList().get(a).getShortTextList().get(b).getLongtext().size(); c++) {
                         Log.d("EEEE", "longtext: " + customisedCriteriaList.get(i).getSubsectionList().get(a).getShortTextList().get(b).getLongtext().get(c));
                     }
@@ -205,10 +216,11 @@ public class ExcelParser {
         return -1;
     }
 
-    public int checkShortText(String newShortText, ArrayList<ShortText> customisedShortTextList) {
+    public int checkShortText(String newShortText, int newGrade, ArrayList<ShortText> customisedShortTextList) {
         for(int i = 0; i < customisedShortTextList.size(); i++) {
             String oldShortText = customisedShortTextList.get(i).getName();
-            if(oldShortText.equals(newShortText)) {
+            int oldGrade = customisedShortTextList.get(i).getGrade();
+            if(oldShortText.equals(newShortText) && oldGrade == newGrade) {
                 return i;
             }
         }
@@ -267,6 +279,10 @@ public class ExcelParser {
 
                     if (myCell.getColumnIndex() == 3) {
                         newCriteria.setLongText(myCell.toString());
+                    }
+
+                    if (myCell.getColumnIndex() == 4) {
+                        newCriteria.setGrade(Double.valueOf(myCell.toString()).intValue());
                     }
 
                     Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myCell.getColumnIndex());

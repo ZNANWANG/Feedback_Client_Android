@@ -5,6 +5,7 @@ public class CustomisedCriteria {
     private String subSection;
     private String shortText;
     private String longText;
+    private int grade;
 
     @Override
     public String toString() {
@@ -13,6 +14,7 @@ public class CustomisedCriteria {
                 ", subSection='" + subSection + '\'' +
                 ", shortText='" + shortText + '\'' +
                 ", longText='" + longText + '\'' +
+                ", grade='" + grade + '\'' +
                 '}';
     }
 
@@ -21,6 +23,7 @@ public class CustomisedCriteria {
         subSection = "";
         shortText = "";
         longText = "";
+        grade = 0;
     }
 
     public String getCriteria() {
@@ -39,6 +42,10 @@ public class CustomisedCriteria {
         return longText;
     }
 
+    public int getGrade() {
+        return grade;
+    }
+
     public void setSubSection(String subSection) {
         this.subSection = subSection;
     }
@@ -53,6 +60,10 @@ public class CustomisedCriteria {
 
     public void setCriteria(String criteria) {
         this.criteria = criteria;
+    }
+
+    public void setGrade(int grade) {
+        this.grade = grade;
     }
 
 }
