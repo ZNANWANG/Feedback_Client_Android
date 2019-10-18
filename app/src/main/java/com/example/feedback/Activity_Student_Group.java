@@ -1,14 +1,14 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -42,7 +42,16 @@ public class Activity_Student_Group extends AppCompatActivity {
     private String middleName;
     private String surname;
     private String email;
+    private String groupNumber;
     private Toolbar mToolbar;
+    private AlertDialog dialog;
+    private EditText editTextStudentID;
+    private EditText editTextGivenname;
+    private EditText editTextMiddleName;
+    private EditText editTextFamilyname;
+    private EditText editTextEmail;
+    private EditText editTextGroup;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +66,61 @@ public class Activity_Student_Group extends AppCompatActivity {
     }
 
     public void init() {
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 221:
+                        for (int i = 0; i < students.size(); i++) {
+                            if (students.get(i).getNumber().equals(studentID)) {
+                                if (!groupNumber.equals("")) {
+                                    students.get(i).setGroup(Integer.parseInt(groupNumber));
+                                    AllFunctions.getObject().groupStudent(project, studentID, Integer.parseInt(groupNumber));
+                                }
+                            }
+                        }
+                        Toast.makeText(getApplicationContext(), "Successfully add a student.", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        Log.d("EEEE", "add student");
+                        myAdapter.notifyDataSetChanged();
+                        Collections.sort(project.getStudentInfo(), new SortByGroup());
+                        break;
+                    case 222:
+                        Toast.makeText(getApplicationContext(), "Fail to add the student. Please try again.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 223:
+                        if (!groupNumber.equals("")) {
+                            AllFunctions.getObject().groupStudent(project, studentID, Integer.parseInt(groupNumber));
+                            students.get(indexOfStudent).setGroup(Integer.parseInt(groupNumber));
+                        }
+                        Toast.makeText(getApplicationContext(), "Successfully edit the info of a student.", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        Log.d("EEEE", "edit student");
+                        myAdapter.notifyDataSetChanged();
+                        Collections.sort(project.getStudentInfo(), new SortByGroup());
+                        break;
+                    case 224:
+                        Toast.makeText(getApplicationContext(), "Fail to edit the student. Please try again.", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 225:
+                        Toast.makeText(getApplicationContext(), "Successfully upload the student list.", Toast.LENGTH_SHORT).show();
+                        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+                        students = project.getStudentInfo();
+                        myAdapter.notifyDataSetChanged();
+                        break;
+                    case 226:
+                        Toast.makeText(getApplicationContext(), "One or more students already exist. Please check and try again.", Toast.LENGTH_SHORT).show();
+                        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+                        students = project.getStudentInfo();
+                        myAdapter.notifyDataSetChanged();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        AllFunctions.getObject().setHandler(handler);
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
-        listView = (ListView) findViewById(R.id.listView_ingroupStudent);
+        listView = findViewById(R.id.listView_ingroupStudent);
         students = project.getStudentInfo();
         myAdapter = new MyAdapter(students, this);
         listView.setAdapter(myAdapter);
@@ -122,81 +184,14 @@ public class Activity_Student_Group extends AppCompatActivity {
                 init();
             }
         } else {
-            Toast.makeText(getApplicationContext(),
-                    "Please choose only 1 student to delete.",
-                    Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    public void back_studentManagement(View view) {
-        finish();
-    }
-
-    public void save_studentManagement(View view) {
-        Intent intent = new Intent(this, Assessment_Preparation_Activity.class).
-                setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
-    }
-
-    public void group_studentManagement(View v) {
-        if (listView.getCheckedItemCount() > 1) {
-            SparseBooleanArray checkedItemsStudents = listView.getCheckedItemPositions();
-            if (checkedItemsStudents != null) {
-                int maxGroupNum = AllFunctions.getObject().getMaxGroupNumber(indexOfProject);
-                for (int i = 0; i < checkedItemsStudents.size(); i++) {
-                    if (checkedItemsStudents.valueAt(i)) {
-                        project.getStudentInfo().get(i).setGroup(maxGroupNum + 1);
-                        AllFunctions.getObject().groupStudent(project,
-                                project.getStudentInfo().get(i).getNumber(),
-                                maxGroupNum + 1);
-                    }
-                }
-                Collections.sort(project.getStudentInfo(), new SortByGroup());
-                for (int i = 0; i < project.getStudentInfo().size(); i++)
-                    listView.setItemChecked(i, false);
-                myAdapter.notifyDataSetChanged();
-            }
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    "Please choose more than 1 students to form a group.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Please choose only 1 student to delete.", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-    public void unGroup_studentManagement(View v) {
-        if (listView.getCheckedItemCount() > 0) {
-            SparseBooleanArray checkedItemsStudents = listView.getCheckedItemPositions();
-            if (checkedItemsStudents != null) {
-                for (int i = 0; i < checkedItemsStudents.size(); i++) {
-                    if (checkedItemsStudents.valueAt(i)) {
-                        project.getStudentInfo().get(i).setGroup(-999);
-                        AllFunctions.getObject().groupStudent(project,
-                                project.getStudentInfo().get(i).getNumber(),
-                                -999);
-                    }
-                }
-                Collections.sort(project.getStudentInfo(), new SortByGroup());
-                for (int i = 0; i < project.getStudentInfo().size(); i++)
-                    listView.setItemChecked(i, false);
-                myAdapter.notifyDataSetChanged();
-            }
-        } else {
-            Toast.makeText(getApplicationContext(),
-                    "Please choose at least 1 student to unGroup.",
-                    Toast.LENGTH_SHORT).show();
-
-        }
-    }
-
 
     public class MyAdapter extends BaseAdapter {
 
         private Context mContext;
         private ArrayList<StudentInfo> studentList;
-        int position_use;
 
         public MyAdapter(ArrayList<StudentInfo> studentList, Context context) {
             this.studentList = studentList;
@@ -221,11 +216,12 @@ public class Activity_Student_Group extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_student_group, parent, false);
-            TextView textView_groupNum = (TextView) convertView.findViewById(R.id.textView_groupnum_instudentlist);
-            if (studentList.get(position).getGroup() == -999)
+            TextView textView_groupNum = convertView.findViewById(R.id.textView_groupnum_instudentlist);
+            if (studentList.get(position).getGroup() == -999) {
                 textView_groupNum.setText("");
-            else
+            } else {
                 textView_groupNum.setText(String.valueOf(studentList.get(position).getGroup()));
+            }
 
             TextView textView_studentID = convertView.findViewById(R.id.textView_studentID_instudentlist);
             textView_studentID.setText(studentList.get(position).getNumber());
@@ -234,11 +230,11 @@ public class Activity_Student_Group extends AppCompatActivity {
             TextView textView_studentEmail = convertView.findViewById(R.id.textView_email_instudentlist);
             textView_studentEmail.setText(studentList.get(position).getEmail());
 
-
-            if (listView.isItemChecked(position))
+            if (listView.isItemChecked(position)) {
                 convertView.setBackgroundColor(Color.parseColor("#D2EBF7"));
-            else
+            } else {
                 convertView.setBackgroundColor(Color.TRANSPARENT);
+            }
             return convertView;
         }
     }
@@ -268,9 +264,8 @@ public class Activity_Student_Group extends AppCompatActivity {
                     Uri uri = data.getData();
                     Log.d(TAG, "File Uri: " + uri.toString());
                     // Get the path
-
                     path = FileUtils.getPath(this, uri);
-                    AllFunctions.getObject().readExcel(project, path);
+                    AllFunctions.getObject().readStudentsExcel(project, path);
                     System.out.println("call the readExcel method: " + path);
                     init();
                     // Get the file instance
@@ -282,61 +277,78 @@ public class Activity_Student_Group extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-
     //button addStudent click.
     public void addStudent(View v) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Group.this);//获得layoutInflater对象
         final View view = layoutInflater.from(Activity_Student_Group.this).inflate(R.layout.dialog_add_student, null);//获得view对象
 
-        Dialog dialog = new AlertDialog.Builder(Activity_Student_Group.this).setTitle("Add Student").setView(view).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Student_Group.this);
+        builder.setView(view);
+        builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
-            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
 
-                EditText editText_studentID_addStudent = (EditText) view.findViewById(R.id.editText_studentID_addStudent);//获取控件
-                EditText editText_firstName_addStudent = (EditText) view.findViewById(R.id.editText_firstName_addStudent);//获取控件
-                EditText editText_middleName_addStudent = (EditText) view.findViewById(R.id.editText_middleName_addStudent);//获取控件
-                EditText editText_surname_addStudent = (EditText) view.findViewById(R.id.editText_surname_addStudent);//获取控件
-                EditText editText_email_addStudent = (EditText) view.findViewById(R.id.editText_email_addStudent);//获取控件
+            }
+        });
 
-                studentID = editText_studentID_addStudent.getText().toString();
-                firstName = editText_firstName_addStudent.getText().toString();
-                middleName = editText_middleName_addStudent.getText().toString();
-                surname = editText_surname_addStudent.getText().toString();
-                email = editText_email_addStudent.getText().toString();
+        dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setTitle("Add Student");
+        dialog.show();
+
+        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        students = project.getStudentInfo();
+        editTextStudentID = view.findViewById(R.id.editText_studentID_addStudent);
+        editTextGivenname = view.findViewById(R.id.editText_firstName_addStudent);
+        editTextMiddleName = view.findViewById(R.id.editText_middleName_addStudent);
+        editTextFamilyname = view.findViewById(R.id.editText_surname_addStudent);
+        editTextEmail = view.findViewById(R.id.editText_email_addStudent);
+        editTextGroup = view.findViewById(R.id.editText_group_addStudent);
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                studentID = editTextStudentID.getText().toString().trim();
+                firstName = editTextGivenname.getText().toString().trim();
+                middleName = editTextMiddleName.getText().toString().trim();
+                surname = editTextFamilyname.getText().toString().trim();
+                email = editTextEmail.getText().toString().trim();
+                groupNumber = editTextGroup.getText().toString().trim();
 
                 String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.+[a-z]+";
 
                 if (studentID.equals("")) {
-                    Toast.makeText(getApplicationContext(), "StudentID cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Student ID cannot be empty", Toast.LENGTH_SHORT).show();
                 } else if (firstName.equals("")) {
-                    Toast.makeText(getApplicationContext(), "FirstName cannot be empty", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getApplicationContext(), "Given name cannot be empty", Toast.LENGTH_SHORT).show();
                 } else if (surname.equals("")) {
-                    Toast.makeText(getApplicationContext(), "LastName cannot be empty", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Family name cannot be empty", Toast.LENGTH_SHORT).show();
                 } else if (!email.matches(emailPattern)) {
                     Toast.makeText(getApplicationContext(), "Please input a valid Email", Toast.LENGTH_SHORT).show();
                 } else {
                     if (AllFunctions.getObject().searchStudent(project, studentID) == -999) {
                         AllFunctions.getObject().addStudent(project, studentID, firstName, middleName, surname, email);
-                        init();
                     } else {
                         Toast.makeText(getApplicationContext(), "student with ID:" + studentID + " is already exits.", Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
-        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-
+        });
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                // TODO Auto-generated method stub
-
+            public void onClick(View view) {
+                dialog.dismiss();
             }
-        }).create();
-        dialog.show();
+        });
     }
-
 
     public void editStudent_inStudentManagement(View v) {
 
@@ -350,29 +362,58 @@ public class Activity_Student_Group extends AppCompatActivity {
                     }
                 }
 
-                LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Group.this);//获得layoutInflater对象
-                View view = layoutInflater.from(Activity_Student_Group.this).inflate(R.layout.dialog_add_student, null);//获得view对象
+                LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Group.this);
+                View view = layoutInflater.from(Activity_Student_Group.this).inflate(R.layout.dialog_add_student, null);
 
-                EditText editText_studentID_addStudent = (EditText) view.findViewById(R.id.editText_studentID_addStudent);//获取控件
-                editText_studentID_addStudent.setEnabled(false);
-                editText_studentID_addStudent.setText(students.get(indexOfStudent).getNumber());
-                EditText editText_firstName_addStudent = (EditText) view.findViewById(R.id.editText_firstName_addStudent);//获取控件
-                editText_firstName_addStudent.setText(students.get(indexOfStudent).getFirstName());
-                EditText editText_middleName_addStudent = (EditText) view.findViewById(R.id.editText_middleName_addStudent);//获取控件
-                editText_middleName_addStudent.setText(students.get(indexOfStudent).getMiddleName());
-                EditText editText_surname_addStudent = (EditText) view.findViewById(R.id.editText_surname_addStudent);//获取控件
-                editText_surname_addStudent.setText(students.get(indexOfStudent).getSurname());
-                EditText editText_email_addStudent = (EditText) view.findViewById(R.id.editText_email_addStudent);//获取控件
-                editText_email_addStudent.setText(students.get(indexOfStudent).getEmail());
+                AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Student_Group.this);
+                builder.setView(view);
+                builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                Dialog dialog = new AlertDialog.Builder(Activity_Student_Group.this).setTitle("Edit Student").setView(view).setPositiveButton("Done", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
 
-                        studentID = editText_studentID_addStudent.getText().toString();
-                        firstName = editText_firstName_addStudent.getText().toString();
-                        middleName = editText_middleName_addStudent.getText().toString();
-                        surname = editText_surname_addStudent.getText().toString();
-                        email = editText_email_addStudent.getText().toString();
+                    }
+                });
+
+                dialog = builder.create();
+                dialog.setCancelable(false);
+                dialog.setTitle("Edit Student");
+                dialog.show();
+
+                project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+                students = project.getStudentInfo();
+                editTextStudentID = view.findViewById(R.id.editText_studentID_addStudent);
+                editTextStudentID.setEnabled(false);
+                editTextStudentID.setText(students.get(indexOfStudent).getNumber());
+                editTextGivenname = view.findViewById(R.id.editText_firstName_addStudent);
+                editTextGivenname.setText(students.get(indexOfStudent).getFirstName());
+                editTextMiddleName = view.findViewById(R.id.editText_middleName_addStudent);
+                editTextMiddleName.setText(students.get(indexOfStudent).getMiddleName());
+                editTextFamilyname = view.findViewById(R.id.editText_surname_addStudent);
+                editTextFamilyname.setText(students.get(indexOfStudent).getSurname());
+                editTextEmail = view.findViewById(R.id.editText_email_addStudent);
+                editTextEmail.setText(students.get(indexOfStudent).getEmail());
+                editTextGroup = view.findViewById(R.id.editText_group_addStudent);
+                if (students.get(indexOfStudent).getGroup() == -999) {
+                    editTextGroup.setText("");
+                } else {
+                    editTextGroup.setText(students.get(indexOfStudent).getGroup() + "");
+                }
+
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        studentID = editTextStudentID.getText().toString().trim();
+                        firstName = editTextGivenname.getText().toString().trim();
+                        middleName = editTextMiddleName.getText().toString().trim();
+                        surname = editTextFamilyname.getText().toString().trim();
+                        email = editTextEmail.getText().toString().trim();
+                        groupNumber = editTextGroup.getText().toString().trim();
 
                         String emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\\.+[a-z]+";
 
@@ -386,26 +427,20 @@ public class Activity_Student_Group extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Please input a valid Email", Toast.LENGTH_SHORT).show();
                         } else {
                             AllFunctions.getObject().editStudent(project, studentID, firstName, middleName, surname, email);
-                            students.get(indexOfStudent).setStudentInfo(studentID, firstName,
-                                    middleName, surname, email);
-                            init();
+                            students.get(indexOfStudent).setStudentInfo(studentID, firstName, middleName, surname, email);
                         }
                     }
-                }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                });
 
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // TODO Auto-generated method stub
-
+                    public void onClick(View view) {
+                        dialog.dismiss();
                     }
-                }).create();
-                dialog.show();
-
+                });
             }
         } else {
-            Toast.makeText(getApplicationContext(),
-                    "Please choose only 1 student to edit.",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Please choose only 1 student to edit.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -426,7 +461,4 @@ public class Activity_Student_Group extends AppCompatActivity {
         }
 
     }
-
-
 }
-

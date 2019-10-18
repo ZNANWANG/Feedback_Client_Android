@@ -17,23 +17,25 @@
         android:hint="Student ID"
         android:gravity="center"
         android:textSize="16dp"
+        android:inputType="number"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="8dp"
         android:paddingRight="16dp"/>
 
     <EditText
-        android:id="@+id/editText_firstName_addStudent"
+        android:id="@+id/editText_surname_addStudent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="8dp"
         android:paddingRight="16dp"
-        android:hint=" First Name"
+        android:hint=" Family Name"
         android:gravity="center"
         android:minHeight="45dp"
         android:textSize="16dp" />
+
     <EditText
         android:id="@+id/editText_middleName_addStudent"
         android:layout_width="fill_parent"
@@ -46,18 +48,34 @@
         android:gravity="center"
         android:minHeight="45dp"
         android:textSize="16dp" />
+
     <EditText
-        android:id="@+id/editText_surname_addStudent"
+        android:id="@+id/editText_firstName_addStudent"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:paddingBottom="8dp"
         android:paddingRight="16dp"
-        android:hint=" Surname"
+        android:hint=" Given Name"
         android:gravity="center"
         android:minHeight="45dp"
         android:textSize="16dp" />
+
+    <EditText
+        android:id="@+id/editText_group_addStudent"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp"
+        android:paddingRight="16dp"
+        android:hint=" Group Number (optional)"
+        android:inputType="number"
+        android:gravity="center"
+        android:minHeight="45dp"
+        android:textSize="16dp" />
+
     <EditText
         android:id="@+id/editText_email_addStudent"
         android:layout_width="fill_parent"

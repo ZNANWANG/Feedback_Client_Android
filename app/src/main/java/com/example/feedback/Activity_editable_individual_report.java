@@ -27,13 +27,6 @@ public class Activity_editable_individual_report extends AppCompatActivity {
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfMark = Integer.parseInt(intent.getStringExtra("indexOfMark"));
-
-        Button button_finalReport = findViewById(R.id.button_finalReport_report);
-        if (!AllFunctions.getObject().getProjectList().get(indexOfProject).getAssistant().get(0).equals
-                (AllFunctions.getObject().getMyEmail())) {
-            button_finalReport.setVisibility(View.INVISIBLE);
-        }
-
         init();
     }
 
@@ -75,6 +68,22 @@ public class Activity_editable_individual_report extends AppCompatActivity {
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         StudentInfo student = AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent);
         Mark mark = AllFunctions.getObject().getMarkListForMarkPage().get(indexOfMark);
+
+        Button button_finalReport = findViewById(R.id.button_finalReport_report);
+        button_finalReport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(Activity_editable_individual_report.this, Activity_SendReport_Individual.class);
+                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                intent.putExtra("indexOfMark", String.valueOf(indexOfMark));
+                startActivity(intent);
+            }
+        });
+        if (!AllFunctions.getObject().getProjectList().get(indexOfProject).getAssistant().get(0).equals
+                (AllFunctions.getObject().getMyEmail())) {
+            button_finalReport.setVisibility(View.INVISIBLE);
+        }
         Button button_editReport_individual = findViewById(R.id.button_edit_report);
         button_editReport_individual.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,13 +152,4 @@ public class Activity_editable_individual_report extends AppCompatActivity {
         TextView textView_pdfContent = findViewById(R.id.textView_pdfContent_report);
         textView_pdfContent.setText(Html.fromHtml(htmlString));
     }
-
-    public void finalReport(View view) {
-        Intent intent = new Intent(Activity_editable_individual_report.this, Activity_SendReport_Individual.class);
-        intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-        intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-        intent.putExtra("indexOfMark", String.valueOf(indexOfMark));
-        startActivity(intent);
-    }
-
 }

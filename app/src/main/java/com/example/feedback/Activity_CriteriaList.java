@@ -124,6 +124,7 @@ public class Activity_CriteriaList extends AppCompatActivity {
     }
 
     private void init() {
+        Log.d("EEEE", "criteria list init");
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -138,6 +139,7 @@ public class Activity_CriteriaList extends AppCompatActivity {
                                 "Sync success.", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
+                        break;
                     default:
                         break;
                 }
@@ -324,8 +326,12 @@ public class Activity_CriteriaList extends AppCompatActivity {
                         case 1:
                             Log.d("EEEE", "1->0");
                             Criteria criteria_Temporary = project.getCriteria().get(source_criteriaIndex);
+                            Log.d("EEEE", criteria_Temporary.getName());
                             project.getCriteria().remove(source_criteriaIndex);
                             defaultCriteriaList.add(criteria_Temporary);
+                            for(int i = 0; i < defaultCriteriaList.size(); i++) {
+                                Log.d("EEEE", "default criteria list: " + defaultCriteriaList.get(i).getName());
+                            }
                             break;
                         case 2:
                             Log.d("EEEE", "2->0");
@@ -336,12 +342,14 @@ public class Activity_CriteriaList extends AppCompatActivity {
                         default:
                             break;
                     }
-                    init();
+                    myAdapter1.notifyDataSetChanged();
+                    myAdapter2.notifyDataSetChanged();
                     // Invalidates the view to force a redraw
                     v.invalidate();
                     // Returns true. DragEvent.getResult() will return true.
                     return true;
                 case DragEvent.ACTION_DRAG_ENDED:
+                    Log.d("EEEE", "drag ended");
                     // Turns off any color tinting
                     // Invalidates the view to force a redraw
                     v.invalidate();
@@ -406,7 +414,8 @@ public class Activity_CriteriaList extends AppCompatActivity {
                         default:
                             break;
                     }
-                    init();
+                    myAdapter1.notifyDataSetChanged();
+                    myAdapter2.notifyDataSetChanged();
                     // Invalidates the view to force a redraw
                     v.invalidate();
                     // Returns true. DragEvent.getResult() will return true.
@@ -599,7 +608,6 @@ public class Activity_CriteriaList extends AppCompatActivity {
                     Uri uri = data.getData();
                     Log.d("EEEE", "File Uri: " + uri.toString());
                     // Get the path
-
                     path = FileUtils.getPath(this, uri);
                     ArrayList<Criteria> uploadCriteriaList = new ArrayList<>();
                     uploadCriteriaList = AllFunctions.getObject().readCriteriaExcel(project, path);

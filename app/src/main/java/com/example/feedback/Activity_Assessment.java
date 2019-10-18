@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,50 +31,39 @@ import java.util.ArrayList;
 public class Activity_Assessment extends AppCompatActivity implements View.OnClickListener {
 
     private Toolbar mToolbar;
-
     MyAdapter myAdapter;
     MyAdapter3 myAdapter3;
-
     int indexOfProject;
     int indexOfStudent;
     int indexOfGroup;
     ArrayList<Integer> studentList;
-
     private static ProjectInfo project;
     ArrayList<Criteria> criteriaList;
     ArrayList<Criteria> commentList;
-
     ListView lv_individual;
     ListView lv_otherComment;
     TextView tv_time;
     Button btn_assessment_start;
     Button btn_assessment_refresh;
-
-
     TextView tv_assessment_student;
     TextView tv_assessment_total_mark;
-
     SeekBar sb_mark;
     TextView tv_mark;
     Double totalMark = 0.0;
     int totalWeighting = 0;
-
-
     EditText et_other_comment;
-
-
     private long durationTime = 0;
     private long warningTime = 0;
     private boolean isPause = false;
     private CountDownTimer countDownTimer;
     private long leftTime = 0;
     private int flag = 0;
-
-
     static private int matrixOfMarkedCriteria[][];
     static private int matrixOfCommentOnly[][];
     static private int matrixCriteriaLongtext[][];
     static private int matrixCommentLongText[][];
+    private AllFunctions allFunctions;
+    private Handler handler;
 
 
     @Override
@@ -88,7 +79,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
 
         tv_assessment_student = findViewById(R.id.tv_assessment_student);
-        studentList = new ArrayList<Integer>();
+        studentList = new ArrayList<>();
 
         if (indexOfGroup == -999) {
             tv_assessment_student.setText(project.getStudentInfo().get(indexOfStudent).getNumber() + " " +
@@ -96,6 +87,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     project.getStudentInfo().get(indexOfStudent).getMiddleName() + " " +
                     project.getStudentInfo().get(indexOfStudent).getSurname());
             studentList.add(indexOfStudent);
+            Log.d("EEEE", "index of student" + indexOfStudent);
         } else {
             tv_assessment_student.setText("Group " + indexOfGroup);
             for (int i = 0; i < project.getStudentInfo().size(); i++) {
@@ -103,9 +95,12 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     studentList.add(i);
                 }
             }
+            Log.d("EEEE", "student list" + studentList);
         }
 
-        tv_assessment_total_mark = (TextView) findViewById(R.id.tv_assessment_total_mark);
+        tv_assessment_total_mark = findViewById(R.id.tv_assessment_total_mark);
+
+        Log.d("EEEE", "student's mark: " + project.getStudentInfo().get(studentList.get(0)).getMark());
 
         if (project.getStudentInfo().get(studentList.get(0)).getMark() != null) {
 
@@ -113,13 +108,9 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
             for (int m = 0; m < studentList.size(); m++) {
                 for (int n = 0; n < project.getCriteria().size(); n++) {
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCriteriaList().get(n).getSubsectionList().clear();
-
-
                 }
                 for (int n = 0; n < project.getCommentList().size(); n++) {
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCommentList().get(n).getSubsectionList().clear();
-
-
                 }
             }
 
@@ -147,7 +138,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCriteriaList().get(n).setMaximunMark(project.getCriteria().get(n).getMaximunMark());
                     project.getStudentInfo().get(studentList.get(m)).getMark().getMarkList().add(0.0);
 
-
                 }
                 for (int n = 0; n < project.getCommentList().size(); n++) {
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCommentList().add(new Criteria());
@@ -167,7 +157,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
         init();
 
 
-        tv_time = (TextView) findViewById(R.id.tv_time);
+        tv_time = findViewById(R.id.tv_time);
         tv_time.setText(String.format("%02d", durationTime / 1000 / 60) + ":" + String.format("%02d", durationTime / 1000 % 60));
 
         btn_assessment_start = findViewById(R.id.btn_assessment_start);
@@ -199,7 +189,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                finish();
+                allFunctions.syncProjectList();
             }
         });
         mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
@@ -222,7 +212,20 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
     }
 
     public void init() {
-
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 210:
+                        Toast.makeText(Activity_Assessment.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    default:
+                        break;
+                }
+            }
+        };
+        allFunctions = AllFunctions.getObject();
+        allFunctions.setHandler(handler);
         criteriaList = project.getCriteria();
         commentList = project.getCommentList();
         durationTime = project.getDurationMin() * 60000 + project.getDurationSec() * 1000;

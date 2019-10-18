@@ -108,4 +108,19 @@ public class StudentInfo {
     public int getGroup() {
         return group;
     }
+
+    @Override
+    public String toString() {
+        return "StudentInfo{" +
+                "number='" + number + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleName='" + middleName + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", totalMark=" + totalMark +
+                ", mark=" + mark +
+                ", group=" + group +
+                ", sendEmail=" + sendEmail +
+                '}';
+    }
 }

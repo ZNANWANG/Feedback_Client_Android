@@ -27,8 +27,8 @@ public class CommunicationForClient {
     AllFunctions functions;
 
     public CommunicationForClient(AllFunctions functions) {
-        host = "http://10.13.69.223:8080/RapidFeedback/";
-//		host = "http://10.13.145.19:8080/rapidfeedback/";
+        host = "http://10.13.88.39:8080/RapidFeedback/";
+//        host = "http://192.168.0.13:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
     }
@@ -294,6 +294,7 @@ public class CommunicationForClient {
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String updateStudent_ACK = jsonReceive.get("updateStudent_ACK").toString();
+            functions.addStudentACK(updateStudent_ACK);
             if (updateStudent_ACK.equals("true")) {
                 ;
             } else {
@@ -332,6 +333,7 @@ public class CommunicationForClient {
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String updateStudent_ACK = jsonReceive.get("updateStudent_ACK").toString();
+            functions.editStudentACK(updateStudent_ACK);
             if (updateStudent_ACK.equals("true")) {
                 ;
             } else {
@@ -613,10 +615,11 @@ public class CommunicationForClient {
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
 
-            System.out.println("Receive: " + receive); //just for test
+            Log.d("EEEE", "Receive: " + receive); //just for test
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String updateStudent_ACK = jsonReceive.get("updateStudent_ACK").toString();
+            functions.uploadStudentsACK(updateStudent_ACK);
             if (updateStudent_ACK.equals("true")) {
 
             } else {

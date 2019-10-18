@@ -6,7 +6,9 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.alibaba.fastjson.JSON;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -79,7 +81,7 @@ public class AllFunctions {
         this.projectList = projectList;
         if (projectList.size() > 0)
             sortStudent();
-        Log.d("EEEE", this.projectList.toString()+"sync success");
+        Log.d("EEEE", this.projectList.toString() + "sync success");
         handlerAllfunction.sendEmptyMessage(210);
     }
 
@@ -168,7 +170,7 @@ public class AllFunctions {
 
     public void setAboutACK(String ack) {
         Log.d("EEEE", "set about ack");
-        if(ack.equals("true")) {
+        if (ack.equals("true")) {
             Log.d("EEEE", "set about ack true");
             handlerAllfunction.sendEmptyMessage(201);
         } else {
@@ -210,7 +212,7 @@ public class AllFunctions {
     }
 
     public void deleteACK(String ack) {
-        if(ack.equals("true")) {
+        if (ack.equals("true")) {
             Log.d("EEEE", "delete ack!!!");
             handlerAllfunction.sendEmptyMessage(205);
         } else {
@@ -247,7 +249,7 @@ public class AllFunctions {
     }
 
     public void setTimeACK(String ack) {
-        if(ack.equals("true")) {
+        if (ack.equals("true")) {
             handlerAllfunction.sendEmptyMessage(203);
         } else {
             handlerAllfunction.sendEmptyMessage(204);
@@ -320,6 +322,38 @@ public class AllFunctions {
 
     }
 
+    public void readStudentsExcel(ProjectInfo project, String path) {
+        Log.d("EEEE", "project name in allfunction for readstudentExcel: " + project.getProjectName());
+        ExcelParser excelParser = new ExcelParser();
+        ArrayList<StudentInfo> studentInfos = new ArrayList<>();
+        if (path.endsWith(".xls")) {
+            Log.d("EEEE", "read xls file.");
+            studentInfos = excelParser.readXlsStudents(path);
+        } else if (path.endsWith(".xlsx")) {
+            Log.d("EEEE", "read xlsx file.");
+            studentInfos = excelParser.readXlsxStudents(path);
+        }
+        Log.d("EEEE", "size of student list: " + studentInfos.size());
+
+        ArrayList<StudentInfo> students = studentInfos;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                communication.importStudents(project.getProjectName(), students);
+            }
+        }).start();
+    }
+
+    public void uploadStudentsACK(String ack) {
+        if (ack.equals("true")) {
+            Log.d("EEEE", "successfully upload students");
+            handlerAllfunction.sendEmptyMessage(225);
+        } else {
+            Log.d("EEEE", "fail to upload students");
+            handlerAllfunction.sendEmptyMessage(226);
+        }
+    }
+
     public ArrayList<Criteria> readCriteriaExcel(ProjectInfo project, String path) {
         ExcelParser excelParser = new ExcelParser();
         Log.d("EEEE", "path: " + path);
@@ -348,6 +382,16 @@ public class AllFunctions {
         }).start();
     }
 
+    public void addStudentACK(String ack) {
+        if (ack.equals("true")) {
+            Log.d("EEEE", "add student successfully");
+            handlerAllfunction.sendEmptyMessage(221);
+        } else {
+            Log.d("EEEE", "fail to add student");
+            handlerAllfunction.sendEmptyMessage(222);
+        }
+    }
+
     public int searchStudent(ProjectInfo project, String number) {
         ArrayList<StudentInfo> list = project.getStudentInfo();
 
@@ -373,7 +417,16 @@ public class AllFunctions {
                 Log.d("editStudent", "success");
             }
         }).start();
+    }
 
+    public void editStudentACK(String ack) {
+        if (ack.equals("true")) {
+            Log.d("EEEE", "edit student successfully");
+            handlerAllfunction.sendEmptyMessage(223);
+        } else {
+            Log.d("EEEE", "fail to edit student");
+            handlerAllfunction.sendEmptyMessage(224);
+        }
     }
 
     public void deleteStudent(ProjectInfo project, String number) {

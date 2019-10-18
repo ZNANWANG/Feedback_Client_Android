@@ -47,6 +47,9 @@ public class ExcelParser {
 
             ArrayList<CustomisedCriteria> criteriaList = new ArrayList<>();
 
+            // Skip the first line of the table
+            rowIter.next();
+
             while (rowIter.hasNext()) {
                 HSSFRow myRow = (HSSFRow) rowIter.next();
                 Iterator<Cell> cellIter = myRow.cellIterator();
@@ -56,23 +59,23 @@ public class ExcelParser {
                 while (cellIter.hasNext()) {
                     HSSFCell myCell = (HSSFCell) cellIter.next();
                     if (myCell.getColumnIndex() == 0) {
-                        newCriteria.setCriteria(myCell.toString());
+                        newCriteria.setCriteria(myCell.toString().trim());
                     }
 
                     if (myCell.getColumnIndex() == 1) {
-                        newCriteria.setSubSection(myCell.toString());
+                        newCriteria.setSubSection(myCell.toString().trim());
                     }
 
                     if (myCell.getColumnIndex() == 2) {
-                        newCriteria.setShortText(myCell.toString());
+                        newCriteria.setShortText(myCell.toString().trim());
                     }
 
                     if (myCell.getColumnIndex() == 3) {
-                        newCriteria.setLongText(myCell.toString());
+                        newCriteria.setLongText(myCell.toString().trim());
                     }
 
                     if (myCell.getColumnIndex() == 4) {
-                        newCriteria.setGrade(Double.valueOf(myCell.toString()).intValue());
+                        newCriteria.setGrade(Double.valueOf(myCell.toString().trim()).intValue());
                     }
                 }
                 Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myRow.getRowNum());
@@ -257,6 +260,9 @@ public class ExcelParser {
 
             ArrayList<CustomisedCriteria> criteriaList = new ArrayList<>();
 
+            // Skip the first row of the table
+            rowIter.next();
+
             while (rowIter.hasNext()) {
                 Row myRow = (Row) rowIter.next();
                 Iterator<Cell> cellIter = myRow.cellIterator();
@@ -266,23 +272,23 @@ public class ExcelParser {
                 while (cellIter.hasNext()) {
                     XSSFCell myCell = (XSSFCell) cellIter.next();
                     if (myCell.getColumnIndex() == 0) {
-                        newCriteria.setCriteria(myCell.toString());
+                        newCriteria.setCriteria(myCell.toString().trim());
                     }
 
                     if (myCell.getColumnIndex() == 1) {
-                        newCriteria.setSubSection(myCell.toString());
+                        newCriteria.setSubSection(myCell.toString().trim());
                     }
 
                     if (myCell.getColumnIndex() == 2) {
-                        newCriteria.setShortText(myCell.toString());
+                        newCriteria.setShortText(myCell.toString().trim());
                     }
 
                     if (myCell.getColumnIndex() == 3) {
-                        newCriteria.setLongText(myCell.toString());
+                        newCriteria.setLongText(myCell.toString().trim());
                     }
 
                     if (myCell.getColumnIndex() == 4) {
-                        newCriteria.setGrade(Double.valueOf(myCell.toString()).intValue());
+                        newCriteria.setGrade(Double.valueOf(myCell.toString().trim()).intValue());
                     }
 
                     Log.d("EEEE", "Cell Value: " + newCriteria.toString() + " Index :" + myCell.getColumnIndex());
@@ -296,5 +302,222 @@ public class ExcelParser {
             e.printStackTrace();
         }
         return customisedCriteriaList;
+    }
+
+    public ArrayList<StudentInfo> readXlsStudents(String path) {
+        ArrayList<StudentInfo> studentInfos = new ArrayList<>();
+
+        try {
+            // Creating Input Stream
+            InputStream myInput;
+
+            File file = new File(path);
+
+            //  Don't forget to Change to your assets folder excel sheet
+            myInput = new FileInputStream(file);
+
+            // Create a POIFSFileSystem object
+            POIFSFileSystem myFileSystem = new POIFSFileSystem(myInput);
+
+            // Create a workbook using the File System
+            HSSFWorkbook myWorkBook = new HSSFWorkbook(myFileSystem);
+
+            // Get the first sheet from workbook
+            HSSFSheet mySheet = myWorkBook.getSheetAt(0);
+
+            /** We now need something to iterate through the cells. **/
+            Iterator<Row> rowIter = mySheet.rowIterator();
+
+            // Skip the first line of the table
+            rowIter.next();
+
+            while (rowIter.hasNext()) {
+                HSSFRow myRow = (HSSFRow) rowIter.next();
+                Iterator<Cell> cellIter = myRow.cellIterator();
+
+                StudentInfo newStudentInfo = new StudentInfo();
+                boolean isValidStudentInfo = true;
+
+                while (cellIter.hasNext()) {
+                    HSSFCell myCell = (HSSFCell) cellIter.next();
+                    if (myCell.getColumnIndex() == 0) {
+                        String studentID = myCell.toString().trim();
+                        if (!studentID.equals("")) {
+                            for (int i = 0; i < studentInfos.size(); i++) {
+                                if (studentID.equals(studentInfos.get(i).getNumber())) {
+                                    isValidStudentInfo = false;
+                                }
+                            }
+                            newStudentInfo.setNumber(Double.valueOf(studentID).intValue() + "");
+                        } else {
+                            isValidStudentInfo = false;
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 1) {
+                        String familyName = myCell.toString().trim();
+                        if (!familyName.equals("")) {
+                            newStudentInfo.setSurname(familyName);
+                        } else {
+                            isValidStudentInfo = false;
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 2) {
+                        String middleName = myCell.toString().trim();
+                        if (!middleName.equals("")) {
+                            newStudentInfo.setMiddleName(middleName);
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 3) {
+                        String givenName = myCell.toString().trim();
+                        if (!givenName.equals("")) {
+                            newStudentInfo.setFirstName(givenName);
+                        } else {
+                            isValidStudentInfo = false;
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 4) {
+                        String groupNumber = myCell.toString().trim();
+                        if (!groupNumber.equals("")) {
+                            newStudentInfo.setGroup(Double.valueOf(groupNumber).intValue());
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 5) {
+                        String email = myCell.toString().trim();
+                        if (!email.equals("")) {
+                            newStudentInfo.setEmail(email);
+                        } else {
+                            isValidStudentInfo = false;
+                        }
+                    }
+                }
+
+                Log.d("EEEE", "Cell Value: " + newStudentInfo.toString() + " Index :" + myRow.getRowNum());
+                if (!((newStudentInfo.getNumber() == null) || (newStudentInfo.getFirstName() == null) || (newStudentInfo.getSurname() == null)
+                        || (newStudentInfo.getEmail() == null))) {
+                    Log.d("EEEE", "valid student info");
+                    if (newStudentInfo.getMiddleName() == null) {
+                        newStudentInfo.setMiddleName("");
+                    }
+
+                    studentInfos.add(newStudentInfo);
+                }
+            }
+            Log.d("EEEE", studentInfos.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return studentInfos;
+    }
+
+    public ArrayList<StudentInfo> readXlsxStudents(String path) {
+        ArrayList<StudentInfo> studentInfos = new ArrayList<>();
+
+        try {
+            // Creating Input Stream
+            InputStream myInput;
+
+            File file = new File(path);
+
+            //  Don't forget to Change to your assets folder excel sheet
+            myInput = new FileInputStream(file);
+
+            XSSFWorkbook workbook = new XSSFWorkbook(myInput);
+            XSSFSheet mySheet = workbook.getSheetAt(0);
+
+            /** We now need something to iterate through the cells. **/
+            Iterator<Row> rowIter = mySheet.rowIterator();
+
+            // Skip the first row of the table
+            rowIter.next();
+
+            while (rowIter.hasNext()) {
+                Row myRow = (Row) rowIter.next();
+                Iterator<Cell> cellIter = myRow.cellIterator();
+
+                StudentInfo newStudentInfo = new StudentInfo();
+                boolean isValidStudentInfo = true;
+
+                while (cellIter.hasNext()) {
+                    XSSFCell myCell = (XSSFCell) cellIter.next();
+                    if (myCell.getColumnIndex() == 0) {
+                        String studentID = myCell.toString().trim();
+
+                        if (!studentID.equals("")) {
+                            for (int i = 0; i < studentInfos.size(); i++) {
+                                if (studentID.equals(studentInfos.get(i).getNumber())) {
+                                    isValidStudentInfo = false;
+                                }
+                            }
+                            newStudentInfo.setNumber(Double.valueOf(studentID).intValue() + "");
+                        } else {
+                            isValidStudentInfo = false;
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 1) {
+                        String familyName = myCell.toString().trim();
+                        if (!familyName.equals("")) {
+                            newStudentInfo.setSurname(familyName);
+                        } else {
+                            isValidStudentInfo = false;
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 2) {
+                        String middleName = myCell.toString().trim();
+                        if (!middleName.equals("")) {
+                            newStudentInfo.setMiddleName(middleName);
+                        } else {
+                            newStudentInfo.setMiddleName("");
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 3) {
+                        String givenName = myCell.toString().trim();
+                        if (!givenName.equals("")) {
+                            newStudentInfo.setFirstName(givenName);
+                        } else {
+                            isValidStudentInfo = false;
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 4) {
+                        String groupNumber = myCell.toString().trim();
+                        if (!groupNumber.equals("")) {
+                            newStudentInfo.setGroup(Double.valueOf(myCell.toString().trim()).intValue());
+                        }
+                    }
+
+                    if (myCell.getColumnIndex() == 5) {
+                        String email = myCell.toString().trim();
+                        if (!email.equals("")) {
+                            newStudentInfo.setEmail(email);
+                        } else {
+                            isValidStudentInfo = false;
+                        }
+                    }
+                }
+
+                Log.d("EEEE", "Cell Value: " + newStudentInfo.toString() + " Index :" + myRow.getRowNum());
+                if (!((newStudentInfo.getNumber() == null) || (newStudentInfo.getFirstName() == null) || (newStudentInfo.getSurname() == null)
+                        || (newStudentInfo.getEmail() == null))) {
+                    Log.d("EEEE", "valid student info");
+                    if (newStudentInfo.getMiddleName() == null) {
+                        newStudentInfo.setMiddleName("");
+                    }
+
+                    studentInfos.add(newStudentInfo);
+                }
+            }
+            Log.d("EEEE", studentInfos.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return studentInfos;
     }
 }
