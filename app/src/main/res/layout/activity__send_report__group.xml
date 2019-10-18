@@ -54,6 +54,19 @@
                     app:autoSizeMaxTextSize="28dp"
                     app:autoSizeStepGranularity="2dp"/>
 
+                <Button
+                    android:id = "@+id/button_record_group"
+                    android:layout_width = "wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text = "Record Voice"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:paddingRight="16dp"
+                    android:paddingLeft="16dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@color/colorPrimary"/>
 
                 <Button
                     android:id="@+id/button_sendStudent_sendReportGroup"

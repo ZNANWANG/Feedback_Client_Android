@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -79,8 +80,19 @@ public class Activity_SendReport_Group extends AppCompatActivity {
     }
 
     private void init() {
+        Log.d("EEEE", "send report group");
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         ArrayList<Mark> markList = AllFunctions.getObject().getMarkListForMarkPage();
+        Button button_record = findViewById(R.id.button_record_group);
+        button_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Record_Voice.class);
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfGroup));
+                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                startActivity(intent);
+            }
+        });
         Button button_sendSingle = findViewById(R.id.button_sendStudent_sendReportGroup);
         button_sendSingle.setOnClickListener(new View.OnClickListener() {
             @Override

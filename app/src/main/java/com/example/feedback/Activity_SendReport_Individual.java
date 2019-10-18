@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,7 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_report_individual);
 
@@ -71,9 +73,21 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
     }
 
     private void init() {
+        Log.d("EEEE", "send report individually");
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         StudentInfo student = AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent);
         ArrayList<Mark> markList = AllFunctions.getObject().getMarkListForMarkPage();
+        Button button_record = findViewById(R.id.button_record_individual);
+        button_record.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("EEEE", "LLLLLLLLL");
+                Intent intent = new Intent(Activity_SendReport_Individual.this, Activity_Record_Voice.class);
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                startActivity(intent);
+            }
+        });
         Button button_sendSingle = findViewById(R.id.button_sendStudent_sendReportIndividual);
         button_sendSingle.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -52,6 +52,9 @@
         <activity
             android:name=".Activity_Assessment_Comment">
         </activity>
+        <activity android:name=".Activity_Record_Voice"
+            android:launchMode="singleTask" />
+        <service android:name=".RecordingService" />
 
         <meta-data
             android:name="preloaded_fonts"

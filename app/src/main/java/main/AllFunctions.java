@@ -44,6 +44,10 @@ public class AllFunctions {
         }).start();
     }
 
+    public void submitRecorder(){
+        communication.submitFile();
+    }
+
     public void setUsername(String username) {
         this.username = username;
     }

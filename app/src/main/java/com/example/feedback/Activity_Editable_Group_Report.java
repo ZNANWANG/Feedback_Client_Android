@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,6 +82,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
 
 
     private void init() {
+        Log.d("EEEE", "edit group report");
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         Mark mark = AllFunctions.getObject().getMarkListForMarkPage().get(indexOfMark);
 

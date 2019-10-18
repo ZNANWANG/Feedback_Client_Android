@@ -1,5 +1,7 @@
 package dbclass;
 
+import com.example.feedback.RecordingItem;
+
 public class StudentInfo {
 
     private String number;
@@ -11,6 +13,15 @@ public class StudentInfo {
     private Mark mark;
     private int group = -999;
     private boolean sendEmail;
+    private RecordingItem item;
+
+    public void setRecordingItem(RecordingItem item){
+        this.item = item;
+    }
+
+    public RecordingItem getRecordingItem(){
+        return item;
+    }
 
     public double getTotalMark() {
         return totalMark;

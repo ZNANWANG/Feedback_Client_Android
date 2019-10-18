@@ -1,10 +1,13 @@
 package main;
 
+import android.os.Environment;
 import android.util.Log;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.feedback.Activity_Login;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +15,10 @@ import dbclass.Criteria;
 import dbclass.Mark;
 import dbclass.ProjectInfo;
 import dbclass.StudentInfo;
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -26,6 +32,7 @@ public class CommunicationForClient {
     private String token;
     //private String myUsername;
     AllFunctions functions;
+    public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("audio/mpeg");
 
     public CommunicationForClient(AllFunctions functions) {
         host = "http://10.13.88.39:8080/RapidFeedback/";
@@ -629,6 +636,36 @@ public class CommunicationForClient {
         } catch (Exception e1) {
             AllFunctions.getObject().exceptionWithServer();
         }
+    }
+
+    public void submitFile(){
+        //test a existed file
+        File f = new File(Environment.getExternalStorageDirectory()+"/SoundRecorder"+"/My Recording_7.mp4");
+
+        RequestBody body = RequestBody.create(MEDIA_TYPE_MARKDOWN, f);
+        MultipartBody multipartBody = new MultipartBody.Builder()
+                // set type as "multipart/form-data"，otherwise cannot upload file
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("filename", "recorder", body)
+                .build();
+        //for test
+        Log.d("submit", "in");
+
+        Request request = new Request.Builder()
+                .url(host + "AudioRecorderServlet")
+                .post(multipartBody)
+                .build();
+
+        //callback
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                System.out.println("get back Parameter：\n" + response.body().string());
+            }
+        });
     }
 
 }
