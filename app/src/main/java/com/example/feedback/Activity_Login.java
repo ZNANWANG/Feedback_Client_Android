@@ -13,7 +13,6 @@ import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -31,6 +30,9 @@ import java.util.HashMap;
 import java.util.List;
 import adapter.UserBeanAdapter;
 import bean.UserBean;
+import main.AllFunctions;
+import util.UserinfoOperator;
+import widget.LoginVideoView;
 
 public class Activity_Login extends AppCompatActivity {
 
@@ -74,7 +76,7 @@ public class Activity_Login extends AppCompatActivity {
                         break;
                     case 101: //means mLoginButton successfully and go to next page
                         Log.d("EEEE", "login!!!!!");
-                        Intent intent = new Intent(Activity_Login.this, Homepage.class);
+                        Intent intent = new Intent(Activity_Login.this, Activity_Homepage.class);
                         startActivityForResult(intent, 1);
                         break;
                     default:
@@ -109,7 +111,7 @@ public class Activity_Login extends AppCompatActivity {
         mSignupTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_Login.this, Activity_signUp.class);
+                Intent intent = new Intent(Activity_Login.this, Activity_SignUp.class);
                 startActivityForResult(intent, 2);
             }
         });

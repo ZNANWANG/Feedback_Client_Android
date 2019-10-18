@@ -1,4 +1,4 @@
-package com.example.feedback;
+package util;
 
 import android.util.Base64;
 import javax.crypto.Cipher;

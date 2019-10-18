@@ -12,7 +12,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Activity_editable_individual_report extends AppCompatActivity {
+import dbclass.Mark;
+import dbclass.ProjectInfo;
+import dbclass.StudentInfo;
+import main.AllFunctions;
+
+public class Activity_Editable_Individual_Report extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfStudent;
     private int indexOfMark;
@@ -50,8 +55,8 @@ public class Activity_editable_individual_report extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_editable_individual_report.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_editable_individual_report.this,
+                        Toast.makeText(Activity_Editable_Individual_Report.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Editable_Individual_Report.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -73,7 +78,7 @@ public class Activity_editable_individual_report extends AppCompatActivity {
         button_finalReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_editable_individual_report.this, Activity_SendReport_Individual.class);
+                Intent intent = new Intent(Activity_Editable_Individual_Report.this, Activity_SendReport_Individual.class);
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                 intent.putExtra("indexOfMark", String.valueOf(indexOfMark));
@@ -88,7 +93,7 @@ public class Activity_editable_individual_report extends AppCompatActivity {
         button_editReport_individual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_editable_individual_report.this, Activity_Assessment.class);
+                Intent intent = new Intent(Activity_Editable_Individual_Report.this, Activity_Assessment.class);
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfGroup", "-999");
                 intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));

@@ -3,6 +3,7 @@
     package="com.example.feedback">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -14,16 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity_SendReport_Group"></activity>
-        <activity android:name=".Activity_Editable_group_report" />
-        <activity android:name=".Activity_showComment_markAllocation" />
+        <activity android:name=".Activity_Editable_Group_Report" />
+        <activity android:name=".Activity_ShowComment_MarkAllocation" />
         <activity android:name=".Activity_SendReport_Individual" />
-        <activity android:name=".Activity_editable_individual_report" />
+        <activity android:name=".Activity_Editable_Individual_Report" />
         <activity android:name=".Activity_ReviewReport" />
         <activity android:name=".Activity_Reaper_Mark"
             android:launchMode="singleTask"/>
         <activity android:name=".Activity_Realtime_Assessment" />
         <activity
-            android:name=".Homepage"
+            android:name=".Activity_Homepage"
             android:launchMode="singleTask" />
         <activity android:name=".Activity_MarkAllocation" />
         <activity android:name=".Activity_CriteriaList" />
@@ -34,9 +35,9 @@
             android:name=".Activity_Assessment"
             android:launchMode="singleTop" />
         <activity
-            android:name=".Assessment_Preparation_Activity"
+            android:name=".Activity_Assessment_Preparation"
             android:launchMode="singleTask" />
-        <activity android:name=".Activity_signUp" />
+        <activity android:name=".Activity_SignUp" />
         <activity android:name=".Activity_Student_Group" />
 
         <activity android:name=".Activity_Login"
@@ -49,7 +50,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activity_assessment_comment">
+            android:name=".Activity_Assessment_Comment">
         </activity>
 
         <meta-data

@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import dbclass.ProjectInfo;
+import dbclass.StudentInfo;
+import main.AllFunctions;
+import util.FileUtils;
+
 public class Activity_Student_Group extends AppCompatActivity {
 
     private MyAdapter myAdapter;

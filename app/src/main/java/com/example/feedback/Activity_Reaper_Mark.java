@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -22,6 +21,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import dbclass.Mark;
+import main.AllFunctions;
 
 public class Activity_Reaper_Mark extends AppCompatActivity {
     private int indexOfProject;
@@ -159,13 +161,13 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (indexOfGroup == -999) {
-                        Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_editable_individual_report.class);
+                        Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_Editable_Individual_Report.class);
                         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                         intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                         intent.putExtra("indexOfMark", String.valueOf(position));
                         startActivity(intent);
                     } else {
-                        Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_Editable_group_report.class);
+                        Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_Editable_Group_Report.class);
                         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                         intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                         intent.putExtra("indexOfMark", String.valueOf(position));

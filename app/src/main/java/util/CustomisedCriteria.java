@@ -1,4 +1,4 @@
-package com.example.feedback;
+package util;
 
 public class CustomisedCriteria {
     private String criteria;

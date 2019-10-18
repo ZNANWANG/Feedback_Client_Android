@@ -2,7 +2,6 @@ package com.example.feedback;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -30,7 +29,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 
-public class Assessment_Preparation_Activity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+import dbclass.Criteria;
+import dbclass.ProjectInfo;
+import main.AllFunctions;
+
+public class Activity_Assessment_Preparation extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private ListView listView;
     private AllFunctions allFunctions = AllFunctions.getObject();
@@ -84,7 +87,7 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
                     case 201: //创建新项目成功
                         break;
                     case 210:
-                        Toast.makeText(Assessment_Preparation_Activity.this,
+                        Toast.makeText(Activity_Assessment_Preparation.this,
                                 "Sync success.", Toast.LENGTH_SHORT).show();
                         updateProjectList();
                     default:
@@ -109,23 +112,23 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
 
         button_project_add = findViewById(R.id.button_plus_inpreparation);
         myAdapterDefaultlistView = new MyAdapterDefaultlistView
-                (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
+                (Activity_Assessment_Preparation.this, AllFunctions.getObject().getProjectList());
         listView = findViewById(R.id.listView_inpreparation);
         listView.setAdapter(myAdapterDefaultlistView);
         listView.setOnItemClickListener(this);
 
-        myAdapter = new MyAdapter_for_listView(projectList, Assessment_Preparation_Activity.this);
+        myAdapter = new MyAdapter_for_listView(projectList, Activity_Assessment_Preparation.this);
         mDeleteCheckbox = findViewById(R.id.cb_delete_project);
         mDeleteCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
                     projectList = allFunctions.getProjectList();
-                    myAdapter = new MyAdapter_for_listView(projectList, Assessment_Preparation_Activity.this);
+                    myAdapter = new MyAdapter_for_listView(projectList, Activity_Assessment_Preparation.this);
                     Log.d("EEEE", this.getClass().getSimpleName());
 
                     listView.setAdapter(myAdapter);
-                    listView.setOnItemClickListener(Assessment_Preparation_Activity.this);
+                    listView.setOnItemClickListener(Activity_Assessment_Preparation.this);
                     button_about.setEnabled(false);
                     button_criteria.setEnabled(false);
                     button_student.setEnabled(false);
@@ -138,10 +141,10 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
                 } else {
                     resetDetailView();
                     myAdapterDefaultlistView = new MyAdapterDefaultlistView
-                            (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
+                            (Activity_Assessment_Preparation.this, AllFunctions.getObject().getProjectList());
                     listView = findViewById(R.id.listView_inpreparation);
                     listView.setAdapter(myAdapterDefaultlistView);
-                    listView.setOnItemClickListener(Assessment_Preparation_Activity.this);
+                    listView.setOnItemClickListener(Activity_Assessment_Preparation.this);
                     button_project_add.setEnabled(true);
                     button_project_add.setBackgroundResource(R.drawable.ripple_add_project);
                     button_sync_projectlist.setEnabled(true);
@@ -167,8 +170,8 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Assessment_Preparation_Activity.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Assessment_Preparation_Activity.this,
+                        Toast.makeText(Activity_Assessment_Preparation.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Assessment_Preparation.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -237,28 +240,28 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
             button_about.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(Assessment_Preparation_Activity.this,
+                    Toast.makeText(Activity_Assessment_Preparation.this,
                             "You have no right to edit.", Toast.LENGTH_SHORT).show();
                 }
             });
             button_criteria.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(Assessment_Preparation_Activity.this,
+                    Toast.makeText(Activity_Assessment_Preparation.this,
                             "You have no right to edit.", Toast.LENGTH_SHORT).show();
                 }
             });
             button_assessor.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(Assessment_Preparation_Activity.this,
+                    Toast.makeText(Activity_Assessment_Preparation.this,
                             "You have no right to edit.", Toast.LENGTH_SHORT).show();
                 }
             });
             button_student.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(Assessment_Preparation_Activity.this,
+                    Toast.makeText(Activity_Assessment_Preparation.this,
                             "You have no right to edit.", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -303,28 +306,28 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
         button_about.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Assessment_Preparation_Activity.this,
+                Toast.makeText(Activity_Assessment_Preparation.this,
                         "Please select or add a project.", Toast.LENGTH_SHORT).show();
             }
         });
         button_criteria.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Assessment_Preparation_Activity.this,
+                Toast.makeText(Activity_Assessment_Preparation.this,
                         "Please select or add a project.", Toast.LENGTH_SHORT).show();
             }
         });
         button_student.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Assessment_Preparation_Activity.this,
+                Toast.makeText(Activity_Assessment_Preparation.this,
                         "Please select or add a project.", Toast.LENGTH_SHORT).show();
             }
         });
         button_assessor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(Assessment_Preparation_Activity.this,
+                Toast.makeText(Activity_Assessment_Preparation.this,
                         "Please select or add a project.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -395,7 +398,7 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
 //            @Override
 //            public void onClick(View view) {
 //                if (editText_assessorName.getText().toString().equals(""))
-//                    Toast.makeText(Assessment_Preparation_Activity.this,
+//                    Toast.makeText(Activity_Assessment_Preparation.this,
 //                            "The email of an invitee cannot be empty.", Toast.LENGTH_SHORT).show();
 //                else {
 //                    //projectList.get(index_to_send).getAssistant().add(editText_assessorName.getText().toString());
@@ -548,7 +551,7 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
         Log.d("EEEE", projectList.toString() + "wtf");
 
         MyAdapterDefaultlistView mSyncAdapter = new MyAdapterDefaultlistView
-                (Assessment_Preparation_Activity.this, projectList);
+                (Activity_Assessment_Preparation.this, projectList);
         listView.setAdapter(mSyncAdapter);
         listView.setOnItemClickListener(this);
 
@@ -564,7 +567,7 @@ public class Assessment_Preparation_Activity extends AppCompatActivity implement
             if(resultCode == Activity.RESULT_OK) {
                 Log.d("EEEE", "new project in assessment preparation.");
 //                MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
-//                        (Assessment_Preparation_Activity.this, AllFunctions.getObject().getProjectList());
+//                        (Activity_Assessment_Preparation.this, AllFunctions.getObject().getProjectList());
 //                listView.setAdapter(myAdapterDefaultlistView);
 //                listView.setOnItemClickListener(this);
 //                if(!(index_to_send == -999)) {

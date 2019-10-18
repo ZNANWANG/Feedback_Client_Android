@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -26,6 +25,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import dbclass.Criteria;
+import dbclass.Mark;
+import dbclass.ProjectInfo;
+import dbclass.ShortText;
+import dbclass.SubSection;
+import main.AllFunctions;
 
 
 public class Activity_Assessment extends AppCompatActivity implements View.OnClickListener {
@@ -329,7 +335,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
             btn_assessment_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Activity_Assessment.this, Activity_assessment_comment.class);
+                    Intent intent = new Intent(Activity_Assessment.this, Activity_Assessment_Comment.class);
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                     intent.putExtra("indexOfCriteria", String.valueOf(position));
                     intent.putExtra("indexOfComment", String.valueOf(-999));

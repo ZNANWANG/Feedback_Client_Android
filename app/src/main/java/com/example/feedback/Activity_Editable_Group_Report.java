@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +14,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class Activity_Editable_group_report extends AppCompatActivity {
+import dbclass.Mark;
+import dbclass.ProjectInfo;
+import dbclass.StudentInfo;
+import main.AllFunctions;
+
+public class Activity_Editable_Group_Report extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfGroup;
     private int indexOfMark;
@@ -61,8 +65,8 @@ public class Activity_Editable_group_report extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_Editable_group_report.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_Editable_group_report.this,
+                        Toast.makeText(Activity_Editable_Group_Report.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Editable_Group_Report.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -84,7 +88,7 @@ public class Activity_Editable_group_report extends AppCompatActivity {
         button_finalReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_Editable_group_report.this, Activity_SendReport_Group.class);
+                Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_SendReport_Group.class);
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                 intent.putExtra("indexMark", String.valueOf(indexOfMark));
@@ -100,7 +104,7 @@ public class Activity_Editable_group_report extends AppCompatActivity {
         button_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_Editable_group_report.this, Activity_Assessment.class);
+                Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_Assessment.class);
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                 intent.putExtra("indexOfStudent", "-1");

@@ -1,4 +1,4 @@
-package com.example.feedback;
+package util;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -10,7 +10,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
 
-class FileUtils {
+public class FileUtils {
 
     public static String getPath(final Context context, final Uri uri) {
 

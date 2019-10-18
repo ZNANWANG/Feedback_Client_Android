@@ -1,4 +1,4 @@
-package com.example.feedback;
+package util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -7,6 +7,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
+import util.AESEncrypter;
 
 public class UserinfoOperator {
 

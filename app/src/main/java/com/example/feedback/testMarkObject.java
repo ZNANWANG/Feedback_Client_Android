@@ -1,11 +1,15 @@
 package com.example.feedback;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+
+import dbclass.Criteria;
+import dbclass.Mark;
+import dbclass.ShortText;
+import dbclass.SubSection;
 
 public class testMarkObject {
 	
-	static public  Criteria createCriteria(){
+	static public Criteria createCriteria(){
 		Criteria c = new Criteria();
 		SubSection ss = new SubSection();
 		SubSection ss2 = new SubSection();

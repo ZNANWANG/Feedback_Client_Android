@@ -10,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,8 +17,10 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import dbclass.ProjectInfo;
+import main.AllFunctions;
 
 public class Activity_About extends AppCompatActivity {
 
@@ -298,7 +299,7 @@ public class Activity_About extends AppCompatActivity {
                         Toast.makeText(Activity_About.this,
                                 "Fail to delete the project.", Toast.LENGTH_SHORT).show();
                         Intent intent2 = new Intent(Activity_About.this,
-                                Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent2);
                         finish();
                     default:

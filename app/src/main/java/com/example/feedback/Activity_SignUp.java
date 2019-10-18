@@ -1,23 +1,21 @@
 package com.example.feedback;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import pl.droidsonroids.gif.GifImageView;
+import main.AllFunctions;
+import widget.LoginVideoView;
 
-public class Activity_signUp extends Activity {
+public class Activity_SignUp extends Activity {
 
     Handler handler;
     private LoginVideoView mLoginVideoView;
@@ -39,13 +37,13 @@ public class Activity_signUp extends Activity {
                 switch (msg.what) {
                     case 111: //means Sign Up successfully and go to login page
                         Toast.makeText(getApplicationContext(), "Sign Up successfully.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_signUp.this, Activity_Login.class)
+                        Intent intent = new Intent(Activity_SignUp.this, Activity_Login.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
                         break;
                     case 110: //Sign Up failed.
-                        Toast.makeText(Activity_signUp.this,
+                        Toast.makeText(Activity_SignUp.this,
                                 "The email address is already occupied. Please try another one.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
@@ -61,7 +59,7 @@ public class Activity_signUp extends Activity {
         textView_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_signUp.this, Activity_Login.class);
+                Intent intent = new Intent(Activity_SignUp.this, Activity_Login.class);
                 startActivity(intent);
                 finish();
             }

@@ -5,17 +5,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
-public class Homepage extends AppCompatActivity {
+public class Activity_Homepage extends AppCompatActivity {
 
     private GifImageView gifImageView;
     private Toolbar mToolbar;
@@ -30,7 +27,7 @@ public class Homepage extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(Homepage.this, Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent = new Intent(Activity_Homepage.this, Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }
@@ -40,8 +37,8 @@ public class Homepage extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Homepage.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Homepage.this,
+                        Toast.makeText(Activity_Homepage.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Homepage.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -62,7 +59,7 @@ public class Homepage extends AppCompatActivity {
     }
 
     public void toPart1(View view) {
-        Intent intent = new Intent(this, Assessment_Preparation_Activity.class);
+        Intent intent = new Intent(this, Activity_Assessment_Preparation.class);
         startActivity(intent);
     }
 

@@ -1,7 +1,6 @@
-package com.example.feedback;
+package dbclass;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProjectInfo {
 

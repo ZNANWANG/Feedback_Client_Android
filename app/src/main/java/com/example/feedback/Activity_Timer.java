@@ -3,11 +3,13 @@ package com.example.feedback;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import dbclass.ProjectInfo;
+import main.AllFunctions;
 
 public class Activity_Timer extends Activity {
     int durationMin, durationSec, warningMin, warningSec;
@@ -140,7 +142,7 @@ public class Activity_Timer extends Activity {
             Toast.makeText(getApplicationContext(), "Duration time cannot be less that warning time", Toast.LENGTH_SHORT).show();
         } else {
             AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
-            Intent intent = new Intent(this, Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent intent = new Intent(this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         }

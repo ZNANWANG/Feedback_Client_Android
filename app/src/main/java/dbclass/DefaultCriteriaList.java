@@ -1,4 +1,4 @@
-package com.example.feedback;
+package dbclass;
 
 import com.alibaba.fastjson.JSONObject;
 

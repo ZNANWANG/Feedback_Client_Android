@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import dbclass.Mark;
+import dbclass.ProjectInfo;
+import dbclass.StudentInfo;
+import main.AllFunctions;
 
 public class Activity_SendReport_Group extends AppCompatActivity {
     private int indexOfProject;

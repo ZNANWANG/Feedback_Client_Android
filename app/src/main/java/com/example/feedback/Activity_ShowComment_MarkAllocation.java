@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +24,13 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class Activity_showComment_markAllocation extends Activity {
+import dbclass.Criteria;
+import dbclass.ProjectInfo;
+import dbclass.ShortText;
+import dbclass.SubSection;
+import main.AllFunctions;
+
+public class Activity_ShowComment_MarkAllocation extends Activity {
     private Criteria criteria;
     private ListView listView_longText;
     private MyAdapterForLongText myAdapterForLongText;
@@ -87,14 +92,14 @@ public class Activity_showComment_markAllocation extends Activity {
         if (listView_longText.getCheckedItemPosition() == -1)
             Toast.makeText(this, "Please choose a comment.", Toast.LENGTH_SHORT).show();
         else {
-            LayoutInflater layoutInflater = LayoutInflater.from(Activity_showComment_markAllocation.this);//获得layoutInflater对象
-            View view2 = layoutInflater.from(Activity_showComment_markAllocation.this).inflate(R.layout.dialog_edit_comment, null);//获得view对象
+            LayoutInflater layoutInflater = LayoutInflater.from(Activity_ShowComment_MarkAllocation.this);//获得layoutInflater对象
+            View view2 = layoutInflater.from(Activity_ShowComment_MarkAllocation.this).inflate(R.layout.dialog_edit_comment, null);//获得view对象
 
             final EditText editText_editLongText = view2.findViewById(R.id.editText_editLongText_editComment);//获取控件
             editText_editLongText.setText(criteria.getSubsectionList().get(indexOfSubsection).getShortTextList().
                     get(indexOfShortText).getLongtext().get(listView_longText.getCheckedItemPosition()));
 
-            Dialog dialog = new AlertDialog.Builder(Activity_showComment_markAllocation.this).setTitle("Edit Comment").
+            Dialog dialog = new AlertDialog.Builder(Activity_ShowComment_MarkAllocation.this).setTitle("Edit Comment").
                     setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     String newLongText = editText_editLongText.getText().toString();
@@ -128,8 +133,8 @@ public class Activity_showComment_markAllocation extends Activity {
     }
 
     public void add_showComment(View view) {
-        LayoutInflater layoutInflater = LayoutInflater.from(Activity_showComment_markAllocation.this);//获得layoutInflater对象
-        final View view2 = layoutInflater.from(Activity_showComment_markAllocation.this).
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_ShowComment_MarkAllocation.this);//获得layoutInflater对象
+        final View view2 = layoutInflater.from(Activity_ShowComment_MarkAllocation.this).
                 inflate(R.layout.dialog_add_comment, null);//获得view对象
 
         final Spinner spinner_subsection = view2.findViewById(R.id.spinner_subsection_addComment);
@@ -156,7 +161,7 @@ public class Activity_showComment_markAllocation extends Activity {
             }
         });
 
-        Dialog dialog = new AlertDialog.Builder(Activity_showComment_markAllocation.this).setTitle("Add Comment").setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        Dialog dialog = new AlertDialog.Builder(Activity_ShowComment_MarkAllocation.this).setTitle("Add Comment").setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 int whichSubsection = spinner_subsection.getSelectedItemPosition();
                 if (whichSubsection < criteria.getSubsectionList().size()) {
@@ -275,7 +280,7 @@ public class Activity_showComment_markAllocation extends Activity {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    myAdapterForLongText = new MyAdapterForLongText(Activity_showComment_markAllocation.this,
+                    myAdapterForLongText = new MyAdapterForLongText(Activity_ShowComment_MarkAllocation.this,
                             subSections.get(groupPosition).getShortTextList().get(childPosition).getLongtext());
                     listView_longText.setAdapter(myAdapterForLongText);
                     indexOfSubsection = groupPosition;

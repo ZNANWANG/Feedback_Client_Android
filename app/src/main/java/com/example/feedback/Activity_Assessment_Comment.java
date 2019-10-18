@@ -5,10 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -21,8 +18,11 @@ import adapter.ThreeAdapter;
 import bean.OneBean;
 import bean.ThreeBean;
 import bean.TwoBean;
+import dbclass.Criteria;
+import dbclass.ProjectInfo;
+import main.AllFunctions;
 
-public class Activity_assessment_comment extends Activity {
+public class Activity_Assessment_Comment extends Activity {
 
     private Criteria criteria;
 

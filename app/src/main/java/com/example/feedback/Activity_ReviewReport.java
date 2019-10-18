@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+
+import dbclass.ProjectInfo;
+import dbclass.StudentInfo;
+import main.AllFunctions;
 
 public class Activity_ReviewReport extends AppCompatActivity {
     private ListView listView_projects;

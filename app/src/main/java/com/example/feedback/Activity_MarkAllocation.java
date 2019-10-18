@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +20,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+
+import dbclass.Criteria;
+import dbclass.ProjectInfo;
+import main.AllFunctions;
 
 
 public class Activity_MarkAllocation extends AppCompatActivity {
@@ -111,7 +114,7 @@ public class Activity_MarkAllocation extends AppCompatActivity {
     public void save_markAllocation(View view) {
         if(isValidIncrementAndMaxMark() == true) {
             AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
-            Intent intent = new Intent(this, Assessment_Preparation_Activity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            Intent intent = new Intent(this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         } else {
@@ -241,7 +244,7 @@ public class Activity_MarkAllocation extends AppCompatActivity {
                 button_commentDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Activity_MarkAllocation.this, Activity_showComment_markAllocation.class);
+                        Intent intent = new Intent(Activity_MarkAllocation.this, Activity_ShowComment_MarkAllocation.class);
                         intent.putExtra("indexOfProject",String.valueOf(indexOfProject));
                         intent.putExtra("indexOfCriteria",String.valueOf(position));
                         startActivity(intent);
@@ -257,7 +260,7 @@ public class Activity_MarkAllocation extends AppCompatActivity {
                 button_commentDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Activity_MarkAllocation.this, Activity_showComment_markAllocation.class);
+                        Intent intent = new Intent(Activity_MarkAllocation.this, Activity_ShowComment_MarkAllocation.class);
                         intent.putExtra("indexOfProject",String.valueOf(indexOfProject));
                         intent.putExtra("indexOfCriteria",String.valueOf(position));
                         startActivity(intent);

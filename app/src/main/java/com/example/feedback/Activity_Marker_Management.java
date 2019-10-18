@@ -29,6 +29,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
 
+import dbclass.ProjectInfo;
+import main.AllFunctions;
+
 public class Activity_Marker_Management extends AppCompatActivity implements AdapterView.OnItemClickListener {
 
     private ArrayList<ProjectInfo> projectList;
