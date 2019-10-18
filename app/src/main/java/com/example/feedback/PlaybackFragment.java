@@ -56,7 +56,6 @@ public class PlaybackFragment extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         item = getArguments().getParcelable(ARG_ITEM);
-
         long itemDuration = item.getLength();
         minutes = TimeUnit.MILLISECONDS.toMinutes(itemDuration);
         seconds = TimeUnit.MILLISECONDS.toSeconds(itemDuration)
@@ -89,14 +88,11 @@ public class PlaybackFragment extends DialogFragment {
                 if(mMediaPlayer != null && fromUser) {
                     mMediaPlayer.seekTo(progress);
                     mHandler.removeCallbacks(mRunnable);
-
                     long minutes = TimeUnit.MILLISECONDS.toMinutes(mMediaPlayer.getCurrentPosition());
                     long seconds = TimeUnit.MILLISECONDS.toSeconds(mMediaPlayer.getCurrentPosition())
                             - TimeUnit.MINUTES.toSeconds(minutes);
                     mCurrentProgressTextView.setText(String.format("%02d:%02d", minutes,seconds));
-
                     updateSeekBar();
-
                 } else if (mMediaPlayer == null && fromUser) {
                     prepareMediaPlayerFromPoint(progress);
                     updateSeekBar();
@@ -116,7 +112,6 @@ public class PlaybackFragment extends DialogFragment {
                 if (mMediaPlayer != null) {
                     mHandler.removeCallbacks(mRunnable);
                     mMediaPlayer.seekTo(seekBar.getProgress());
-
                     long minutes = TimeUnit.MILLISECONDS.toMinutes(mMediaPlayer.getCurrentPosition());
                     long seconds = TimeUnit.MILLISECONDS.toSeconds(mMediaPlayer.getCurrentPosition())
                             - TimeUnit.MINUTES.toSeconds(minutes);

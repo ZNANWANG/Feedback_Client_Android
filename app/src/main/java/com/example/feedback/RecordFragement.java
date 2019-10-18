@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,14 +17,7 @@ import android.widget.Toast;
 import com.melnykov.fab.FloatingActionButton;
 import java.io.File;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link RecordFragement.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link RecordFragement#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class RecordFragement extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -51,6 +45,7 @@ public class RecordFragement extends Fragment {
      * @return A new instance of fragment Record_Fragment.
      */
     public static RecordFragement newInstance(int position) {
+        Log.d("EEEE", "new record fragment");
         RecordFragement f = new RecordFragement();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
@@ -60,6 +55,7 @@ public class RecordFragement extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d("EEEE", "record fragment start");
         super.onCreate(savedInstanceState);
         position = getArguments().getInt(ARG_POSITION);
         Activity_Record_Voice activity = (Activity_Record_Voice)getActivity();

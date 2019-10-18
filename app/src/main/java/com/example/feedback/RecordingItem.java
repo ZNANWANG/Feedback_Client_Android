@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.icu.text.AlphabeticIndex;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -44,7 +43,6 @@ public class RecordingItem implements Parcelable {
         mLength = length;
     }
 
-
     public String getName() {
         return mName;
     }
@@ -52,7 +50,6 @@ public class RecordingItem implements Parcelable {
     public void setName(String name) {
         mName = name;
     }
-
 
     public static final Creator<RecordingItem> CREATOR = new Creator<RecordingItem>() {
         public RecordingItem createFromParcel(Parcel in) {

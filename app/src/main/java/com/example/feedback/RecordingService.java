@@ -12,16 +12,13 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.example.feedback.Activity_Record_Voice;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
-
 import dbclass.StudentInfo;
 import main.AllFunctions;
 
@@ -62,7 +59,7 @@ public class RecordingService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
-
+        startRecording();
         return START_STICKY;
     }
 
@@ -121,6 +118,7 @@ public class RecordingService extends Service {
                             ".mp4";
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             mFilePath += "/feedback/" + mFileName;
+            Log.d("EEEE", "audio path: " + mFilePath);
             fileIsExists(mFilePath);
             f = new File(mFilePath);
         } while (f.exists() && !f.isDirectory());
