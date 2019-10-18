@@ -12,13 +12,16 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.example.feedback.Activity_Record_Voice;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import dbclass.StudentInfo;
 import main.AllFunctions;
 
@@ -108,14 +111,11 @@ public class RecordingService extends Service {
     public void setFileNameAndPath() {
         File f;
         do {
-            mFileName =
+            mFileName = AllFunctions.getObject().getProjectList().
+                    get(indexOfProject).getSubjectCode() + "_" +
                     AllFunctions.getObject().getProjectList().
-                            get(indexOfProject).getSubjectCode() +
-                            "_" +
-                            AllFunctions.getObject().getProjectList().
-                                    get(indexOfProject).getStudentInfo().
-                                    get(indexOfStudent).getFirstName() +
-                            ".mp4";
+                            get(indexOfProject).getStudentInfo().
+                            get(indexOfStudent).getFirstName() + ".mp4";
             mFilePath = Environment.getExternalStorageDirectory().getAbsolutePath();
             mFilePath += "/feedback/" + mFileName;
             Log.d("EEEE", "audio path: " + mFilePath);

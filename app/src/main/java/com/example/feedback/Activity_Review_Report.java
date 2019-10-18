@@ -24,7 +24,7 @@ import dbclass.ProjectInfo;
 import dbclass.StudentInfo;
 import main.AllFunctions;
 
-public class Activity_ReviewReport extends AppCompatActivity {
+public class Activity_Review_Report extends AppCompatActivity {
     private ListView listView_projects;
     private ListView listView_students;
     private ArrayList<ProjectInfo> projectList;
@@ -34,7 +34,7 @@ public class Activity_ReviewReport extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__review_report);
+        setContentView(R.layout.activity_review_report);
         initToolbar();
         init();
     }
@@ -59,8 +59,8 @@ public class Activity_ReviewReport extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_ReviewReport.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_ReviewReport.this,
+                        Toast.makeText(Activity_Review_Report.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Review_Report.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -76,7 +76,7 @@ public class Activity_ReviewReport extends AppCompatActivity {
     public void init() {
         projectList = AllFunctions.getObject().getProjectList();
         MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
-                (Activity_ReviewReport.this, projectList);
+                (Activity_Review_Report.this, projectList);
         listView_projects = findViewById(R.id.listView_projects_reviewReport);
         listView_students = findViewById(R.id.listView_students_reviewReport);
         listView_projects.setAdapter(myAdapterDefaultlistView);
@@ -85,7 +85,7 @@ public class Activity_ReviewReport extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 indexOfProject = position;
                 ProjectInfo project = projectList.get(position);
-                MyAdapter myAdapter = new MyAdapter(project.getStudentInfo(), Activity_ReviewReport.this);
+                MyAdapter myAdapter = new MyAdapter(project.getStudentInfo(), Activity_Review_Report.this);
                 listView_students.setAdapter(myAdapter);
                 listView_students.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -157,7 +157,7 @@ public class Activity_ReviewReport extends AppCompatActivity {
             button_viewReport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Activity_ReviewReport.this, Activity_Reaper_Mark.class);
+                    Intent intent = new Intent(Activity_Review_Report.this, Activity_Reaper_Mark.class);
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroup()));

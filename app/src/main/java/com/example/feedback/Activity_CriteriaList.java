@@ -58,7 +58,7 @@ public class Activity_CriteriaList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__criteria_list);
+        setContentView(R.layout.activity_criteria_list);
         Log.d("EEEE", "criteriaList interface onCreate");
         verifyStoragePermissions(Activity_CriteriaList.this);
         Intent intent = getIntent();

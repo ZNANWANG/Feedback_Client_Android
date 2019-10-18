@@ -520,21 +520,14 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
             if (project.getStudentInfo().get(studentList.get(position)).getMark() != null) {
                 et_other_comment.setText(project.getStudentInfo().get(studentList.get(position)).getMark().getComment());
-
             }
             final View view4 = convertView;
             btn_assessment_save.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     et_other_comment = view4.findViewById(R.id.et_other_comment);
-
-
                     String otherComment = et_other_comment.getText().toString();
-
                     project.getStudentInfo().get(studentList.get(position)).getMark().setComment(otherComment);
-
-
                 }
             });
             return convertView;

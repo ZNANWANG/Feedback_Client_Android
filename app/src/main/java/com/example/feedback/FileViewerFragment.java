@@ -54,7 +54,7 @@ public class FileViewerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_file_viewer, container, false);
-        Button submit = (Button) v.findViewById(R.id.submit);
+        Button submit = v.findViewById(R.id.submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -30,7 +30,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__send_report__group);
+        setContentView(R.layout.activity_send_report_group);
         initToolbar();
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
@@ -139,7 +139,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
                         "<p>" + project.getProjectName() + "</p >" +
                         "<h2 style=\"font-weight: normal\">Mark Attained</h2>" +
                         "<p>" + markList.get(0).getTotalMark() + "%</p >" +
-                        "<h2 style=\"font-weight: normal\">Assessor</h2>" + "<p>";
+                        "<h2 style=\"font-weight: normal\">Marker</h2>" + "<p>";
         for (int i = 0; i < project.getAssistant().size(); i++) {
             htmlString = htmlString + project.getAssistant().get(i) + "<br>";
         }
@@ -168,21 +168,6 @@ public class Activity_SendReport_Group extends AppCompatActivity {
             }
             htmlString += "<br>";
         }
-
-        htmlString += "<h2 style=\"font-weight: normal\">CommentOnlyCriteria</h2>" + "<p>";
-        for (int i = 0; i < markList.get(0).getCommentList().size(); i++) {
-            htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + markList.get(0).getCommentList().get(i).getName() + "</span></h3>";
-            for (int j = 0; j < markList.size(); j++) {
-                htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + markList.get(j).getLecturerName() + ":</h4>";
-                if (markList.get(j).getCommentList().size() > 0)
-                    for (int k = 0; k < markList.get(j).getCommentList().get(i).getSubsectionList().size(); k++) {
-                        htmlString += "<p>&lt;" + markList.get(j).getCommentList().get(i).getSubsectionList().get(k).getName() + ":&gt;"
-                                + markList.get(j).getCommentList().get(i).getSubsectionList().get(k).getShortTextList().get(0).getLongtext() + "</p >";
-                    }
-            }
-            htmlString += "<br>";
-        }
-
 
         htmlString +=
                 "</div>" +

@@ -66,7 +66,7 @@
                 android:layout_marginBottom="30dp"
                 android:background="@drawable/ripple_button"
                 android:onClick="toPart2"
-                android:text="Real-Time Assessment"
+                android:text="Realtime Assessment"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="30sp"

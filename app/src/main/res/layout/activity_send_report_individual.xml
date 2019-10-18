@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:background="#D7D7D7">
+            android:background="@color/translusentPrimary">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,7 +59,7 @@
                     android:layout_width = "wrap_content"
                     android:layout_height="40dp"
                     android:layout_margin="10dp"
-                    android:text="Record Voice"
+                    android:text="Record Audio"
                     android:gravity="center"
                     android:textSize="20sp"
                     android:paddingRight="16dp"
@@ -128,6 +128,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="TextView"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
                         android:padding="10dp"/>
                 </ScrollView>
             </RelativeLayout>

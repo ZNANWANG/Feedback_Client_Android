@@ -61,7 +61,7 @@ public class Activity_Student_Group extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__student__group);
+        setContentView(R.layout.activity_student_group);
 
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));

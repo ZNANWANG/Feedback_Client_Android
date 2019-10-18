@@ -53,7 +53,7 @@ public class Activity_About extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("EEEE", "about edition start!");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__about);
+        setContentView(R.layout.activity_about);
         Intent intent = getIntent();
         index = intent.getStringExtra("index");
         Log.d("EEEE", "index: " + index);

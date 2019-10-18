@@ -34,5 +34,6 @@
     <color name="divider">#FFFFFF</color>
     <color name="text">#FFFFFF</color>
     <color name="tab_strip">#B42929</color>
+    <color name="translusentPrimary">#20014085</color>
 
 </resources>

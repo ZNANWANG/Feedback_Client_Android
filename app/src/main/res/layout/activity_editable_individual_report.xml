@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:background="#D7D7D7">
+            android:background="@color/translusentPrimary">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -118,6 +118,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="TextView"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
                         android:padding="10dp"/>
                 </ScrollView>
             </RelativeLayout>

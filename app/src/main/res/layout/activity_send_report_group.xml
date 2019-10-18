@@ -5,15 +5,16 @@
     xmlns:toolbar="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity_Assessment_Preparation" >
+    tools:context=".Activity_Assessment_Preparation"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar_editable_group_report"
+            android:id="@+id/toolbar_send_report_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
@@ -31,70 +32,81 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:background="#D7D7D7">
+            android:background="@color/translusentPrimary">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
-                android:layout_weight="10"
-                xmlns:app="http://schemas.android.com/apk/res-auto">
+                android:layout_weight="10">
 
                 <TextView
-                    android:id="@+id/textView_totalMark_report"
+                    android:id="@+id/textView_totalMark_sendReportGroup"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="Mark:72%"
                     android:gravity="left|center_vertical"
                     android:paddingLeft="40dp"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     app:autoSizeTextType="uniform"
                     app:autoSizeMinTextSize="10dp"
                     app:autoSizeMaxTextSize="28dp"
                     app:autoSizeStepGranularity="2dp"/>
 
-
-                <TextView
-                    android:id="@+id/textView_assessorName_report"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="Assessor: Xxxxxxx Xxxxxx"
-                    android:gravity="left|center_vertical"
-                    android:textColor="#000000"
-                    android:layout_marginRight="40dp"
-                    app:autoSizeTextType="uniform"
-                    app:autoSizeMinTextSize="10dp"
-                    app:autoSizeMaxTextSize="26dp"
-                    app:autoSizeStepGranularity="2dp" />
-
                 <Button
-                    android:id="@+id/button_edit_groupReport"
-                    android:layout_width="wrap_content"
+                    android:id = "@+id/button_record_group"
+                    android:layout_width = "wrap_content"
                     android:layout_height="40dp"
-                    android:textSize="20sp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:text="Edit"
-                    android:singleLine="true"
-                    android:layout_marginRight="15dp"
+                    android:layout_margin="10dp"
+                    android:text = "Record Audio"
                     android:gravity="center"
+                    android:textSize="20sp"
+                    android:paddingRight="16dp"
+                    android:paddingLeft="16dp"
                     android:layout_gravity="center"
                     android:textColor="@color/white"
                     android:background="@color/colorPrimary"/>
 
                 <Button
-                    android:id="@+id/button_finalReport_groupReport"
+                    android:id="@+id/button_sendStudent_sendReportGroup"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text="Send to student"
+                    android:gravity="center"
                     android:textSize="20sp"
+                    android:paddingRight="16dp"
+                    android:paddingLeft="16dp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@color/colorPrimary"/>
+
+                <Button
+                    android:id="@+id/button_sendBoth_sendReportGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:text="Final report"
+                    android:text="Send to both"
                     android:singleLine="true"
-                    android:layout_marginRight="15dp"
                     android:gravity="center"
+                    android:textSize="20sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:background="@color/colorPrimary"/>
+
+                <Button
+                    android:id="@+id/btn_finish_sendReportGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_margin="10dp"
+                    android:text="Finish"
+                    android:gravity="center"
+                    android:textSize="20sp"
+                    android:paddingRight="16dp"
+                    android:paddingLeft="16dp"
                     android:layout_gravity="center"
                     android:textColor="@color/white"
                     android:background="@color/colorPrimary"/>
@@ -112,11 +124,13 @@
                     android:layout_centerHorizontal="true">
 
                     <TextView
-                        android:id="@+id/textView_pdfContent_GroupReport"
+                        android:id="@+id/textView_pdfContent_sendReportGroup"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="TextView"
-                        android:padding="10dp"/>
+                        android:padding="10dp"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:text="TextView" />
                 </ScrollView>
             </RelativeLayout>
         </LinearLayout>

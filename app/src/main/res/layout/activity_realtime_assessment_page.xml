@@ -52,7 +52,7 @@
                 <View
                     android:id="@+id/divider18"
                     android:layout_width="1dp"
-                    android:background="#000000"
+                    android:background="@color/black"
                     android:layout_height="match_parent" />
 
                 <LinearLayout
@@ -74,8 +74,9 @@
                             android:layout_gravity="center_vertical"
                             android:layout_marginLeft="10dp"
                             android:layout_weight="5"
-                            android:textColor="#000000"
-                            android:textSize="18dp" />
+                            android:textColor="@color/black"
+                            android:textSize="18sp"
+                            android:textStyle="bold"/>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -89,8 +90,9 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginRight="5dp"
-                                android:textColor="#000000"
-                                android:textSize="16dp" />
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                android:textStyle="bold"/>
 
 
                             <TextView
@@ -98,17 +100,19 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical|right"
-                                android:textColor="#000000"
-                                android:textSize="16dp" />
+                                android:textColor="@color/black"
+                                android:textSize="18sp"
+                                android:textStyle="bold"/>
 
                         </LinearLayout>
 
 
                     </LinearLayout>
+
                     <View
                         android:id="@+id/divider19"
                         android:layout_height="1dp"
-                        android:background="#000000"
+                        android:background="@color/black"
                         android:layout_width="match_parent" />
 
                     <LinearLayout
@@ -116,64 +120,98 @@
                         android:layout_height="match_parent"
                         android:layout_weight="12"
                         android:orientation="horizontal"
-                        android:background="#E4E4E4">
+                        android:background="@color/translusentPrimary">
 
                         <TextView
                             android:id="@+id/textView9"
-                            android:layout_width="wrap_content"
-                            android:layout_height="35dp"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
                             android:text="Group No."
                             android:layout_weight="1"
                             android:layout_gravity="center_vertical|left"
-                            android:textSize="16dp"
-                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
                             android:gravity="left|center_vertical"
                             android:padding="5dp" />
 
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
 
                         <TextView
                             android:id="@+id/textView_studentID_studentsWithButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="35dp"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
                             android:clickable="false"
                             android:text="Student ID"
                             android:layout_weight="6"
-                            android:textSize="16dp"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
                             android:layout_gravity="center_vertical|left"
-                            android:singleLine="true"
-                            android:textColor="#000000"
+                            android:textColor="@color/black"
                             android:gravity="left|center_vertical"
                             android:padding="5dp"/>
 
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
 
                         <TextView
                             android:id="@+id/textView_fullname_studentsWithButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="35dp"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
                             android:clickable="false"
                             android:text="Student Name"
                             android:layout_weight="12"
                             android:layout_gravity="center_vertical|left"
-                            android:textSize="16dp"
-                            android:singleLine="true"
-                            android:textColor="#000000"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
                             android:gravity="left|center_vertical"
                             android:padding="5dp"/>
 
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
 
                         <TextView
                             android:id="@+id/textView_email_studentsWithButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="35dp"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
                             android:clickable="false"
                             android:text="Email"
                             android:layout_weight="20"
                             android:layout_gravity="center_vertical|left"
-                            android:textSize="16dp"
-                            android:textColor="#000000"
-                            android:singleLine="true"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black"
                             android:gravity="left|center_vertical"
                             android:padding="5dp" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:text="start"
+                            android:visibility="invisible"
+                            android:textStyle="bold"
+                            android:textSize="18sp"
+                            android:layout_marginRight="16dp"
+                            android:paddingRight="16dp"
+                            android:paddingLeft="16dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/ic_start_button"/>
+
                     </LinearLayout>
 
                     <ListView
@@ -181,7 +219,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:divider="#000000"
+                        android:divider="@color/black"
                         android:dividerHeight="1dp"
                         android:scrollbars="vertical" />
 

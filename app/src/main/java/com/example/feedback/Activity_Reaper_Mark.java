@@ -36,7 +36,7 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__reaper__mark);
+        setContentView(R.layout.activity_reaper_mark);
 
         initToolbar();
         Intent intent = getIntent();

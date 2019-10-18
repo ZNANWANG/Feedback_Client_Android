@@ -23,7 +23,7 @@ public class Activity_Timer extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__timer);
+        setContentView(R.layout.activity_timer);
 
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));

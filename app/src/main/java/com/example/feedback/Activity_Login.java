@@ -56,7 +56,7 @@ public class Activity_Login extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_test_);
+        setContentView(R.layout.activity_login);
         init();
         initDropDownGroup();
         resetHandler();

@@ -25,7 +25,7 @@ public class Activity_Record_Voice extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("EEEE", "record audio!!!!!");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__record__voice);
+        setContentView(R.layout.activity_record_voice);
         pager = findViewById(R.id.pager);
         pager.setAdapter(new MyAdapter(getSupportFragmentManager()));
         tabs = findViewById(R.id.tabs);
@@ -65,8 +65,7 @@ public class Activity_Record_Voice extends AppCompatActivity {
     }
 
     public class MyAdapter extends FragmentPagerAdapter {
-        private String[] titles = { getString(R.string.tab_title_record),
-                getString(R.string.tab_title_saved_recordings) };
+        private String[] titles = { getString(R.string.tab_title_record), getString(R.string.tab_title_saved_recordings) };
 
         public MyAdapter(FragmentManager fm) {
             super(fm);

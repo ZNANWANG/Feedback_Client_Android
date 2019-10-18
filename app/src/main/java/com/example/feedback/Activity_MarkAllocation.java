@@ -39,7 +39,7 @@ public class Activity_MarkAllocation extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity__mark_allocation);
+        setContentView(R.layout.activity_mark_allocation);
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
         init();

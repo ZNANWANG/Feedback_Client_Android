@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:background="#D7D7D7">
+            android:background="@color/translusentPrimary">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -67,8 +67,8 @@
                     android:layout_weight="1"
                     android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="#000000"
-                    android:background="#ffffff"
+                    android:textColor="@color/black"
+                    android:background="@color/white"
                     android:paddingLeft="4dp"
                     android:gravity="center"
                     android:layout_gravity="center"
@@ -89,7 +89,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:text="Mark: 72%"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:paddingLeft="20dp"
                     android:textSize="20sp"/>
 
@@ -104,7 +104,7 @@
                     android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:textColor="#ffffff"
-                    android:background="@drawable/ic_button_background"
+                    android:background="@color/colorPrimary"
                     android:onClick="finish_assessment"
                     android:text="Finish"/>
 
@@ -132,7 +132,7 @@
                             android:layout_height="wrap_content"
                             android:text="Assessment"
                             android:textSize="25sp"
-                            android:textColor="#000000"
+                            android:textColor="@color/black"
                             android:paddingLeft="16dp"
                             android:paddingTop="8dp"/>
 
@@ -157,7 +157,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="25sp"
-                            android:textColor="#000000"
+                            android:textColor="@color/black"
                             android:layout_marginTop="10dp"
                             android:paddingLeft="16dp"
                             android:paddingTop="5dp"

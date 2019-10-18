@@ -69,7 +69,7 @@ public class Activity_Homepage extends AppCompatActivity {
     }
 
     public void toPart3(View view) {
-        Intent intent = new Intent(this, Activity_ReviewReport.class);
+        Intent intent = new Intent(this, Activity_Review_Report.class);
         startActivity(intent);
     }
 
