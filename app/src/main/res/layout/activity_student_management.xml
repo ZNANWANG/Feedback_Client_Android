@@ -99,7 +99,7 @@
                         android:layout_alignBaseline="@id/textView3"
                         android:layout_toStartOf="@id/button_addstudent_instudentgroup"
                         android:background="@drawable/ic_excel"
-                        android:onClick="import_StudentManagement" />
+                        android:onClick="importStudentManagement" />
 
                     <View
                         android:id="@+id/divider10"

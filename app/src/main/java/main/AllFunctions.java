@@ -326,20 +326,7 @@ public class AllFunctions {
         }
     }
 
-    public void readStudentsExcel(ProjectInfo project, String path) {
-        Log.d("EEEE", "project name in allfunction for readstudentExcel: " + project.getProjectName());
-        ExcelParser excelParser = new ExcelParser();
-        ArrayList<StudentInfo> studentInfos = new ArrayList<>();
-        if (path.endsWith(".xls")) {
-            Log.d("EEEE", "read xls file.");
-            studentInfos = excelParser.readXlsStudents(path);
-        } else if (path.endsWith(".xlsx")) {
-            Log.d("EEEE", "read xlsx file.");
-            studentInfos = excelParser.readXlsxStudents(path);
-        }
-        Log.d("EEEE", "size of student list: " + studentInfos.size());
-
-        ArrayList<StudentInfo> students = studentInfos;
+    public void addStudentsFromExcel(ProjectInfo project, ArrayList<StudentInfo> students) {
         new Thread(new Runnable() {
             @Override
             public void run() {

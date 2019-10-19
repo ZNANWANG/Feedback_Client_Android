@@ -1,14 +1,17 @@
 package com.example.feedback;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -33,10 +36,15 @@ import java.util.Comparator;
 import dbclass.ProjectInfo;
 import dbclass.StudentInfo;
 import main.AllFunctions;
+import util.ExcelParser;
 import util.FileUtils;
 
 public class Activity_Student_Management extends AppCompatActivity {
 
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE =
+            {"android.permission.READ_EXTERNAL_STORAGE",
+            "android.permission.WRITE_EXTERNAL_STORAGE"};
     private MyAdapter myAdapter;
     private ArrayList<StudentInfo> students;
     private ListView listView;
@@ -61,6 +69,7 @@ public class Activity_Student_Management extends AppCompatActivity {
     private Handler handler;
     private String from;
     private Button saveButton;
+    private ArrayList<StudentInfo> studentsExcel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,14 +120,12 @@ public class Activity_Student_Management extends AppCompatActivity {
                         break;
                     case 225:
                         Toast.makeText(getApplicationContext(), "Successfully upload the student list.", Toast.LENGTH_SHORT).show();
-                        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
-                        students = project.getStudentInfo();
+                        AllFunctions.getObject().getProjectList().get(indexOfProject).addStudentList(studentsExcel);
                         myAdapter.notifyDataSetChanged();
+                        Collections.sort(project.getStudentInfo(), new SortByGroup());
                         break;
                     case 226:
                         Toast.makeText(getApplicationContext(), "One or more students already exist. Please check and try again.", Toast.LENGTH_SHORT).show();
-                        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
-                        students = project.getStudentInfo();
                         myAdapter.notifyDataSetChanged();
                         break;
                     default:
@@ -259,14 +266,47 @@ public class Activity_Student_Management extends AppCompatActivity {
 
     private static final int FILE_SELECT_CODE = 0;
 
-    public void import_StudentManagement(View view) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
+    public void importStudentManagement(View view) {
         try {
-            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
+            verifyStoragePermissions(Activity_Student_Management.this);
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
+        }
+    }
+
+    public void verifyStoragePermissions(Activity activity) {
+
+        try {
+            int permission = ActivityCompat.checkSelfPermission(activity,
+                    "android.permission.READ_EXTERNAL_STORAGE");
+            if (permission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+            } else {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                    intent.setType("*/*");
+                    intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
+                } else {
+                    Toast.makeText(this, "You denied the permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
         }
     }
 
@@ -282,7 +322,7 @@ public class Activity_Student_Management extends AppCompatActivity {
                     Log.d(TAG, "File Uri: " + uri.toString());
                     // Get the path
                     path = FileUtils.getPath(this, uri);
-                    AllFunctions.getObject().readStudentsExcel(project, path);
+                    readStudentsExcel(project, path);
                     System.out.println("call the readExcel method: " + path);
                     init();
                     // Get the file instance
@@ -292,6 +332,23 @@ public class Activity_Student_Management extends AppCompatActivity {
                 break;
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void readStudentsExcel(ProjectInfo project, String path) {
+        Log.d("EEEE", "project name in allfunction for readstudentExcel: " + project.getProjectName());
+        ExcelParser excelParser = new ExcelParser();
+        ArrayList<StudentInfo> studentInfos = new ArrayList<>();
+        if (path.endsWith(".xls")) {
+            Log.d("EEEE", "read xls file.");
+            studentInfos = excelParser.readXlsStudents(path);
+        } else if (path.endsWith(".xlsx")) {
+            Log.d("EEEE", "read xlsx file.");
+            studentInfos = excelParser.readXlsxStudents(path);
+        }
+        Log.d("EEEE", "size of student list: " + studentInfos.size());
+
+        studentsExcel = studentInfos;
+        AllFunctions.getObject().addStudentsFromExcel(project, studentsExcel);
     }
 
     //button addStudent click.
