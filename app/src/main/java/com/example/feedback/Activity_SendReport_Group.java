@@ -157,7 +157,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         htmlString += "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
         for (int i = 0; i < markList.get(0).getCriteriaList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + markList.get(0).getCriteriaList().get(i).getName() + "</span>" +
-                    "<span style=\"float:right\">   " + markList.get(0).getMarkList().get(i) + "/" + markList.get(0).getCriteriaList().get(i).getMaximunMark() + "</span></h3>";
+                    "<span style=\"float:right\">   " + markList.get(0).getMarkList().get(i) + "/" + Double.valueOf(markList.get(0).getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
             for (int j = 0; j < markList.size(); j++) {
                 htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + markList.get(j).getLecturerName() + ":</h4>";
                 if (markList.get(j).getCriteriaList().size() > 0)

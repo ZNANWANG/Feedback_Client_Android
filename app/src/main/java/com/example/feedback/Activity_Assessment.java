@@ -1,11 +1,13 @@
 package com.example.feedback;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,9 +25,9 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import java.util.ArrayList;
-
 import dbclass.Criteria;
 import dbclass.Mark;
 import dbclass.ProjectInfo;
@@ -70,6 +72,8 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
     static private int matrixCommentLongText[][];
     private AllFunctions allFunctions;
     private Handler handler;
+    private AlertDialog dialog;
+    private String from;
 
 
     @Override
@@ -82,18 +86,19 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
+        from = intent.getStringExtra("from");
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
 
         tv_assessment_student = findViewById(R.id.tv_assessment_student);
         studentList = new ArrayList<>();
 
         if (indexOfGroup == -999) {
-            tv_assessment_student.setText(project.getStudentInfo().get(indexOfStudent).getNumber() + " " +
+            tv_assessment_student.setText(project.getStudentInfo().get(indexOfStudent).getNumber() + " --- " +
                     project.getStudentInfo().get(indexOfStudent).getFirstName() + " " +
                     project.getStudentInfo().get(indexOfStudent).getMiddleName() + " " +
                     project.getStudentInfo().get(indexOfStudent).getSurname());
             studentList.add(indexOfStudent);
-            Log.d("EEEE", "index of student" + indexOfStudent);
+            Log.d("EEEE", "index of student " + indexOfStudent);
         } else {
             tv_assessment_student.setText("Group " + indexOfGroup);
             for (int i = 0; i < project.getStudentInfo().size(); i++) {
@@ -106,7 +111,9 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
         tv_assessment_total_mark = findViewById(R.id.tv_assessment_total_mark);
 
-        Log.d("EEEE", "student's mark: " + project.getStudentInfo().get(studentList.get(0)).getMark());
+        String json = new Gson().toJson(project.getStudentInfo().get(studentList.get(0)).getMark());
+
+        Log.d("EEEE", "student's mark: " + json);
 
         if (project.getStudentInfo().get(studentList.get(0)).getMark() != null) {
 
@@ -122,18 +129,15 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
             for (int j = 0; j < project.getCriteria().size(); j++) {
                 totalWeighting = totalWeighting + project.getCriteria().get(j).getMaximunMark();
-
             }
 
             for (int k = 0; k < project.getCriteria().size(); k++) {
                 totalMark = project.getStudentInfo().get(studentList.get(0)).getMark().getTotalMark();
-
             }
 
             tv_assessment_total_mark.setText(String.format("%.2f", project.getStudentInfo().get(studentList.get(0)).getMark().getTotalMark()) + "%");
 
         } else {
-
             initMatrix();
             tv_assessment_total_mark.setText("0%");
             for (int m = 0; m < studentList.size(); m++) {
@@ -143,12 +147,10 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCriteriaList().get(n).setName(project.getCriteria().get(n).getName());
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCriteriaList().get(n).setMaximunMark(project.getCriteria().get(n).getMaximunMark());
                     project.getStudentInfo().get(studentList.get(m)).getMark().getMarkList().add(0.0);
-
                 }
                 for (int n = 0; n < project.getCommentList().size(); n++) {
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCommentList().add(new Criteria());
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCommentList().get(n).setName(project.getCommentList().get(n).getName());
-
                 }
             }
 
@@ -157,11 +159,9 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
             }
         }
 
-
         lv_individual = findViewById(R.id.lv_individual);
         lv_otherComment = findViewById(R.id.lv_otherComment);
         init();
-
 
         tv_time = findViewById(R.id.tv_time);
         tv_time.setText(String.format("%02d", durationTime / 1000 / 60) + ":" + String.format("%02d", durationTime / 1000 % 60));
@@ -180,7 +180,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
     @Override
     protected void onNewIntent(Intent intent) {
         lv_individual.setAdapter(myAdapter);
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -224,7 +223,41 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     case 210:
                         Toast.makeText(Activity_Assessment.this,
                                 "Sync success.", Toast.LENGTH_SHORT).show();
-                        finish();
+                        if (from.equals("realtime")) {
+                            finish();
+                        } else if (from.equals("edit")) {
+                            if (checkAllCriteria()) {
+                                addSubsectionToMarkObject();
+                                for (int i = 0; i < studentList.size(); i++) {
+                                    project.getStudentInfo().get(studentList.get(i)).setTotalMark(project.getStudentInfo().get(studentList.get(i)).getMark().getTotalMark());
+                                    AllFunctions.getObject().sendMark(project, project.getStudentInfo().get(studentList.get(i)).getNumber(), project.getStudentInfo().get(studentList.get(i)).getMark());
+                                }
+                            } else {
+                                Toast.makeText(Activity_Assessment.this, "You have one or more comments not selected", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    case 211:
+                        Toast.makeText(Activity_Assessment.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 351:
+                        Toast.makeText(Activity_Assessment.this,
+                                "Record mark success", Toast.LENGTH_SHORT).show();
+//                        dialog.dismiss();
+                        if (from.equals("realtime")) {
+                            Intent intent = new Intent(Activity_Assessment.this, Activity_Reaper_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            startActivity(intent);
+                            finish();
+                        } else if (from.equals("edit")) {
+                            finish();
+                        }
+                    case 352:
+                        Toast.makeText(Activity_Assessment.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
                     default:
                         break;
                 }
@@ -243,7 +276,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
         setListViewHeightBasedOnChildren(lv_individual);
         lv_otherComment.setAdapter(myAdapter3);
         setListViewHeightBasedOnChildren(lv_otherComment);
-
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -305,7 +337,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
                     if (project.getCriteria().get(position).getSubsectionList().get(j).getShortTextList().get(m).getGrade() == 1) {
                         weightList.set(0, (weightList.get(0) + 1));
-
                     } else if (project.getCriteria().get(position).getSubsectionList().get(j).getShortTextList().get(m).getGrade() == 2) {
                         weightList.set(1, (weightList.get(1) + 1));
                     } else if (project.getCriteria().get(position).getSubsectionList().get(j).getShortTextList().get(m).getGrade() == 3) {
@@ -330,7 +361,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
             tv_green.setLayoutParams(param3);
 
-
             Button btn_assessment_comment = convertView.findViewById(R.id.btn_assessment_comment_back);
             btn_assessment_comment.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -344,14 +374,12 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                 }
             });
 
-
-            sb_mark = (SeekBar) convertView.findViewById(R.id.sb_mark);
-            tv_mark = (TextView) convertView.findViewById(R.id.tv_mark);
+            sb_mark = convertView.findViewById(R.id.sb_mark);
+            tv_mark = convertView.findViewById(R.id.tv_mark);
             sb_mark.setMax((int) (project.getCriteria().get(position).getMaximunMark() / increment));
             final View view2 = convertView;
             sb_mark.setProgress((int) (project.getStudentInfo().get(studentList.get(0)).getMark().getMarkList().get(position) / increment));
-            tv_mark.setText((project.getStudentInfo().get(studentList.get(0)).getMark().getMarkList().get(position) + " / " + project.getCriteria().get(position).getMaximunMark()));
-
+            tv_mark.setText((project.getStudentInfo().get(studentList.get(0)).getMark().getMarkList().get(position) + " / " + Double.valueOf(project.getCriteria().get(position).getMaximunMark())));
 
             sb_mark.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
@@ -367,16 +395,14 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     }
 
                     Double progressDisplay = progress * increment;
-                    tv_mark = (TextView) view2.findViewById(R.id.tv_mark);
+                    tv_mark = view2.findViewById(R.id.tv_mark);
                     tv_mark.setText(String.valueOf(progressDisplay) + " / " + project.getCriteria().get(position).getMaximunMark());
 
                     for (int i = 0; i < studentList.size(); i++) {
                         if (project.getStudentInfo().get(studentList.get(i)).getMark().getMarkList() == null) {
                             project.getStudentInfo().get(studentList.get(i)).getMark().getMarkList().add(position, progressDisplay);
-
                         } else {
                             project.getStudentInfo().get(studentList.get(i)).getMark().getMarkList().set(position, progressDisplay);
-
                         }
                     }
 
@@ -404,12 +430,9 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
         for (int i = 0; i < studentList.size(); i++) {
             Double sum = 0.0;
             for (int k = 0; k < project.getStudentInfo().get(studentList.get(i)).getMark().getMarkList().size(); k++) {
-
                 sum = sum + project.getStudentInfo().get(studentList.get(i)).getMark().getMarkList().get(k) * (100.0 / totalWeighting);
-
                 project.getStudentInfo().get(studentList.get(i)).getMark().setTotalMark(sum);
             }
-
         }
     }
 
@@ -431,7 +454,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                 tv_time.setText("00:00");
             }
         };
-
     }
 
     @Override
@@ -449,7 +471,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     if (!isPause) {
                         isPause = true;
                         countDownTimer.cancel();
-
                     }
 
                     btn_assessment_start.setBackgroundResource(R.drawable.ic_start);
@@ -534,8 +555,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
         }
     }
 
-
-    public void finish_assessment(View view) {
+    public void finishAssessment(View view) {
 
         if (checkAllCriteria()) {
             addSubsectionToMarkObject();
@@ -545,21 +565,16 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                 AllFunctions.getObject().sendMark(project, project.getStudentInfo().get(studentList.get(i)).getNumber(), project.getStudentInfo().get(studentList.get(i)).getMark());
             }
 
-            Intent intent = new Intent(Activity_Assessment.this, Activity_Reaper_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-            startActivity(intent);
-            finish();
+//            LayoutInflater layoutInflater = LayoutInflater.from(Activity_Assessment.this);
+//            final View view2 = layoutInflater.from(Activity_Assessment.this).inflate(R.layout.dialog_record_mark, null);
+//            AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Assessment.this);
+//            dialog = builder.create();
+//            dialog.setCancelable(false);
+//            dialog.setView(view2);
+//            dialog.show();
         } else {
             Toast.makeText(this, "You have one or more comments not selected", Toast.LENGTH_SHORT).show();
         }
-
-    }
-
-
-    public void back_assessment(View view) {
-        finish();
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {
@@ -613,7 +628,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                 arrayList_ls.add(matrixCriteriaLongtext[criteriaIndex][i]);
                 arrayLists.add(arrayList_ls);
             }
-
         }
         return arrayLists;
     }
@@ -628,7 +642,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                 arrayList_ls.add(matrixCommentLongText[criteriaIndex][i]);
                 arrayLists.add(arrayList_ls);
             }
-
         }
         return arrayLists;
     }
@@ -741,5 +754,9 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                 }
             }
         }
+    }
+
+    public void onBackPressed() {
+        allFunctions.syncProjectList();
     }
 }

@@ -6,11 +6,11 @@
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle" >
             <solid
-                android:color="@color/translusentBlue" >
+                android:color="@color/colorPrimary" >
             </solid>
 
             <corners
-                android:radius="140dp">
+                android:radius="5dp">
             </corners>
         </shape>
     </item>

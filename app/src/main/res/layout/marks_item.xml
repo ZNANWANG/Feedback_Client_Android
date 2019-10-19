@@ -44,9 +44,6 @@
 
         </ListView>
 
-
-
-
         <Button
             android:id="@+id/btn_view"
             android:layout_width="match_parent"
@@ -56,9 +53,9 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
             android:layout_weight="0"
-            android:background="@drawable/ic_button_background"
+            android:background="@drawable/ripple_round_button"
             android:text="View Report"
-            android:textColor="#ffffff" />
+            android:textColor="@color/white" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

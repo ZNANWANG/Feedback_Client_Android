@@ -84,7 +84,7 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:textColor="@color/white"
-                    android:background="@color/colorPrimary"/>
+                    android:background="@drawable/ripple_round_button"/>
 
                 <Button
                     android:id="@+id/button_finalReport_report"
@@ -93,13 +93,13 @@
                     android:textSize="20sp"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"
-                    android:text="Final report"
+                    android:text="Send report"
                     android:singleLine="true"
                     android:layout_marginRight="15dp"
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:textColor="@color/white"
-                    android:background="@color/colorPrimary"/>
+                    android:background="@drawable/ripple_round_button"/>
             </LinearLayout>
 
             <RelativeLayout
@@ -110,7 +110,7 @@
                 <ScrollView
                     android:layout_width="1024dp"
                     android:layout_height="match_parent"
-                    android:background="#ffffff"
+                    android:background="@color/white"
                     android:layout_centerHorizontal="true">
 
                     <TextView

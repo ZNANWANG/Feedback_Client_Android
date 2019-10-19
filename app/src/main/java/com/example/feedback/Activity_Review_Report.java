@@ -83,6 +83,9 @@ public class Activity_Review_Report extends AppCompatActivity {
         listView_projects.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                for (int i = 0; i < adapterView.getChildCount(); i++)
+                    adapterView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                view.setBackgroundColor(getResources().getColor(R.color.check));
                 indexOfProject = position;
                 ProjectInfo project = projectList.get(position);
                 MyAdapter myAdapter = new MyAdapter(project.getStudentInfo(), Activity_Review_Report.this);
@@ -93,7 +96,6 @@ public class Activity_Review_Report extends AppCompatActivity {
                         myAdapter.notifyDataSetChanged();
                     }
                 });
-
             }
         });
     }

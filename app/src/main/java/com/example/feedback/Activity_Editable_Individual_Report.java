@@ -91,6 +91,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
                 (AllFunctions.getObject().getMyEmail())) {
             button_finalReport.setVisibility(View.INVISIBLE);
         }
+
         Button button_editReport_individual = findViewById(R.id.button_edit_report);
         button_editReport_individual.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,6 +100,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfGroup", "-999");
                 intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                intent.putExtra("from", "edit");
                 AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent).setMark(mark);
                 startActivity(intent);
                 finish();
@@ -110,7 +112,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
         TextView textView_totalMark = findViewById(R.id.textView_totalMark_report);
         textView_totalMark.setText("Mark:" + (int) mark.getTotalMark() + "%");
         TextView textView_assessorName = findViewById(R.id.textView_assessorName_report);
-        textView_assessorName.setText("Assessor: " + mark.getLecturerName());
+        textView_assessorName.setText("Marker: " + mark.getLecturerName());
         String htmlString =
                 "<html>" +
                         "<body>" +
@@ -121,23 +123,22 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
                         "<p>" + project.getSubjectCode() + " --- " + project.getSubjectName() + "</p >" +
                         "<h2 style=\"font-weight: normal\">Project</h2>" +
                         "<p>" + project.getProjectName() + "</p >" +
-                        "<h2 style=\"font-weight: normal\">Mark Attained</h2>" +
+                        "<h2 style=\"font-weight: normal\">Mark</h2>" +
                         "<p>" + mark.getTotalMark() + "%</p >" +
                         "<h2 style=\"font-weight: normal\">Assessor</h2>" + "<p>";
         for (int i = 0; i < project.getAssistant().size(); i++)
             htmlString = htmlString + project.getAssistant().get(i) + "<br>";
         htmlString = htmlString +
                 "</p >" +
-                "<h2 style=\"font-weight: normal\">Assessment Date</h2>" +
-                "<p>" + "test date" + "</p ><br><br><br><hr>" +
+                "<br><br><br><hr>" +
                 "<div>" +
                 "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
         for (int i = 0; i < mark.getCriteriaList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + mark.getCriteriaList().get(i).getName() + "</span>" +
-                    "<span style=\"float:right\">" + mark.getMarkList().get(i) + "/" + mark.getCriteriaList().get(i).getMaximunMark() + "</span></h3>";
+                    "<span style=\"float:right\">" + "  ---  " + mark.getMarkList().get(i) + "/" + Double.valueOf(mark.getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
             for (int j = 0; j < mark.getCriteriaList().get(i).getSubsectionList().size(); j++) {
-                htmlString += "<p>&lt;" + mark.getCriteriaList().get(i).getSubsectionList().get(j).getName() +
-                        ":&gt;" + mark.getCriteriaList().get(i).getSubsectionList().get(j).getShortTextList().get(0).getLongtext() + "</p >";
+                htmlString += "<p>" + mark.getCriteriaList().get(i).getSubsectionList().get(j).getName() +
+                        " : " + mark.getCriteriaList().get(i).getSubsectionList().get(j).getShortTextList().get(0).getLongtext() + "</p >";
             }
             htmlString += "<br>";
         }

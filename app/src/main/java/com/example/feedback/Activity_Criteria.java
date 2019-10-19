@@ -29,16 +29,14 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 import dbclass.Criteria;
 import dbclass.DefaultCriteriaList;
 import dbclass.ProjectInfo;
 import main.AllFunctions;
 import util.FileUtils;
 
-public class Activity_CriteriaList extends AppCompatActivity {
+public class Activity_Criteria extends AppCompatActivity {
 
     private ProjectInfo project;
     private int indexOfProject;
@@ -52,28 +50,29 @@ public class Activity_CriteriaList extends AppCompatActivity {
     private MyAdapter_criteriaListDefault myAdapter1;
     private MyAdapter_criteriaListDefault myAdapter2;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private String from;
     private static String[] PERMISSIONS_STORAGE = {"android.permission.READ_EXTERNAL_STORAGE",
     "android.permission.WRITE_EXTERNAL_STORAGE"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_criteria_list);
+        setContentView(R.layout.activity_criteria);
         Log.d("EEEE", "criteriaList interface onCreate");
-        verifyStoragePermissions(Activity_CriteriaList.this);
+        verifyStoragePermissions(Activity_Criteria.this);
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
+        from = intent.getStringExtra("from");
+        Log.d("EEEE", "from: " + from);
         init();
     }
 
     public static void verifyStoragePermissions(Activity activity) {
 
         try {
-            //检测是否有写的权限
             int permission = ActivityCompat.checkSelfPermission(activity,
                     "android.permission.READ_EXTERNAL_STORAGE");
             if (permission != PackageManager.PERMISSION_GRANTED) {
-                // 没有写的权限，去申请写的权限，会弹出对话框
                 ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
             }
         } catch (Exception e) {
@@ -88,7 +87,11 @@ public class Activity_CriteriaList extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                discardWarning();
+                if (from.equals("old")) {
+                    discardWarning();
+                } else if (from.equals("new")) {
+                    AllFunctions.getObject().deleteProject(indexOfProject);
+                }
             }
         });
         mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
@@ -96,8 +99,8 @@ public class Activity_CriteriaList extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_CriteriaList.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_CriteriaList.this,
+                        Toast.makeText(Activity_Criteria.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Criteria.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -127,18 +130,27 @@ public class Activity_CriteriaList extends AppCompatActivity {
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 0:
-                        Intent intent = new Intent(Activity_CriteriaList.this,
-                                Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                        break;
                     case 210:
-                        Toast.makeText(Activity_CriteriaList.this,
-                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_Criteria.this,
+                                "Sync success", Toast.LENGTH_SHORT).show();
                         dialog.dismiss();
                         finish();
                         break;
+                    case 211:
+                        Toast.makeText(Activity_Criteria.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        break;
+                    case 205:
+                        Log.d("EEEE", "Successfully delete the project.");
+                        Toast.makeText(Activity_Criteria.this,
+                                "Successfully delete the project.", Toast.LENGTH_SHORT).show();
+                        finish();
+                        break;
+                    case 206:
+                        Log.d("EEEE", "Fail to delete the project.");
+                        Toast.makeText(Activity_Criteria.this,
+                                "Fail to delete the project. Please try again.", Toast.LENGTH_SHORT).show();
                     default:
                         break;
                 }
@@ -165,15 +177,16 @@ public class Activity_CriteriaList extends AppCompatActivity {
     }
 
     //button next.
-    public void next_inCriteriaList(View view) {
+    public void nextCriteria(View view) {
         Log.d("EEEE", project.getCriteria() + "");
         if(project.getCriteria().size() == 0){
             Log.d("EEEE", "empty criteria list.");
-            Toast.makeText(Activity_CriteriaList.this, "Marking criteria cannot be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Activity_Criteria.this, "Marking criteria cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
-            Intent intent = new Intent(this, Activity_MarkAllocation.class);
+            Intent intent = new Intent(this, Activity_Mark_Allocation.class);
             intent.putExtra("index", String.valueOf(indexOfProject));
-            startActivityForResult(intent, 1);
+            intent.putExtra("from", from);
+            startActivity(intent);
             Log.d("EEEE", "Go to mark allocation.");
         }
     }
@@ -195,7 +208,7 @@ public class Activity_CriteriaList extends AppCompatActivity {
                             project.getCriteria().add(criteria);
                             init();
                         } else {
-                            Toast.makeText(Activity_CriteriaList.this, "Criteria " + newCriteriaName + " has been existed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Activity_Criteria.this, "Criteria " + newCriteriaName + " has been existed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -207,33 +220,6 @@ public class Activity_CriteriaList extends AppCompatActivity {
         }).create();
         dialog.show();
     }
-
-//    public void addCommentCriteria(View view) {
-//        LayoutInflater layoutInflater = LayoutInflater.from(this);//获得layoutInflater对象
-//        final View view2 = layoutInflater.from(this).inflate(R.layout.dialog_add_criteria, null);//获得view对象
-//
-//        Dialog dialog = new android.app.AlertDialog.Builder(this).setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int which) {
-//                EditText editText_newCriteriaName = view2.findViewById(R.id.editText_criteriaName_dialogAddCriteria);//获取控件
-//                String newCriteriaName = editText_newCriteriaName.getText().toString();
-//
-//                if (findWhichCriteriaList_itbelongs(newCriteriaName) == -999) {
-//                    Criteria criteria = new Criteria();
-//                    criteria.setName(newCriteriaName);
-//                    project.getCommentList().add(criteria);
-//                    init();
-//                } else {
-//                    Toast.makeText(Activity_CriteriaList.this, "Criteria " + newCriteriaName + " has been existed.", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                // TODO Auto-generated method stub
-//            }
-//        }).create();
-//        dialog.show();
-//    }
 
     public class MyAdapter_criteriaListDefault extends BaseAdapter {
         private Context mContext;
@@ -269,14 +255,12 @@ public class Activity_CriteriaList extends AppCompatActivity {
             convertView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    // DND框架要求传递的数据
                     ClipData.Item item1 = new ClipData.Item(criteriaList.get(position).getName());
                     ClipData.Item item2 = new ClipData.Item(String.valueOf(position));
 
                     ClipData clipData = new ClipData("", new String[]{ClipDescription.MIMETYPE_TEXT_PLAIN}, item1);
                     clipData.addItem(item2);
 
-                    // 开始当前View的拖动操作，将当前拖动对象的position当作localState传递到拖动事件中
                     dragView.startDrag(clipData, new View.DragShadowBuilder(dragView), null, 0);
                     return true;
                 }
@@ -331,12 +315,6 @@ public class Activity_CriteriaList extends AppCompatActivity {
                             for(int i = 0; i < defaultCriteriaList.size(); i++) {
                                 Log.d("EEEE", "default criteria list: " + defaultCriteriaList.get(i).getName());
                             }
-                            break;
-                        case 2:
-                            Log.d("EEEE", "2->0");
-                            Criteria criteria_Temporary2 = project.getCommentList().get(source_criteriaIndex);
-                            project.getCommentList().remove(source_criteriaIndex);
-                            defaultCriteriaList.add(criteria_Temporary2);
                             break;
                         default:
                             break;
@@ -404,12 +382,6 @@ public class Activity_CriteriaList extends AppCompatActivity {
                             break;
                         case 1:
                             break;
-                        case 2:
-                            Log.d("EEEE", "2->1");
-                            Criteria criteria_Temporary2 = project.getCommentList().get(source_criteriaIndex);
-                            project.getCommentList().remove(source_criteriaIndex);
-                            project.getCriteria().add(criteria_Temporary2);
-                            break;
                         default:
                             break;
                     }
@@ -434,93 +406,7 @@ public class Activity_CriteriaList extends AppCompatActivity {
         }
     };
 
-//    private View.OnDragListener dragListenerForCommentOnlyCriteria = new View.OnDragListener() {
-//
-//        @Override
-//        public boolean onDrag(View v, DragEvent event) {
-//
-//            // Defines a variable to store the action type for the incoming event
-//            final int action = event.getAction();
-//
-//            // Handles each of the expected events
-//            switch (action) {
-//
-//                case DragEvent.ACTION_DRAG_STARTED:
-//                    // Determines if this View can accept the dragged data
-//                    if (event.getClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
-//                        v.invalidate();
-//                        return true;
-//                    }
-//                    return false;
-//                case DragEvent.ACTION_DRAG_ENTERED:
-//
-//                    v.setBackgroundColor(Color.parseColor("#dbdbdb"));
-//                    v.invalidate();
-//                    return true;
-//
-//                case DragEvent.ACTION_DRAG_LOCATION:
-//                    return true;
-//
-//                case DragEvent.ACTION_DRAG_EXITED:
-//                    v.setBackgroundColor(Color.TRANSPARENT);
-//                    v.invalidate();
-//                    return true;
-//
-//                case DragEvent.ACTION_DROP:
-//
-//                    v.setBackgroundColor(Color.TRANSPARENT);
-//                    // Gets the item containing the dragged data
-//                    ClipData.Item item1 = event.getClipData().getItemAt(0);
-//                    ClipData.Item item2 = event.getClipData().getItemAt(1);
-//                    String source_criteriaName = item1.getText().toString();
-//                    int source_criteriaIndex = Integer.parseInt(item2.getText().toString());
-//
-//
-//                    int whichList = findWhichCriteriaList_itbelongs(source_criteriaName);
-//                    switch (whichList) {
-//                        case 0:
-//                            Criteria criteria_Temporary = defaultCriteriaList.get(source_criteriaIndex);
-//                            defaultCriteriaList.remove(source_criteriaIndex);
-//                            project.getCommentList().add(criteria_Temporary);
-//                            break;
-//                        case 1:
-//                            Criteria criteria_Temporary2 = project.getCriteria().get(source_criteriaIndex);
-//                            project.getCriteria().remove(source_criteriaIndex);
-//                            project.getCommentList().add(criteria_Temporary2);
-//                            break;
-//                        case 2:
-//                            break;
-//                        default:
-//                            ;
-//                    }
-//
-//                    init();
-//
-//                    // Invalidates the view to force a redraw
-//                    v.invalidate();
-//
-//                    // Returns true. DragEvent.getResult() will return true.
-//                    return true;
-//
-//                case DragEvent.ACTION_DRAG_ENDED:
-//
-//                    // Turns off any color tinting
-//                    // Invalidates the view to force a redraw
-//                    v.invalidate();
-//
-//                    // returns true; the value is ignored.
-//                    return true;
-//                // An unknown action type was received.
-//                default:
-//                    Log.e("DragDrop Example", "Unknown action type received by OnDragListener.");
-//                    break;
-//            }
-//            return false;
-//        }
-//    };
-
-
-    //0 means defaultCriteriaList, 1 means marking criteriaList, 2 means commentOnly criteriaList
+    //0 means defaultCriteriaList, 1 means marking criteriaList
     private int findWhichCriteriaList_itbelongs(String criteriaName) {
         for (Criteria c : defaultCriteriaList) {
             if (c.getName().equals(criteriaName))
@@ -530,22 +416,18 @@ public class Activity_CriteriaList extends AppCompatActivity {
             if (c.getName().equals(criteriaName))
                 return 1;
         }
-        for (Criteria c : project.getCommentList()) {
-            if (c.getName().equals(criteriaName))
-                return 2;
-        }
         return -999;
     }
 
     public void discardWarning() {
         AllFunctions.getObject().setHandler(handler); // attention!!!!!!!
 
-        LayoutInflater layoutInflater = LayoutInflater.from(Activity_CriteriaList.this);//获得layoutInflater对象
-        final View view = layoutInflater.from(Activity_CriteriaList.this).
-                inflate(R.layout.dialog_quit_editing, null);//获得view对象
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Criteria.this);
+        final View view = layoutInflater.from(Activity_Criteria.this).
+                inflate(R.layout.dialog_quit_editing, null);
         TextView warning = view.findViewById(R.id.textView_dialog_query_waring_editing);
-        warning.setText("Are you sure you want to discard all changes ?");
-        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_CriteriaList.this);
+        warning.setText("Are you sure to discard all changes ?");
+        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Criteria.this);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -578,13 +460,6 @@ public class Activity_CriteriaList extends AppCompatActivity {
         });
     }
 
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if(keyCode == KeyEvent.KEYCODE_BACK) {
-//            return true;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
-
     private static final int FILE_SELECT_CODE = 0;
 
     public void uploadCriteria(View view) {
@@ -594,7 +469,7 @@ public class Activity_CriteriaList extends AppCompatActivity {
         try {
             startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"), FILE_SELECT_CODE);
         } catch (android.content.ActivityNotFoundException ex) {
-            // Potentially direct the user to the Market with a Dialog
+            ex.printStackTrace();
         }
     }
 
@@ -620,6 +495,10 @@ public class Activity_CriteriaList extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        discardWarning();
+        if (from.equals("old")) {
+            discardWarning();
+        } else if (from.equals("new")) {
+            AllFunctions.getObject().deleteProject(indexOfProject);
+        }
     }
 }

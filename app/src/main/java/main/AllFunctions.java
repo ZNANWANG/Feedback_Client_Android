@@ -88,6 +88,10 @@ public class AllFunctions {
         handlerAllfunction.sendEmptyMessage(210);
     }
 
+    public void syncFail() {
+        handlerAllfunction.sendEmptyMessage(211);
+    }
+
     public ArrayList<ProjectInfo> getProjectList() {
         return projectList;
     }
@@ -128,7 +132,6 @@ public class AllFunctions {
             handlerAllfunction.sendEmptyMessage(110);
         }
     }
-
 
     public void createProject(String projectName, String subjectName,
                               String subjectCode, String description) {
@@ -293,6 +296,14 @@ public class AllFunctions {
         }).start();
     }
 
+    public void deleteAssessorACK(String ack) {
+        if (ack.equals("true")) {
+            handlerAllfunction.sendEmptyMessage(309);
+        } else {
+            handlerAllfunction.sendEmptyMessage(310);
+        }
+    }
+
 
     public void projectCriteria(ProjectInfo project, ArrayList<Criteria> criteriaList,
                                 ArrayList<Criteria> commentList) {
@@ -307,22 +318,12 @@ public class AllFunctions {
         }).start();
     }
 
-    public void readExcel(ProjectInfo project, String path) {
-        Log.d("EEEE", "project name in allfunction for readExcel: " + project.getProjectName());
-        ReadExcel read = new ReadExcel();
-        read.setInputFile(path);
-        project.addStudentList(read.read());
-        Log.d("EEEE", "student list in allFunction: " + read.read().size());
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                communication.importStudents(project.getProjectName(),
-                        project.getStudentInfo());
-                Log.d("readExcel", "success");
-            }
-        }).start();
-
+    public void updateProjectCriteriaACK(String ack) {
+        if (ack.equals("true")) {
+            handlerAllfunction.sendEmptyMessage(401);
+        } else {
+            handlerAllfunction.sendEmptyMessage(402);
+        }
     }
 
     public void readStudentsExcel(ProjectInfo project, String path) {
@@ -472,6 +473,16 @@ public class AllFunctions {
                 Log.d("sendMark", "success");
             }
         }).start();
+    }
+
+    public void sendMarkACK(String ack) {
+        if (ack.equals("true")) {
+            Log.d("EEEE", "send mark successfully");
+            handlerAllfunction.sendEmptyMessage(351);
+        } else {
+            Log.d("EEEE", "fail to send mark");
+            handlerAllfunction.sendEmptyMessage(352);
+        }
     }
 
     public void sendPDF(ProjectInfo project, String studentID, int sendBoth) {

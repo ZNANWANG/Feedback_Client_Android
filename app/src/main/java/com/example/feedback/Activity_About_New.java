@@ -17,17 +17,20 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import dbclass.ProjectInfo;
 import main.AllFunctions;
 
-public class Activity_About extends AppCompatActivity {
+public class Activity_About_New extends AppCompatActivity {
 
-    private int durationMin, durationSec, warningMin, warningSec;
-    private String projectName, subjectName, subjectCode, projectDes;
+    private int durationMin = 0;
+    private int durationSec = 0;
+    private int warningMin = 0;
+    private int warningSec = 0;
+    private String projectName, subjectName, subjectCode, projectDesc;
     private String index;
+    private String buttonFlag;
     private ProjectInfo project;
     private Handler handler;
     private AlertDialog dialog;
@@ -48,17 +51,15 @@ public class Activity_About extends AppCompatActivity {
     private Button button_minus_warning_minutes;
     private Button button_plus_warning_seconds;
     private Button button_minus_warning_seconds;
-    private Button button_next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("EEEE", "about edition start!");
+        Log.d("EEEE", "new about edition start!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
         Intent intent = getIntent();
         index = intent.getStringExtra("index");
-        Log.d("EEEE", "index: " + index);
-        init(Integer.parseInt(index));
+        init();
     }
 
     private void initToolbar() {
@@ -77,8 +78,8 @@ public class Activity_About extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_About.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_About.this,
+                        Toast.makeText(Activity_About_New.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_About_New.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -92,14 +93,12 @@ public class Activity_About extends AppCompatActivity {
     }
 
     public void discardWarning() {
-        AllFunctions.getObject().setHandler(handler); // attention!!!!!!!
+        AllFunctions.getObject().setHandler(handler);
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_About_New.this);//获得layoutInflater对象
+        final View view = layoutInflater.from(Activity_About_New.this).
+                inflate(R.layout.dialog_quit_editing, null);//获得view对象
 
-        LayoutInflater layoutInflater = LayoutInflater.from(Activity_About.this);
-        final View view = layoutInflater.from(Activity_About.this).
-                inflate(R.layout.dialog_quit_editing, null);
-        TextView warning = view.findViewById(R.id.textView_dialog_query_waring_editing);
-        warning.setText("Are you sure to discard all changes ?");
-        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_About.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_About_New.this);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -121,7 +120,8 @@ public class Activity_About extends AppCompatActivity {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AllFunctions.getObject().syncProjectList();
+                finish();
+                dialog.dismiss();
             }
         });
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
@@ -141,8 +141,6 @@ public class Activity_About extends AppCompatActivity {
         button_minus_warning_minutes = findViewById(R.id.button_warningMinMinus_Timer);
         button_plus_warning_seconds = findViewById(R.id.button_addWarningSec_inTimer);
         button_minus_warning_seconds = findViewById(R.id.button_warningSecMinus_Timer);
-        button_next = findViewById(R.id.button_next_about);
-        button_next.setText(R.string.save_button);
         editText_projectName = findViewById(R.id.editText_projectname_inabout);
         editText_subjectName = findViewById(R.id.editText_subjectname_inabout);
         editText_subjectCode = findViewById(R.id.editText_subjectcode_inabout);
@@ -219,23 +217,11 @@ public class Activity_About extends AppCompatActivity {
         });
     }
 
-    private void init(int index) {
+    private void init() {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        project = AllFunctions.getObject().getProjectList().get(index);
         bindHandler();
         initToolbar();
         bindView();
-        getTimeOfProject();
-        mToolbar.setTitle(project.getProjectName());
-        editText_projectName.setText(project.getProjectName());
-        editText_projectName.setEnabled(false);
-        editText_subjectName.setText(project.getSubjectName());
-        editText_subjectCode.setText(project.getSubjectCode());
-        editText_projectDes.setText(project.getDescription());
-        editText_durationMin.setText(String.valueOf(durationMin));
-        editText_durationSec.setText(String.valueOf(durationSec));
-        editText_warningMin.setText(String.valueOf(warningMin));
-        editText_warningSec.setText(String.valueOf(warningSec));
     }
 
     private void bindHandler() {
@@ -245,37 +231,28 @@ public class Activity_About extends AppCompatActivity {
                 switch (msg.what) {
                     case 201:
                         Log.d("EEEE", "Successfully update the information of the project.");
-                        Toast.makeText(Activity_About.this,
+                        Toast.makeText(Activity_About_New.this,
                                 "Successfully update the information of the project.", Toast.LENGTH_SHORT).show();
                         AllFunctions.getObject().projectTimer(project, durationMin, durationSec, warningMin, warningSec);
                         break;
                     case 202:
                         Log.d("EEEE", "Fail to update the information of the project.");
-                        Toast.makeText(Activity_About.this,
-                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Activity_About_New.this,
+                                "Fail to update the information of the project.", Toast.LENGTH_SHORT).show();
                         break;
                     case 203:
                         Log.d("EEEE", "Successfully update the time setting of the project.");
-                        Toast.makeText(Activity_About.this,
+                        Toast.makeText(Activity_About_New.this,
                                 "Successfully update the time setting of the project.", Toast.LENGTH_SHORT).show();
-                        setResult(Activity.RESULT_OK);
-                        finish( );
+                        Intent intent = new Intent(Activity_About_New.this, Activity_Criteria.class);
+                        intent.putExtra("index", String.valueOf(index));
+                        intent.putExtra("from", "new");
+                        startActivity(intent);
                         break;
                     case 204:
                         Log.d("EEEE", "Fail to update the time setting of the project.");
-                        Toast.makeText(Activity_About.this,
-                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
-                        break;
-                    case 210:
-                        Toast.makeText(Activity_About.this,
-                                "Sync success", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
-                        finish();
-                        break;
-                    case 211:
-                        Toast.makeText(Activity_About.this,
-                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
-                        dialog.dismiss();
+                        Toast.makeText(Activity_About_New.this,
+                                "Fail to update the time setting of the project.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         break;
@@ -284,7 +261,7 @@ public class Activity_About extends AppCompatActivity {
         };
 
         AllFunctions.getObject().setHandler(handler);
-        Log.d("EEEE", "bind handler in old about");
+        Log.d("EEEE", "bind handler in new about");
     }
 
     public void addDurationMin(View view) {
@@ -351,26 +328,18 @@ public class Activity_About extends AppCompatActivity {
         editText_warningSec.setText(String.valueOf(warningSec));
     }
 
-    private void getTimeOfProject() {
-        durationMin = project.getDurationMin();
-        Log.d("EEEE", durationSec+"");
-        durationSec = project.getDurationSec();
-        warningMin = project.getWarningMin();
-        warningSec = project.getWarningSec();
-    }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
     }
 
-    //save button click
+    //next button click listener
     public void nextAbout(View view) {
         bindHandler();
         projectName = editText_projectName.getText().toString();
         subjectName = editText_subjectName.getText().toString();
         subjectCode = editText_subjectCode.getText().toString();
-        projectDes = editText_projectDes.getText().toString();
+        projectDesc = editText_projectDes.getText().toString();
 
         if (projectName.equals("")) {
             Toast.makeText(getApplicationContext(), "Project name cannot be empty", Toast.LENGTH_SHORT).show();
@@ -380,11 +349,12 @@ public class Activity_About extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Subject name cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
             if(checkTimeSetting()) {
-                Log.d("EEEE", "save with index != -999 " + Integer.parseInt(index));
-                project = AllFunctions.getObject().getProjectList().get(Integer.parseInt(index));
-                AllFunctions.getObject().updateProject(project, projectName, subjectName, subjectCode, projectDes);
+                Log.d("EEEE", "save with index = -999 " + Integer.parseInt(index));
+                AllFunctions.getObject().createProject(projectName, subjectName, subjectCode, projectDesc);
+                int indextToSend = AllFunctions.getObject().getProjectList().size() - 1;
+                project = AllFunctions.getObject().getProjectList().get(indextToSend);
+                index = String.valueOf(indextToSend);
             }
-
         }
     }
 

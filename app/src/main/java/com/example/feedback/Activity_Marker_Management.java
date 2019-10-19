@@ -48,6 +48,8 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
     private AlertDialog dialog;
     private EditText mEditTextInvitee;
     private ProgressBar mProgressbarInvitation;
+    private int deleteIndex;
+    private String from;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         Intent intent = getIntent();
         index = intent.getStringExtra("index");
         Log.d("EEEE", "Marker management's index: " + index);
+        from = intent.getStringExtra("from");
         init();
     }
 
@@ -69,22 +72,27 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
-                    case 207: //邀请marker成功
+                    case 207:
                         Toast.makeText(Activity_Marker_Management.this,
                                 "The invitation has been sent.", Toast.LENGTH_SHORT).show();
                         mProgressbarInvitation.setVisibility(View.INVISIBLE);
                         dialog.dismiss();
                         mEditTextInvitee.setText("");
                         break;
-                    case 208: //邀请marker失败
+                    case 208:
                         Toast.makeText(Activity_Marker_Management.this,
                                 "The email has not been registered. Please check and try again.", Toast.LENGTH_SHORT).show();
                         mProgressbarInvitation.setVisibility(View.INVISIBLE);
                         mEditTextInvitee.setText("");
                         break;
-                    case 209: //删除marker失败
+                    case 309:
                         Toast.makeText(Activity_Marker_Management.this,
-                                "There is anything wrong on server. Please try later.", Toast.LENGTH_SHORT).show();
+                                "Successfully delete the marker", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 310:
+                        Toast.makeText(Activity_Marker_Management.this,
+                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
+                        init();
                         break;
                     default:
                         break;
@@ -101,6 +109,9 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         mButtonInviteMarker = findViewById(R.id.button_marker_add_management);
         mListViewMarkers = findViewById(R.id.listView_marker_management);
         mButtonNextMarkers = findViewById(R.id.button_next_marker_management);
+        if (from.equals("old")) {
+            mButtonNextMarkers.setVisibility(View.INVISIBLE);
+        }
         mToolbar.setTitle(project.getProjectName());
         AdapterForMarkerDisplay mAdapterDisplayMarkers = new AdapterForMarkerDisplay(
                 project.getAssistant(), Activity_Marker_Management.this);
@@ -135,7 +146,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                 AllFunctions.getObject().setHandler(handler);
                 LayoutInflater layoutInflater = LayoutInflater.from(Activity_Marker_Management.this);//获得layoutInflater对象
                 final View view2 = layoutInflater.from(Activity_Marker_Management.this).
-                        inflate(R.layout.dialog_markers, null);//获得view对象
+                        inflate(R.layout.dialog_markers, null);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Marker_Management.this);
                 builder.setPositiveButton("Invite", new DialogInterface.OnClickListener() {
@@ -291,6 +302,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
                 @Override
                 public void onClick(View view) {
                     AllFunctions.getObject().deleteAssessor(projectList.get(indexOfProject), mMarkerList.get(position));
+                    deleteIndex = position;
                     mMarkerList.remove(position);
                     adapterForMarkers.notifyDataSetChanged();
                 }
@@ -305,8 +317,9 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
     }
 
     public void nextMarkerManagement(View view) {
-        Intent intent = new Intent(Activity_Marker_Management.this, Activity_Student_Group.class);
+        Intent intent = new Intent(Activity_Marker_Management.this, Activity_Student_Management.class);
         intent.putExtra("index", index);
+        intent.putExtra("from", "new");
         startActivity(intent);
     }
 }

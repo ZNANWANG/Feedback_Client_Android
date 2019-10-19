@@ -96,6 +96,9 @@ public class CommunicationForClient {
                 List<ProjectInfo> projectList = JSONObject.parseArray(projectListString, ProjectInfo.class);
                 ArrayList<ProjectInfo> arrayList = new ArrayList();
                 arrayList.addAll(projectList);
+//                for (int i = 0; i < arrayList.size(); i++) {
+//                    Log.d("EEEE", "project info: " + arrayList.get(i).getCriteria().get(0).getSubsectionList().get(0).getShortTextList().get(0).getLongtext().toString());
+//                }
                 functions.setUsername(firstName);
                 functions.setMyEmail(username);
                 Log.d("CommunicationForClient", "when login firstName received is: " + firstName);
@@ -168,6 +171,7 @@ public class CommunicationForClient {
                 token = jsonReceive.getString("token");
             } else {
                 Log.d("EEEE", "sync fail");
+                functions.syncFail();
             }
         } catch (Exception e1) {
             e1.printStackTrace();
@@ -231,6 +235,7 @@ public class CommunicationForClient {
             System.out.println("Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String updateProject_ACK = jsonReceive.get("updateProject_ACK").toString();
+            functions.updateProjectCriteriaACK(updateProject_ACK);
             if (updateProject_ACK.equals("true")) {
                 ;
             } else {
@@ -297,9 +302,7 @@ public class CommunicationForClient {
         //get the JSONObject from response
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
-
             System.out.println("Receive: " + receive); //just for test
-
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String updateStudent_ACK = jsonReceive.get("updateStudent_ACK").toString();
             functions.addStudentACK(updateStudent_ACK);
@@ -478,6 +481,7 @@ public class CommunicationForClient {
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String delete_ACK = jsonReceive.get("delete_ACK").toString();
+            functions.deleteAssessorACK(delete_ACK);
             if (delete_ACK.equals("true")) {
                 ;
             } else {
@@ -521,6 +525,7 @@ public class CommunicationForClient {
                 List<Mark> markList = JSONObject.parseArray(markListString, Mark.class);
                 ArrayList<Mark> arrayList = new ArrayList();
                 arrayList.addAll(markList);
+                Log.d("EEEE", "get marks: " + arrayList.toString());
                 AllFunctions.getObject().setMarkListForMarkPage(arrayList);
             } else {
                 //失败跳出
@@ -557,8 +562,9 @@ public class CommunicationForClient {
 
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             String mark_ACK = jsonReceive.get("mark_ACK").toString();
+            functions.sendMarkACK(mark_ACK);
             if (mark_ACK.equals("true")) {
-                ;
+                Log.d("EEEE", "send mark success");
             } else {
                 //失败跳出
             }

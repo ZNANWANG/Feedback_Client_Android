@@ -110,6 +110,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                 intent.putExtra("indexOfStudent", "-1");
+                intent.putExtra("from", "edit");
                 for (int i = 0; i < project.getStudentInfo().size(); i++) {
                     if (project.getStudentInfo().get(i).getGroup() == indexOfGroup)
                         project.getStudentInfo().get(i).setMark(mark);
@@ -124,7 +125,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
         TextView textView_totalMark = findViewById(R.id.textView_totalMark_report);
         textView_totalMark.setText("Mark:" + (int) mark.getTotalMark() + "%");
         TextView textView_assessorName = findViewById(R.id.textView_assessorName_report);
-        textView_assessorName.setText("Assessor: " + mark.getLecturerName());
+        textView_assessorName.setText("Marker: " + mark.getLecturerName());
         String htmlString =
                 "<html>" +
                         "<body>" +
@@ -154,7 +155,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
         htmlString += "<h2 style=\"font-weight: normal\">CommentOnlyCriteria</h2>" + "<p>";
         for (int i = 0; i < mark.getCriteriaList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + mark.getCriteriaList().get(i).getName() + "</span>" +
-                    "<span style=\"float:right\">" + mark.getMarkList().get(i) + "/" + mark.getCriteriaList().get(i).getMaximunMark() + "</span></h3>";
+                    "<span style=\"float:right\">" + mark.getMarkList().get(i) + "/" + Double.valueOf(mark.getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
             for (int j = 0; j < mark.getCriteriaList().get(i).getSubsectionList().size(); j++) {
                 htmlString += "<p>&lt;" + mark.getCriteriaList().get(i).getSubsectionList().get(j).getName() +
                         ":&gt;" + mark.getCriteriaList().get(i).getSubsectionList().get(j).getShortTextList().get(0).getLongtext() + "</p >";

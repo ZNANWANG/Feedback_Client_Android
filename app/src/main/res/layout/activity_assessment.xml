@@ -47,7 +47,7 @@
                     android:layout_gravity="center"
                     android:text="987578 XXXXX XXXXXXX"
                     android:gravity="center"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="10dp"
                     android:paddingLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:textSize="20sp"
@@ -55,18 +55,19 @@
 
                 <Button
                     android:id="@+id/btn_assessment_start"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:background="@drawable/ic_start" />
 
                 <TextView
                     android:id="@+id/tv_time"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:layout_weight="1"
                     android:textSize="24sp"
                     android:textStyle="bold"
+                    android:singleLine="true"
                     android:textColor="@color/black"
                     android:background="@color/white"
                     android:paddingLeft="4dp"
@@ -76,8 +77,8 @@
 
                 <Button
                     android:id="@+id/btn_assessment_refresh"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_gravity="center"
                     android:background="@drawable/ic_refresh" />
 
@@ -103,9 +104,9 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="15dp"
                     android:gravity="center"
-                    android:textColor="#ffffff"
-                    android:background="@color/colorPrimary"
-                    android:onClick="finish_assessment"
+                    android:textColor="@color/white"
+                    android:background="@drawable/ripple_round_button"
+                    android:onClick="finishAssessment"
                     android:text="Finish"/>
 
             </LinearLayout>
@@ -118,7 +119,7 @@
                 <ScrollView
                     android:layout_width="1024dp"
                     android:layout_height="match_parent"
-                    android:background="#ffffff"
+                    android:background="@color/white"
                     android:layout_centerHorizontal="true">
 
                     <LinearLayout

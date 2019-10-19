@@ -15,7 +15,7 @@ import android.widget.Toast;
 import main.AllFunctions;
 import widget.LoginVideoView;
 
-public class Activity_SignUp extends Activity {
+public class Activity_Signup extends Activity {
 
     Handler handler;
     private LoginVideoView mLoginVideoView;
@@ -37,13 +37,13 @@ public class Activity_SignUp extends Activity {
                 switch (msg.what) {
                     case 111: //means Sign Up successfully and go to login page
                         Toast.makeText(getApplicationContext(), "Sign Up successfully.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_SignUp.this, Activity_Login.class)
+                        Intent intent = new Intent(Activity_Signup.this, Activity_Login.class)
                                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
                         break;
                     case 110: //Sign Up failed.
-                        Toast.makeText(Activity_SignUp.this,
+                        Toast.makeText(Activity_Signup.this,
                                 "The email address is already occupied. Please try another one.", Toast.LENGTH_SHORT).show();
                         break;
                     default:
@@ -59,7 +59,7 @@ public class Activity_SignUp extends Activity {
         textView_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_SignUp.this, Activity_Login.class);
+                Intent intent = new Intent(Activity_Signup.this, Activity_Login.class);
                 startActivity(intent);
                 finish();
             }

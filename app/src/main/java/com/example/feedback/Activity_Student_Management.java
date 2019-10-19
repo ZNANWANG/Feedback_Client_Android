@@ -20,10 +20,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -33,7 +35,7 @@ import dbclass.StudentInfo;
 import main.AllFunctions;
 import util.FileUtils;
 
-public class Activity_Student_Group extends AppCompatActivity {
+public class Activity_Student_Management extends AppCompatActivity {
 
     private MyAdapter myAdapter;
     private ArrayList<StudentInfo> students;
@@ -57,15 +59,16 @@ public class Activity_Student_Group extends AppCompatActivity {
     private EditText editTextEmail;
     private EditText editTextGroup;
     private Handler handler;
+    private String from;
+    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_group);
-
+        setContentView(R.layout.activity_student_management);
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
-
+        from = intent.getStringExtra("from");
         init();
         initToolbar();
     }
@@ -124,6 +127,10 @@ public class Activity_Student_Group extends AppCompatActivity {
             }
         };
         AllFunctions.getObject().setHandler(handler);
+        saveButton = findViewById(R.id.button_save_student_management);
+        if (from.equals("old")) {
+            saveButton.setVisibility(View.INVISIBLE);
+        }
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         listView = findViewById(R.id.listView_ingroupStudent);
         students = project.getStudentInfo();
@@ -153,8 +160,8 @@ public class Activity_Student_Group extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_Student_Group.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_Student_Group.this,
+                        Toast.makeText(Activity_Student_Management.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Student_Management.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -189,8 +196,14 @@ public class Activity_Student_Group extends AppCompatActivity {
                 init();
             }
         } else {
-            Toast.makeText(getApplicationContext(),"Please choose only 1 student to delete.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Please choose only 1 student to delete.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public void saveStudentManagement(View view) {
+        Intent intent = new Intent(Activity_Student_Management.this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -255,7 +268,6 @@ public class Activity_Student_Group extends AppCompatActivity {
         } catch (android.content.ActivityNotFoundException ex) {
             // Potentially direct the user to the Market with a Dialog
         }
-
     }
 
     private static final String TAG = "ChooseFile";
@@ -285,10 +297,10 @@ public class Activity_Student_Group extends AppCompatActivity {
     //button addStudent click.
     public void addStudent(View v) {
 
-        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Group.this);//获得layoutInflater对象
-        final View view = layoutInflater.from(Activity_Student_Group.this).inflate(R.layout.dialog_add_student, null);//获得view对象
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Management.this);//获得layoutInflater对象
+        final View view = layoutInflater.from(Activity_Student_Management.this).inflate(R.layout.dialog_add_student, null);//获得view对象
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Student_Group.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Student_Management.this);
         builder.setView(view);
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
@@ -367,10 +379,10 @@ public class Activity_Student_Group extends AppCompatActivity {
                     }
                 }
 
-                LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Group.this);
-                View view = layoutInflater.from(Activity_Student_Group.this).inflate(R.layout.dialog_add_student, null);
+                LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Management.this);
+                View view = layoutInflater.from(Activity_Student_Management.this).inflate(R.layout.dialog_add_student, null);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Student_Group.this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Student_Management.this);
                 builder.setView(view);
                 builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
                     @Override

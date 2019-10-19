@@ -7,6 +7,7 @@ import android.os.Message;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,6 +24,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import dbclass.Mark;
+import dbclass.ProjectInfo;
+import dbclass.StudentInfo;
 import main.AllFunctions;
 
 public class Activity_Reaper_Mark extends AppCompatActivity {
@@ -32,12 +35,14 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
     private ArrayList<Mark> marks;
     private Handler handler;
     private Toolbar mToolbar;
+    private ProjectInfo project;
+    private StudentInfo student;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("EEEE", "new reaper mark activity");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reaper_mark);
-
         initToolbar();
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
@@ -56,9 +61,10 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
             }
         };
 
+        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        student = project.getStudentInfo().get(indexOfStudent);
         AllFunctions.getObject().setHandler(handler);
-        AllFunctions.getObject().getMarks(AllFunctions.getObject().getProjectList().get(indexOfProject),
-                indexOfGroup, AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent).getNumber());
+        AllFunctions.getObject().getMarks(project, indexOfGroup, student.getNumber());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,21 +103,14 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
 
     private void init() {
         marks = AllFunctions.getObject().getMarkListForMarkPage();
-        for (int i = 0; i < marks.size(); i++) {
-            System.out.println("第" + i + "个Mark的lectureName是" + marks.get(i).getLecturerName());
-            for (int j = 0; j < marks.get(i).getCriteriaList().size(); j++)
-                System.out.println("第" + i + "个Mark的第" + j + "个criteria叫" + marks.get(i).getCriteriaList().get(j).getName());
-        }
         MyAdapterForGridView myAdapterForGridView = new MyAdapterForGridView(marks, this);
-        GridView listView_gridGroup = findViewById(R.id.listView_markItem_markPage);
-        listView_gridGroup.setAdapter(myAdapterForGridView);
-
+        GridView gridViewMark = findViewById(R.id.listView_markItem_markPage);
+        gridViewMark.setAdapter(myAdapterForGridView);
     }
 
-    public void refresh_MarkPage(View v) {
+    public void refreshMarkPage(View v) {
         AllFunctions.getObject().setHandler(handler);
-        AllFunctions.getObject().getMarks(AllFunctions.getObject().getProjectList().get(indexOfProject),
-                indexOfGroup, AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent).getNumber());
+        AllFunctions.getObject().getMarks(project, indexOfGroup, student.getNumber());
     }
 
 
@@ -148,8 +147,6 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
             textView_totalMark.setText(String.valueOf(markList.get(position).getTotalMark()) + "%");
             TextView textView_assessorName = convertView.findViewById(R.id.textView_assessorName_gridItemMark);
             textView_assessorName.setText(markList.get(position).getLecturerName());
-
-            //System.out.println("第"+position+"个Mark里面有"+markList.get(position).getCriteriaList().size()+"个criteria");
 
             ListView listView_gridCriteria = convertView.findViewById(R.id.listView_criteriaMark_gridItemMark);
             MyAdapterForGridItem myAdapterForGridItem = new MyAdapterForGridItem(markList.get(position), convertView.getContext());
@@ -207,7 +204,6 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            //  System.out.println("这是第"+position+"个criteria");
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_criteria_andmark, parent, false);
 
             TextView textView_markWithTotalMark = convertView.findViewById(R.id.textView_markTotalMark_listItemCriteriaMark);

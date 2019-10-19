@@ -12,7 +12,6 @@ public class Mark {
     private String lecturerName;
     private String lecturerEmail;
     
-    
     public String getLecturerName() {
     	return lecturerName;
     }

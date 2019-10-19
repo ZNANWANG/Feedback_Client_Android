@@ -44,7 +44,7 @@
             android:layout_toRightOf="@id/sb_mark"
             android:text="0/10"
             android:layout_alignBottom="@id/sb_mark"
-            android:textColor="#cc0000"
+            android:textColor="@color/red"
             android:textSize="18dp" />
 
         <LinearLayout

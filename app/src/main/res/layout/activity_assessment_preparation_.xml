@@ -91,7 +91,7 @@
                             android:layout_marginBottom="5dp"
                             android:background="@drawable/ripple_add_project"
                             android:gravity="center_vertical"
-                            android:onClick="plus_AssessmentPreparation" />
+                            android:onClick="addProjectAssessmentPreparation" />
                     </RelativeLayout>
 
                     <View
@@ -152,7 +152,7 @@
                             android:fontFamily="sans-serif-medium"
                             android:paddingRight="10dp"
                             android:gravity="left|center"
-                            android:onClick="about_AssessmentPreparation"
+                            android:onClick="aboutAssessmentPreparation"
                             android:text="About  "
                             android:textAllCaps="false"
                             android:textColor="@color/black"
@@ -168,7 +168,7 @@
                             android:background="@color/colorPrimary" />
 
                         <TextView
-                            android:id="@+id/about_detail__inpreparation"
+                            android:id="@+id/about_detail_inpreparation"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
@@ -188,7 +188,7 @@
                             android:drawableRight="@drawable/ic_pencil"
                             android:fontFamily="sans-serif-medium"
                             android:gravity="left|center"
-                            android:onClick="criteriaManagement_AssessmentPreparation"
+                            android:onClick="criteriaManagementAssessmentPreparation"
                             android:text="Criteria  "
                             android:textAllCaps="false"
                             android:textColor="@color/black"
@@ -215,7 +215,7 @@
                             android:padding="10dp"/>
 
                         <Button
-                            android:id="@+id/button_asseccor__inpreparation"
+                            android:id="@+id/button_asseccor_inpreparation"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
@@ -224,7 +224,7 @@
                             android:drawableRight="@drawable/ic_pencil"
                             android:fontFamily="sans-serif-medium"
                             android:gravity="left|center"
-                            android:onClick="assessors_AssessmentPreparation"
+                            android:onClick="markerManagementAssessmentPreparation"
                             android:text="Marker Management  "
                             android:textAllCaps="false"
                             android:textColor="@color/black"
@@ -260,7 +260,7 @@
                             android:drawableRight="@drawable/ic_pencil"
                             android:fontFamily="sans-serif-medium"
                             android:gravity="left|center"
-                            android:onClick="studentManagement_AssessmentPreparation"
+                            android:onClick="studentManagementAssessmentPreparation"
                             android:text="Student Management  "
                             android:textAllCaps="false"
                             android:textColor="@color/black"

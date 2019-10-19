@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/file"
         android:layout_centerHorizontal="true"
-        android:text="Please tap the file to listen your record"
+        android:text="Please Tap the File to Listen to Your Audio"
         android:layout_marginBottom="50dp"
         android:textColor="@color/black"
         android:textSize="40sp"
@@ -32,10 +32,10 @@
         android:layout_below="@+id/file"
         android:layout_centerHorizontal="true"
         android:text="submit"
-        android:paddingRight="10dp"
-        android:paddingLeft="10dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
         android:textColor="@color/white"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/ripple_round_button"
         android:textStyle="bold"
         android:textSize="20sp"/>
 

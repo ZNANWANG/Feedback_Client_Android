@@ -12,9 +12,7 @@ import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.example.feedback.Activity_Record_Voice;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;

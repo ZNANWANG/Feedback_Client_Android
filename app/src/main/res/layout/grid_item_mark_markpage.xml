@@ -55,7 +55,7 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="5dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/ripple_round_button"
         android:text="View Report"
         android:textSize="20sp"
         android:textColor="@color/white" />

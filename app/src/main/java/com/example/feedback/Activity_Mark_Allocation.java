@@ -1,8 +1,11 @@
 package com.example.feedback;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -26,15 +29,17 @@ import dbclass.ProjectInfo;
 import main.AllFunctions;
 
 
-public class Activity_MarkAllocation extends AppCompatActivity {
+public class Activity_Mark_Allocation extends AppCompatActivity {
     private int indexOfProject;
     private GridView gridView;
-    //private ListView listView;
+    private Handler handler;
     private ProjectInfo project;
     private ArrayList<Criteria> markingCriteriaList;
     ArrayList<Criteria> allCriteriaList;
     private int markedCriteriaNum;
     private Toolbar mToolbar;
+    private Button saveButton;
+    private String from;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +47,46 @@ public class Activity_MarkAllocation extends AppCompatActivity {
         setContentView(R.layout.activity_mark_allocation);
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("index"));
+        from = intent.getStringExtra("from");
         init();
         Log.d("EEEE", "mark allocation start!");
     }
 
     public void init() {
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 401:
+                        Log.d("EEEE", "Successfully update the criteria of the project.");
+                        Toast.makeText(Activity_Mark_Allocation.this,
+                                "Successfully update the criteria of the project.", Toast.LENGTH_SHORT).show();
+                        if (from.equals("old")) {
+                            Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            finish();
+                        } else if (from.equals("new")) {
+                            Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Marker_Management.class);
+                            intent.putExtra("index", String.valueOf(indexOfProject));
+                            intent.putExtra("from", "new");
+                            startActivity(intent);
+                        }
+                        break;
+                    case 402:
+                        Log.d("EEEE", "Fail to update the criteria of the project.");
+                        Toast.makeText(Activity_Mark_Allocation.this,
+                                "Server error. Please try again.", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        AllFunctions.getObject().setHandler(handler);
+        saveButton = findViewById(R.id.button_next_markAllocation);
+        if (from.equals("old")) {
+            saveButton.setText(R.string.save_button);
+        }
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         markingCriteriaList = project.getCriteria();
         markedCriteriaNum = project.getCriteria().size();
@@ -57,8 +97,6 @@ public class Activity_MarkAllocation extends AppCompatActivity {
         MyAdapter myAdapter = new MyAdapter(allCriteriaList, this);
         gridView = findViewById(R.id.gridView_CriteriaList_markAllocation);
         gridView.setAdapter(myAdapter);
-        //  listView = findViewById(R.id.listView_criteriaList_markAllocation);
-        //  listView.setAdapter(myAdapter);
     }
 
     private void initToolbar() {
@@ -77,8 +115,8 @@ public class Activity_MarkAllocation extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_MarkAllocation.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_MarkAllocation.this,
+                        Toast.makeText(Activity_Mark_Allocation.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Mark_Allocation.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -103,34 +141,17 @@ public class Activity_MarkAllocation extends AppCompatActivity {
             }
 
             if(markingCriteriaList.get(i).getMaximunMark() == 0) {
-                Toast.makeText(Activity_MarkAllocation.this, "Maximum mark cannot be zero.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Activity_Mark_Allocation.this, "Maximum mark cannot be zero.", Toast.LENGTH_SHORT).show();
                 return false;
             }
         }
         return true;
     }
 
-    //button 'save'.
-    public void save_markAllocation(View view) {
-        if(isValidIncrementAndMaxMark() == true) {
-            AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
-            Intent intent = new Intent(this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
-        } else {
-            return;
-        }
-    }
-
     //button 'next'.
-    public void next_markAllocation(View view) {
+    public void nextMarkAllocation(View view) {
         if(isValidIncrementAndMaxMark() == true) {
             AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
-            Intent intent = new Intent(this, Activity_Marker_Management.class);
-            intent.putExtra("index", String.valueOf(indexOfProject));
-            startActivity(intent);
-        } else {
-            return;
         }
     }
 
@@ -244,7 +265,7 @@ public class Activity_MarkAllocation extends AppCompatActivity {
                 button_commentDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Activity_MarkAllocation.this, Activity_ShowComment_MarkAllocation.class);
+                        Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_ShowComment_MarkAllocation.class);
                         intent.putExtra("indexOfProject",String.valueOf(indexOfProject));
                         intent.putExtra("indexOfCriteria",String.valueOf(position));
                         startActivity(intent);
@@ -260,7 +281,7 @@ public class Activity_MarkAllocation extends AppCompatActivity {
                 button_commentDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Activity_MarkAllocation.this, Activity_ShowComment_MarkAllocation.class);
+                        Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_ShowComment_MarkAllocation.class);
                         intent.putExtra("indexOfProject",String.valueOf(indexOfProject));
                         intent.putExtra("indexOfCriteria",String.valueOf(position));
                         startActivity(intent);

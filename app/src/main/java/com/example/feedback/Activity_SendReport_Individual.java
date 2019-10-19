@@ -140,19 +140,18 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
         }
         htmlString = htmlString +
                 "</p >" +
-                "<h2 style=\"font-weight: normal\">Assessment Date</h2>" +
-                "<p>" + "test date" + "</p ><br><br><br><hr>" +
+                "<br><br><br><hr>" +
                 "<div>";
 
         htmlString += "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
         for (int i = 0; i < markList.get(0).getCriteriaList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + markList.get(0).getCriteriaList().get(i).getName() + "</span>" +
-                    "<span style=\"float:right\">   " + markList.get(0).getMarkList().get(i) + "/" + markList.get(0).getCriteriaList().get(i).getMaximunMark() + "</span></h3>";
+                    "<span style=\"float:right\">" + "  ---  " + markList.get(0).getMarkList().get(i) + "/" + Double.valueOf(markList.get(0).getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
             for (int j = 0; j < markList.size(); j++) {
                 htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + markList.get(j).getLecturerName() + ":</h4>";
                 if (markList.get(j).getCriteriaList().size() > 0)
                     for (int k = 0; k < markList.get(j).getCriteriaList().get(i).getSubsectionList().size(); k++) {
-                        htmlString += "<p>&lt;" + markList.get(j).getCriteriaList().get(i).getSubsectionList().get(k).getName() + ":&gt;"
+                        htmlString += "<p>" + markList.get(j).getCriteriaList().get(i).getSubsectionList().get(k).getName() + " : "
                                 + markList.get(j).getCriteriaList().get(i).getSubsectionList().get(k).getShortTextList().get(0).getLongtext() + "</p >";
                     }
             }

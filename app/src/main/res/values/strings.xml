@@ -10,4 +10,5 @@
     <string name="toast_recording_start">Recording started</string>
     <string name="tab_title_record">Record</string>
     <string name="tab_title_saved_recordings">Saved Recordings</string>
+    <string name="save_button">save</string>
 </resources>

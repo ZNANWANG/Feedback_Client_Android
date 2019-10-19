@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,8 +33,7 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
     private int indexOfProject;
     private MyAdapter myAdapter;
     private TextView textView_duration_title;
-    private TextView textView_numCandicate;
-    private TextView textView_numAssessor;
+    private TextView textView_numCandicateAndMarker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,36 +81,31 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
         projectList = AllFunctions.getObject().getProjectList();
         MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
                 (Activity_Realtime_Assessment.this, projectList);
-
         listView_projects = findViewById(R.id.listView_projects_realtimeAssessment);
         listView_students = findViewById(R.id.listView_students_realtimeAssessment);
         listView_projects.setAdapter(myAdapterDefaultlistView);
         listView_projects.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                for (int i = 0; i < adapterView.getChildCount(); i++)
+                    adapterView.getChildAt(i).setBackgroundColor(Color.TRANSPARENT);
+                view.setBackgroundColor(getResources().getColor(R.color.check));
                 indexOfProject = position;
                 ProjectInfo project = projectList.get(position);
                 myAdapter = new MyAdapter(project.getStudentInfo(), Activity_Realtime_Assessment.this);
                 listView_students.setAdapter(myAdapter);
-//                listView_students.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                        myAdapter.notifyDataSetChanged();
-//                    }
-//                });
                 textView_duration_title = findViewById(R.id.textView_duration_realtimeAssessment);
-                textView_duration_title.setText("" + projectList.get(indexOfProject).getDurationMin() + ":" +
-                        +projectList.get(indexOfProject).getDurationSec() + " Presentation");
-                textView_numCandicate = findViewById(R.id.textView_numCandidates_realtimeAssessment);
+                textView_duration_title.setText("Presentation duration: " + projectList.get(indexOfProject).getDurationMin() + ":" +
+                        +projectList.get(indexOfProject).getDurationSec());
+                textView_numCandicateAndMarker = findViewById(R.id.textView_numCandidatesMarkers_realtimeAssessment);
                 int numStudentHasMarked = 0;
                 for (int i = 0; i < projectList.get(indexOfProject).getStudentInfo().size(); i++) {
                     if (projectList.get(indexOfProject).getStudentInfo().get(i).getTotalMark() > 0.0)
                         numStudentHasMarked++;
                 }
-                textView_numCandicate.setText(numStudentHasMarked + " of " +
-                        projectList.get(indexOfProject).getStudentInfo().size() + " candidates marked by");
-                textView_numAssessor = findViewById(R.id.textView_numAssessors_realtimeAssessment);
-                textView_numAssessor.setText(projectList.get(indexOfProject).getAssistant().size() + " elevators");
+                textView_numCandicateAndMarker.setText(numStudentHasMarked + " of " +
+                        projectList.get(indexOfProject).getStudentInfo().size() + " candidate(s) marked by" +
+                        projectList.get(indexOfProject).getAssistant().size() + " marker(s)");
 
             }
         });
@@ -120,8 +115,7 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
     private void resetStudentListView() {
         listView_students.setAdapter(null);
         textView_duration_title.setText("");
-        textView_numCandicate.setText("");
-        textView_numAssessor.setText("");
+        textView_numCandicateAndMarker.setText("");
     }
 
 
@@ -173,9 +167,11 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroup()));
-                    System.out.println("project: " + indexOfProject);
-                    System.out.println("student: " + position);
-                    resetStudentListView();
+                    intent.putExtra("from", "realtime");
+                    Log.d("EEEE", "project: " + indexOfProject);
+                    Log.d("EEEE", "student: " + position);
+                    Log.d("EEEE", "group: " + studentList.get(position).getGroup());
+//                    resetStudentListView();
                     startActivity(intent);
                 }
             });
