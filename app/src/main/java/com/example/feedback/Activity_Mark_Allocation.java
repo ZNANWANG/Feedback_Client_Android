@@ -101,7 +101,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_mark_allocation);
-        mToolbar.setTitle(project.getProjectName() + " -- Welcome " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle(project.getProjectName() + " -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

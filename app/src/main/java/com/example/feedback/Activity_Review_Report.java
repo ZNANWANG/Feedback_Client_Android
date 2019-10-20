@@ -46,7 +46,7 @@ public class Activity_Review_Report extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_review_report);
-        mToolbar.setTitle("Report -- Welcome " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Report -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

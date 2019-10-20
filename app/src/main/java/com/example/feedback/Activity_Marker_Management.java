@@ -201,7 +201,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
 
     public void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_marker_management);
-        mToolbar.setTitle("Project -- Welcome " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Project -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

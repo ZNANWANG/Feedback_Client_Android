@@ -55,7 +55,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_editable_group_report);
-        mToolbar.setTitle("Assessment -- Welcome " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Assessment -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

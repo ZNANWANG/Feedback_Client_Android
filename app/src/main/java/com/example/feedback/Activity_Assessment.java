@@ -188,7 +188,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_assessment);
-        mToolbar.setTitle("Assessment -- Welcome " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Assessment -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

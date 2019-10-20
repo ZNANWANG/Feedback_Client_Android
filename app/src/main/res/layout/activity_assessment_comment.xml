@@ -24,6 +24,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:layout_below="@id/toolbar_assessment_comment"
         android:fillViewport="true" >
 
@@ -36,18 +37,26 @@
             <Button
                 android:id="@+id/btn_assessment_comment_done"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="36dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
                 android:layout_marginEnd="16dp"
                 android:paddingRight="16dp"
                 android:paddingLeft="16dp"
                 android:onClick="commentDone"
                 android:text="Done"
-                android:textSize="20sp"
+                android:textSize="25sp"
                 android:textColor="@color/white"
-                android:background="@color/colorPrimary"/>
+                android:background="@drawable/ripple_round_button"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginBottom="10dp"
+                android:layout_below="@id/btn_assessment_comment_done"
+                android:background="@color/colorPrimary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,6 +73,11 @@
                     android:scrollbars="vertical"
                     android:paddingLeft="16dp"
                     android:paddingRight="16dp"/>
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="#e4e4e4" />
 
                 <ListView
                     android:id="@+id/lv_main"

@@ -43,7 +43,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_editable_individual_report);
-        mToolbar.setTitle("Assessment -- Welcome " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Assessment -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
