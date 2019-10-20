@@ -215,7 +215,7 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
                 "Assessment duration: " + projectInfo.getDurationMin() + ":" + projectInfo.getDurationSec() + "\n" +
                 "Warning time: " + projectInfo.getWarningMin() + ":" + projectInfo.getWarningSec() + "\n");
         textView_criteriaDetail = findViewById(R.id.criteria_detail__inpreparation);
-        String criteriaDetailString = "Mark Section\n";
+        String criteriaDetailString = "";
         for (Criteria c : projectInfo.getCriteria()) {
             criteriaDetailString = criteriaDetailString + c.getName() + "\n";
             criteriaDetailString = criteriaDetailString + "Maximum mark: " + c.getMaximunMark() + "\n";

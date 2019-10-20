@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import dbclass.Mark;
@@ -126,7 +127,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         });
 
         TextView textView_totalMark = findViewById(R.id.textView_totalMark_sendReportGroup);
-        textView_totalMark.setText("Mark:" + (int) markList.get(0).getTotalMark() + "%");
+        textView_totalMark.setText("Mark:" + (int) getAverageMark(markList) + "%");
 
         String htmlString =
                 "<html>" +
@@ -138,7 +139,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
                         "<h2 style=\"font-weight: normal\">Project</h2>" +
                         "<p>" + project.getProjectName() + "</p >" +
                         "<h2 style=\"font-weight: normal\">Mark Attained</h2>" +
-                        "<p>" + markList.get(0).getTotalMark() + "%</p >" +
+                        "<p>" + getAverageMark(markList) + "%</p >" +
                         "<h2 style=\"font-weight: normal\">Marker</h2>" + "<p>";
         for (int i = 0; i < project.getAssistant().size(); i++) {
             htmlString = htmlString + project.getAssistant().get(i) + "<br>";
@@ -150,19 +151,20 @@ public class Activity_SendReport_Group extends AppCompatActivity {
 
         htmlString = htmlString +
                 "</p >" +
-                "<h2 style=\"font-weight: normal\">Assessment Date</h2>" +
-                "<p>" + "test date" + "</p ><br><br><br><hr>" +
+                "<br><br><br><hr>" +
                 "<div>";
+
+
 
         htmlString += "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
         for (int i = 0; i < markList.get(0).getCriteriaList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + markList.get(0).getCriteriaList().get(i).getName() + "</span>" +
-                    "<span style=\"float:right\">   " + markList.get(0).getMarkList().get(i) + "/" + Double.valueOf(markList.get(0).getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
+                    "<span style=\"float:right\">" + "  ---  " + getAverageCriterionMark(markList, i) + "/" + Double.valueOf(markList.get(0).getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
             for (int j = 0; j < markList.size(); j++) {
                 htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + markList.get(j).getLecturerName() + ":</h4>";
                 if (markList.get(j).getCriteriaList().size() > 0)
                     for (int k = 0; k < markList.get(j).getCriteriaList().get(i).getSubsectionList().size(); k++) {
-                        htmlString += "<p>&lt;" + markList.get(j).getCriteriaList().get(i).getSubsectionList().get(k).getName() + ":&gt;"
+                        htmlString += "<p>" + markList.get(j).getCriteriaList().get(i).getSubsectionList().get(k).getName() + " : "
                                 + markList.get(j).getCriteriaList().get(i).getSubsectionList().get(k).getShortTextList().get(0).getLongtext() + "</p >";
                     }
             }
@@ -175,6 +177,36 @@ public class Activity_SendReport_Group extends AppCompatActivity {
                         "</html>";
         TextView textView_pdfContent = findViewById(R.id.textView_pdfContent_sendReportGroup);
         textView_pdfContent.setText(Html.fromHtml(htmlString));
+    }
+
+    public double getAverageCriterionMark(ArrayList<Mark> markList, int criteriaIndex) {
+        double sumMark = 0;
+        double markers = markList.size();
+        for (int i = 0; i < markers; i++) {
+            sumMark += markList.get(i).getMarkList().get(criteriaIndex);
+        }
+        Log.d("EEEE", "sum of mark: " + sumMark);
+        double avgMark = sumMark/markers;
+        Log.d("EEEE", "avg mark: " + avgMark);
+        BigDecimal bigDecimal = new BigDecimal(avgMark);
+        avgMark = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        Log.d("EEEE", "avg mark: " + avgMark);
+        return avgMark;
+    }
+
+    public double getAverageMark(ArrayList<Mark> markList) {
+        double sumMark = 0;
+        double markers = markList.size();
+        for (int i = 0; i < markers; i++) {
+            sumMark += markList.get(i).getTotalMark();
+        }
+        Log.d("EEEE", "sum of mark: " + sumMark);
+        double avgMark = sumMark/markers;
+        Log.d("EEEE", "avg mark: " + avgMark);
+        BigDecimal bigDecimal = new BigDecimal(avgMark);
+        avgMark = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue();
+        Log.d("EEEE", "avg mark: " + avgMark);
+        return avgMark;
     }
 }
 

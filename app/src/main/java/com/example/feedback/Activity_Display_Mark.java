@@ -196,6 +196,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
                         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                         intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                         intent.putExtra("indexOfMark", String.valueOf(position));
+                        intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                         startActivity(intent);
                     }
                 }

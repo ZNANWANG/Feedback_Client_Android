@@ -24,6 +24,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfGroup;
     private int indexOfMark;
+    private int indexOfStudent;
     private ArrayList<StudentInfo> studentInfoArrayList;
     private Toolbar mToolbar;
 
@@ -38,6 +39,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
                 getObject().getProjectList().get(indexOfProject);
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
         indexOfMark = Integer.parseInt(intent.getStringExtra("indexOfMark"));
+        indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         studentInfoArrayList = new ArrayList<StudentInfo>();
         for (int i = 0; i < project.getStudentInfo().size(); i++) {
             if (project.getStudentInfo().get(i).getGroup() == indexOfGroup)
@@ -109,7 +111,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
                 Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_Assessment.class);
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                intent.putExtra("indexOfStudent", "-1");
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                 intent.putExtra("from", "edit");
                 for (int i = 0; i < project.getStudentInfo().size(); i++) {
                     if (project.getStudentInfo().get(i).getGroup() == indexOfGroup)
@@ -148,17 +150,16 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
 
         htmlString = htmlString +
                 "</p >" +
-                "<h2 style=\"font-weight: normal\">Assessment Date</h2>" +
-                "<p>" + "test date" + "</p ><br><br><br><hr>" +
+                "<br><br><br><hr>" +
                 "<div>";
 
         htmlString += "<h2 style=\"font-weight: normal\">CommentOnlyCriteria</h2>" + "<p>";
         for (int i = 0; i < mark.getCriteriaList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + mark.getCriteriaList().get(i).getName() + "</span>" +
-                    "<span style=\"float:right\">" + mark.getMarkList().get(i) + "/" + Double.valueOf(mark.getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
+                    "<span style=\"float:right\">" + "  ---  " + mark.getMarkList().get(i) + "/" + Double.valueOf(mark.getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
             for (int j = 0; j < mark.getCriteriaList().get(i).getSubsectionList().size(); j++) {
-                htmlString += "<p>&lt;" + mark.getCriteriaList().get(i).getSubsectionList().get(j).getName() +
-                        ":&gt;" + mark.getCriteriaList().get(i).getSubsectionList().get(j).getShortTextList().get(0).getLongtext() + "</p >";
+                htmlString += "<p>" + mark.getCriteriaList().get(i).getSubsectionList().get(j).getName() +
+                        " : " + mark.getCriteriaList().get(i).getSubsectionList().get(j).getShortTextList().get(0).getLongtext() + "</p >";
             }
             htmlString += "<br>";
         }
