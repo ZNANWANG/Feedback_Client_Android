@@ -53,7 +53,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_send_report_group);
-        mToolbar.setTitle("Report");
+        mToolbar.setTitle("Report -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

@@ -74,7 +74,7 @@ public class Activity_Criteria extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_criteria);
-        mToolbar.setTitle(project.getProjectName());
+        mToolbar.setTitle(project.getProjectName() +  " -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

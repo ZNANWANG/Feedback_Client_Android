@@ -48,9 +48,15 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
         return true;
     }
 
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d("EEEE", "new realtime assessment");
+        myAdapter.notifyDataSetChanged();
+    }
+
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_realtime_assessment);
-        mToolbar.setTitle("Assessment");
+        mToolbar.setTitle("Assessment -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -106,10 +112,8 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
                 textView_numCandicateAndMarker.setText(numStudentHasMarked + " of " +
                         projectList.get(indexOfProject).getStudentInfo().size() + " candidate(s) marked by " +
                         projectList.get(indexOfProject).getAssistant().size() + " marker(s)");
-
             }
         });
-
     }
 
     private void resetStudentListView() {

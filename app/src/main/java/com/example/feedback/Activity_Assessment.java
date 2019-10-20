@@ -25,7 +25,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import dbclass.Criteria;
 import dbclass.Mark;
@@ -189,7 +188,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_assessment);
-        mToolbar.setTitle("Assessment");
+        mToolbar.setTitle("Assessment -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -244,21 +243,12 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                         Toast.makeText(Activity_Assessment.this,
                                 "Record mark success", Toast.LENGTH_SHORT).show();
 //                        dialog.dismiss();
-                        if (from.equals("realtime")) {
-                            Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                            startActivity(intent);
-                            finish();
-                        } else if (from.equals("edit")) {
-                            Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                            startActivity(intent);
-                            finish();
-                        }
+                        Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                        intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                        intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                        startActivity(intent);
+                        finish();
                     case 352:
                         Toast.makeText(Activity_Assessment.this,
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();

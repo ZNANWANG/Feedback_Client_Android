@@ -22,7 +22,9 @@
         <activity android:name=".Activity_Review_Report" />
         <activity android:name=".Activity_Display_Mark"
             android:launchMode="singleTask"/>
-        <activity android:name=".Activity_Realtime_Assessment" />
+        <activity
+            android:name=".Activity_Realtime_Assessment"
+            android:launchMode="singleTask"/>
         <activity
             android:name=".Activity_Homepage"
             android:launchMode="singleTask" />

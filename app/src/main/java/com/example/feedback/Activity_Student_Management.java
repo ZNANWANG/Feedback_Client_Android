@@ -156,7 +156,7 @@ public class Activity_Student_Management extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_studetn_group);
-        mToolbar.setTitle(project.getProjectName());
+        mToolbar.setTitle(project.getProjectName() + " -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

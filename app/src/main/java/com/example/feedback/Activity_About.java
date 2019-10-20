@@ -63,7 +63,7 @@ public class Activity_About extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_project_about);
-        mToolbar.setTitle("Project");
+        mToolbar.setTitle("Project -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -384,7 +384,6 @@ public class Activity_About extends AppCompatActivity {
                 project = AllFunctions.getObject().getProjectList().get(Integer.parseInt(index));
                 AllFunctions.getObject().updateProject(project, projectName, subjectName, subjectCode, projectDes);
             }
-
         }
     }
 

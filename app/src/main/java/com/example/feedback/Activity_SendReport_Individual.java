@@ -45,7 +45,7 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_send_report_individual);
-        mToolbar.setTitle("Assessment");
+        mToolbar.setTitle("Assessment -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

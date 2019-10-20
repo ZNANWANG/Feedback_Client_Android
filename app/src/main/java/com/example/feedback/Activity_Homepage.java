@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import main.AllFunctions;
 import pl.droidsonroids.gif.GifImageView;
 
 public class Activity_Homepage extends AppCompatActivity {
@@ -22,7 +23,7 @@ public class Activity_Homepage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         mToolbar = (Toolbar) findViewById(R.id.toolbar_homepage);
-        mToolbar.setTitle("Rapid Feedback");
+        mToolbar.setTitle("Rapid Feedback -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

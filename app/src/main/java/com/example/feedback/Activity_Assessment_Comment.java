@@ -3,8 +3,12 @@ package com.example.feedback;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -22,10 +26,10 @@ import dbclass.Criteria;
 import dbclass.ProjectInfo;
 import main.AllFunctions;
 
-public class Activity_Assessment_Comment extends Activity {
+public class Activity_Assessment_Comment extends AppCompatActivity {
 
     private Criteria criteria;
-
+    private Toolbar mToolbar;
     private int indexOfProject;
     private int indexOfCriteria;
     private int indexOfComment;
@@ -41,7 +45,7 @@ public class Activity_Assessment_Comment extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assessment_comment);
-
+        initToolbar();
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfCriteria = Integer.parseInt(intent.getStringExtra("indexOfCriteria"));
@@ -62,7 +66,6 @@ public class Activity_Assessment_Comment extends Activity {
             for (int i = 0; i < savedIndexList.size(); i++) {
                 for (int j = 0; j < savedIndexList.get(i).size(); j++) {
                     System.out.print(savedIndexList.get(i).get(j) + " ");
-
                 }
                 System.out.println();
             }
@@ -102,6 +105,60 @@ public class Activity_Assessment_Comment extends Activity {
         expandCheckAdapter.notifyDataSetChanged(oneBeans);
     }
 
+    private void initToolbar() {
+        mToolbar = findViewById(R.id.toolbar_assessment_comment);
+        mToolbar.setTitle("Project -- Welcome " + AllFunctions.getObject().getUsername());
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+//                if (indexOfCriteria == -999) {
+//                    if (Activity_Assessment.commentOnlySelectedAll(indexOfComment)) {
+//                        finish();
+//                        Intent intent = new Intent(Activity_Assessment_Comment.this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                        startActivity(intent);
+//                    } else {
+//                        Toast.makeText(Activity_Assessment_Comment.this, "You need to select a comment for each subsection", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    if (Activity_Assessment.markedCriteriaSelectedAll(indexOfCriteria)) {
+//                        finish();
+//                        Intent intent = new Intent(Activity_Assessment_Comment.this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//                        startActivity(intent);
+//                    } else {
+//                        Toast.makeText(Activity_Assessment_Comment.this, "You need to select a comment for each subsection", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+                finish();
+                Intent intent = new Intent(Activity_Assessment_Comment.this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            }
+        });
+//        mToolbar.inflateMenu(R.menu.menu_toolbar);
+        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_logout:
+                        Toast.makeText(Activity_Assessment_Comment.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Assessment_Comment.this,
+                                Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
+    }
+
     private OneTwoAdapter.OnTwoItemClickListener onTwoItemClickListener = new OneTwoAdapter.OnTwoItemClickListener() {
         @Override
         public void onClick(int groupId, int childId) {
@@ -115,12 +172,9 @@ public class Activity_Assessment_Comment extends Activity {
                 if (savedIndexList.size() != 0) {
                     for (int m = 0; m < savedIndexList.size(); m++) {
                         for (int n = 0; n < 3; n++) {
-
                             if (groupId == savedIndexList.get(m).get(0) && childId == savedIndexList.get(m).get(1) && i == savedIndexList.get(m).get(2)) {
                                 threeBeans.get(i).setChecked(true);
                             }
-
-
                         }
                     }
                 }
@@ -135,7 +189,6 @@ public class Activity_Assessment_Comment extends Activity {
 
             List<ThreeBean> threeSelect = threeListAdapter.getThreeSelect();
             if (threeSelect.size() > 0) {
-
                 subsectionIndex = threeListAdapter.getOneItemSelect();
                 shortTextIndex = threeListAdapter.getTwoItemSelect();
                 longTextIndex = Integer.valueOf(TextUtils.join(", ", threeSelect));
@@ -145,9 +198,7 @@ public class Activity_Assessment_Comment extends Activity {
                 } else {
                     Activity_Assessment.saveCommentToMatrixCriteria(indexOfCriteria, threeListAdapter.getOneItemSelect(), threeListAdapter.getTwoItemSelect(), Integer.valueOf(TextUtils.join(", ", threeSelect)));
                 }
-
                 refreshComment();
-
                 Log.d("10000000000", subsectionIndex + " " + shortTextIndex + " " + longTextIndex);
             }
         }
@@ -155,13 +206,11 @@ public class Activity_Assessment_Comment extends Activity {
     };
 
     public void commentDone(View view) {
-
         if (indexOfCriteria == -999) {
             if (Activity_Assessment.commentOnlySelectedAll(indexOfComment)) {
                 finish();
                 Intent intent = new Intent(this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
-
             } else {
                 Toast.makeText(this, "You need to select a comment for each subsection", Toast.LENGTH_SHORT).show();
             }
@@ -170,10 +219,8 @@ public class Activity_Assessment_Comment extends Activity {
                 finish();
                 Intent intent = new Intent(this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
-
             } else {
                 Toast.makeText(this, "You need to select a comment for each subsection", Toast.LENGTH_SHORT).show();
-
             }
         }
     }
@@ -184,5 +231,11 @@ public class Activity_Assessment_Comment extends Activity {
         } else {
             savedIndexList = Activity_Assessment.getMatrixMarkedCriteria(indexOfCriteria);
         }
+    }
+
+    public void onBackPressed() {
+        finish();
+        Intent intent = new Intent(Activity_Assessment_Comment.this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(intent);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -8,8 +7,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,17 +24,16 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-
 import dbclass.Criteria;
 import dbclass.ProjectInfo;
 import dbclass.ShortText;
 import dbclass.SubSection;
 import main.AllFunctions;
 
-public class Activity_ShowComment_MarkAllocation extends Activity {
+public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
     private Criteria criteria;
+    private Toolbar mToolbar;
     private ListView listView_longText;
     private MyAdapterForLongText myAdapterForLongText;
     private int indexOfSubsection = -999;
@@ -45,7 +47,7 @@ public class Activity_ShowComment_MarkAllocation extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_comment_markallocation);
-
+        initToolbar();
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfCriteria = Integer.parseInt(intent.getStringExtra("indexOfCriteria"));
@@ -59,6 +61,41 @@ public class Activity_ShowComment_MarkAllocation extends Activity {
             criteria = project.getCriteria().get(indexOfCriteria);
         }
         init();
+    }
+
+    private void initToolbar() {
+        mToolbar = findViewById(R.id.toolbar_show_comment_markallocation);
+        mToolbar.setTitle("Project -- Welcome " + AllFunctions.getObject().getUsername());
+        setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_back);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                finish();
+            }
+        });
+//        mToolbar.inflateMenu(R.menu.menu_toolbar);
+        mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.action_logout:
+                        Toast.makeText(Activity_ShowComment_MarkAllocation.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_ShowComment_MarkAllocation.this,
+                                Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
+        return true;
     }
 
     private void init() {
@@ -117,10 +154,6 @@ public class Activity_ShowComment_MarkAllocation extends Activity {
             dialog.setCancelable(false);
             dialog.show();
         }
-    }
-
-    public void back_showComment(View view) {
-        finish();
     }
 
     public void delete_showComment(View view) {

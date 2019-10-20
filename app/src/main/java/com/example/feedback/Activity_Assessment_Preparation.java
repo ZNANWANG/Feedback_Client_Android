@@ -154,7 +154,7 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
 
     public void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_assessment_presentation);
-        mToolbar.setTitle("Projects");
+        mToolbar.setTitle("Project -- Welcome " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
