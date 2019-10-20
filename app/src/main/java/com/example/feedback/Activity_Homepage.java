@@ -3,6 +3,8 @@ package com.example.feedback;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -17,11 +19,55 @@ public class Activity_Homepage extends AppCompatActivity {
 
     private GifImageView gifImageView;
     private Toolbar mToolbar;
+    private Handler handler;
+    private String to;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+        initToolbar();
+        init();
+        gifImageView = findViewById(R.id.geogif);
+    }
+
+    public void init() {
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 201: //创建新项目成功
+                        break;
+                    case 210:
+                        Toast.makeText(Activity_Homepage.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        if (to.equals("part1")) {
+                            Intent intent = new Intent(Activity_Homepage.this, Activity_Assessment_Preparation.class);
+                            startActivity(intent);
+                        } else if (to.equals("part2")) {
+                            Intent intent = new Intent(Activity_Homepage.this, Activity_Realtime_Assessment.class);
+                            startActivity(intent);
+                        } else if (to.equals("part3")) {
+                            Intent intent = new Intent(Activity_Homepage.this, Activity_Review_Report.class);
+                            startActivity(intent);
+                        }
+                        break;
+                    case 211:
+                        Toast.makeText(Activity_Homepage.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        AllFunctions.getObject().setHandler(handler);
+    }
+
+    public void onNewIntent(Intent intent) {
+        AllFunctions.getObject().setHandler(handler);
+    }
+
+    public void initToolbar() {
         mToolbar = (Toolbar) findViewById(R.id.toolbar_homepage);
         mToolbar.setTitle("Rapid Feedback -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
@@ -51,7 +97,6 @@ public class Activity_Homepage extends AppCompatActivity {
             }
         });
 
-        gifImageView = findViewById(R.id.geogif);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -60,18 +105,18 @@ public class Activity_Homepage extends AppCompatActivity {
     }
 
     public void toPart1(View view) {
-        Intent intent = new Intent(this, Activity_Assessment_Preparation.class);
-        startActivity(intent);
+        to = "part1";
+        AllFunctions.getObject().syncProjectList();
     }
 
     public void toPart2(View view) {
-        Intent intent = new Intent(this, Activity_Realtime_Assessment.class);
-        startActivity(intent);
+        to = "part2";
+        AllFunctions.getObject().syncProjectList();
     }
 
     public void toPart3(View view) {
-        Intent intent = new Intent(this, Activity_Review_Report.class);
-        startActivity(intent);
+        to = "part3";
+        AllFunctions.getObject().syncProjectList();
     }
 
     public void onBackPressed() {

@@ -31,7 +31,7 @@ public class UserInfoOperator {
                     String value = (String) jsonObject.get(key);
                     userInfo.put(key, value);
                 }
-                Log.d("EEEE", userInfo.toString());
+//                Log.d("EEEE", userInfo.toString());
                 String encryptedEmail = AESEncrypter.encrypt(email);
                 String encryptedPassword = AESEncrypter.encrypt(password);
                 userInfo.put(encryptedEmail, encryptedPassword);
@@ -44,7 +44,7 @@ public class UserInfoOperator {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("EEEE", "YYYY");
+//            Log.d("EEEE", "YYYY");
         }
     }
 

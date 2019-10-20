@@ -88,6 +88,11 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
                         Toast.makeText(Activity_Assessment_Preparation.this,
                                 "Sync success.", Toast.LENGTH_SHORT).show();
                         updateProjectList();
+                        break;
+                    case 211:
+                        Toast.makeText(Activity_Assessment_Preparation.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
                     default:
                         break;
                 }
@@ -159,6 +164,8 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                Intent intent = new Intent(Activity_Assessment_Preparation.this, Activity_Homepage.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         });
@@ -189,6 +196,8 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(Activity_Assessment_Preparation.this, Activity_Homepage.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
         finish();
     }
 
@@ -446,7 +455,6 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
 
     public void updateProjectList(){
         projectList = allFunctions.getProjectList();
-        Log.d("EEEE", projectList.toString() + "wtf");
 
         MyAdapterDefaultlistView mSyncAdapter = new MyAdapterDefaultlistView
                 (Activity_Assessment_Preparation.this, projectList);

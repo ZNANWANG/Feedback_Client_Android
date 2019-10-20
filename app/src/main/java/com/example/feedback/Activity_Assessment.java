@@ -235,6 +235,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                                 Toast.makeText(Activity_Assessment.this, "You have one or more comments not selected", Toast.LENGTH_SHORT).show();
                             }
                         }
+                        break;
                     case 211:
                         Toast.makeText(Activity_Assessment.this,
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();
