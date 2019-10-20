@@ -1,7 +1,6 @@
 package com.example.feedback;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -26,7 +25,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+
 import java.util.ArrayList;
 import dbclass.Criteria;
 import dbclass.Mark;
@@ -120,7 +119,8 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
             MarkObjectToMatrix(project.getStudentInfo().get(studentList.get(0)).getMark());
             for (int m = 0; m < studentList.size(); m++) {
                 for (int n = 0; n < project.getCriteria().size(); n++) {
-                    project.getStudentInfo().get(studentList.get(m)).getMark().getCriteriaList().get(n).getSubsectionList().clear();
+                    Mark mark = project.getStudentInfo().get(studentList.get(m)).getMark();
+                    mark.getCriteriaList().get(n).getSubsectionList().clear();
                 }
                 for (int n = 0; n < project.getCommentList().size(); n++) {
                     project.getStudentInfo().get(studentList.get(m)).getMark().getCommentList().get(n).getSubsectionList().clear();
@@ -245,13 +245,18 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                                 "Record mark success", Toast.LENGTH_SHORT).show();
 //                        dialog.dismiss();
                         if (from.equals("realtime")) {
-                            Intent intent = new Intent(Activity_Assessment.this, Activity_Reaper_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                             intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                             intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                             startActivity(intent);
                             finish();
                         } else if (from.equals("edit")) {
+                            Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            startActivity(intent);
                             finish();
                         }
                     case 352:

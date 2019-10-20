@@ -9,7 +9,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
@@ -26,8 +28,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -179,6 +183,28 @@ public class Activity_Criteria extends AppCompatActivity {
         }
     }
 
+    public void helpCriteriaUpload(View view) {
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Criteria.this);
+        final View view2 = layoutInflater.from(Activity_Criteria.this).inflate(R.layout.dialog_help, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Criteria.this);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setView(view2);
+        dialog.show();
+        ImageView imageView = view2.findViewById(R.id.imageView_dialog_help);
+        imageView.setBackgroundResource(R.drawable.criteria);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.width = 1700;
+        params.height = 1000;
+        dialog.getWindow().setAttributes(params);
+    }
 
     public void addMarkedCriteria(View view) {
         LayoutInflater layoutInflater = LayoutInflater.from(this);//获得layoutInflater对象

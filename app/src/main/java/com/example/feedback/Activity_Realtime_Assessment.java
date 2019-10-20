@@ -104,7 +104,7 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
                         numStudentHasMarked++;
                 }
                 textView_numCandicateAndMarker.setText(numStudentHasMarked + " of " +
-                        projectList.get(indexOfProject).getStudentInfo().size() + " candidate(s) marked by" +
+                        projectList.get(indexOfProject).getStudentInfo().size() + " candidate(s) marked by " +
                         projectList.get(indexOfProject).getAssistant().size() + " marker(s)");
 
             }

@@ -53,6 +53,8 @@
                         android:id="@+id/textView_marker_management"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_toStartOf="@id/button_marker_add_management"
                         android:text="Marker Management"
                         style="@style/NewProjectElementTitle" />
 

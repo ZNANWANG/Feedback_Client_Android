@@ -159,7 +159,7 @@ public class Activity_Review_Report extends AppCompatActivity {
             button_viewReport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(Activity_Review_Report.this, Activity_Reaper_Mark.class);
+                    Intent intent = new Intent(Activity_Review_Report.this, Activity_Display_Mark.class);
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroup()));

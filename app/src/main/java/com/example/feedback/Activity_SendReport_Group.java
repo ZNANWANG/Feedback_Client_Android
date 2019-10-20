@@ -99,7 +99,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
             public void onClick(View view) {
                 for (int i = 0; i < studentInfoArrayList.size(); i++)
                     AllFunctions.getObject().sendPDF(project, studentInfoArrayList.get(i).getNumber(), 1);
-                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Reaper_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }
@@ -110,7 +110,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
             public void onClick(View view) {
                 for (int i = 0; i < studentInfoArrayList.size(); i++)
                     AllFunctions.getObject().sendPDF(project, studentInfoArrayList.get(i).getNumber(), 2);
-                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Reaper_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }
@@ -119,7 +119,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         button_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Reaper_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();
             }

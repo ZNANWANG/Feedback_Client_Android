@@ -54,8 +54,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Student Management"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
                         style="@style/NewProjectElementTitle"
-                        android:layout_toStartOf="@id/button_addstudent_instudentgroup" />
+                        android:layout_toStartOf="@id/button_help_student" />
 
                     <Button
                         android:id="@+id/button_addstudent_instudentgroup"
@@ -100,6 +102,17 @@
                         android:layout_toStartOf="@id/button_addstudent_instudentgroup"
                         android:background="@drawable/ic_excel"
                         android:onClick="importStudentManagement" />
+
+                    <Button
+                        android:id="@+id/button_help_student"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_alignBaseline="@id/textView3"
+                        android:layout_centerVertical="true"
+                        android:layout_toStartOf="@id/button_import_instudentgroup"
+                        android:background="@drawable/ic_help"
+                        android:onClick="helpStudentUpload"/>
 
                     <View
                         android:id="@+id/divider10"

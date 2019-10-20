@@ -50,6 +50,7 @@
                         android:id="@+id/textView_title_markAllocation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
                         android:text="Customised Marking Criteria"
                         style="@style/NewProjectElementTitle" />
 

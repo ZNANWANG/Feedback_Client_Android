@@ -28,7 +28,7 @@ import dbclass.ProjectInfo;
 import dbclass.StudentInfo;
 import main.AllFunctions;
 
-public class Activity_Reaper_Mark extends AppCompatActivity {
+public class Activity_Display_Mark extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfStudent;
     private int indexOfGroup;
@@ -42,13 +42,36 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d("EEEE", "new reaper mark activity");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reaper_mark);
+        setContentView(R.layout.activity_display_mark);
         initToolbar();
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
 
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 301: //means getMark success
+                        init();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+
+        project = AllFunctions.getObject().getProjectList().get(indexOfProject);
+        student = project.getStudentInfo().get(indexOfStudent);
+        AllFunctions.getObject().setHandler(handler);
+        AllFunctions.getObject().getMarks(project, indexOfGroup, student.getNumber());
+    }
+
+    public void onNewIntent(Intent intent) {
+        indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
+        indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
+        indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
+        Log.d("EEEE", "new display mark activity");
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -87,8 +110,8 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_Reaper_Mark.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_Reaper_Mark.this,
+                        Toast.makeText(Activity_Display_Mark.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Display_Mark.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -144,7 +167,12 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.grid_item_mark_markpage, parent, false);
 
             TextView textView_totalMark = convertView.findViewById(R.id.textView_totalMark_gridItemMark);
-            textView_totalMark.setText(String.valueOf(markList.get(position).getTotalMark()) + "%");
+            if (markList.get(position).getTotalMark() != -999) {
+                textView_totalMark.setText(markList.get(position).getTotalMark() + "%");
+            } else {
+                textView_totalMark.setText("Marking...");
+            }
+
             TextView textView_assessorName = convertView.findViewById(R.id.textView_assessorName_gridItemMark);
             textView_assessorName.setText(markList.get(position).getLecturerName());
 
@@ -158,13 +186,13 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (indexOfGroup == -999) {
-                        Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_Editable_Individual_Report.class);
+                        Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Individual_Report.class);
                         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                         intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                         intent.putExtra("indexOfMark", String.valueOf(position));
                         startActivity(intent);
                     } else {
-                        Intent intent = new Intent(Activity_Reaper_Mark.this, Activity_Editable_Group_Report.class);
+                        Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Group_Report.class);
                         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                         intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                         intent.putExtra("indexOfMark", String.valueOf(position));
@@ -172,6 +200,9 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
                     }
                 }
             });
+            if (markList.get(position).getTotalMark() == -999) {
+                button_viewReport.setVisibility(View.INVISIBLE);
+            }
 
             return convertView;
         }
@@ -208,7 +239,7 @@ public class Activity_Reaper_Mark extends AppCompatActivity {
 
             TextView textView_markWithTotalMark = convertView.findViewById(R.id.textView_markTotalMark_listItemCriteriaMark);
             textView_markWithTotalMark.setText(markItem.getMarkList().get(position) + "/" +
-                    markItem.getCriteriaList().get(position).getMaximunMark());
+                    Double.valueOf(markItem.getCriteriaList().get(position).getMaximunMark()));
             TextView textView_criteriaName = convertView.findViewById(R.id.textView_criteriaName_listItemCriteriaMark);
             textView_criteriaName.setText(markItem.getCriteriaList().get(position).getName());
             convertView.setEnabled(false);

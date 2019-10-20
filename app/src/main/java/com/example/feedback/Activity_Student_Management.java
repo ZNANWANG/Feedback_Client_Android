@@ -1,7 +1,6 @@
 package com.example.feedback;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,8 +11,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -21,10 +22,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -422,6 +425,35 @@ public class Activity_Student_Management extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+    }
+
+    public void helpStudentUpload(View view) {
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Student_Management.this);
+        final View view2 = layoutInflater.from(Activity_Student_Management.this).inflate(R.layout.dialog_help, null);
+        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(Activity_Student_Management.this);
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.setView(view2);
+        dialog.show();
+        ImageView imageView = view2.findViewById(R.id.imageView_dialog_help);
+        imageView.setBackgroundResource(R.drawable.students);
+        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+        params.width = 1700;
+        params.height = 800;
+        dialog.getWindow().setAttributes(params);
+
+//        WindowManager windowManager = Activity_Student_Management.this.getWindowManager();
+//        DisplayMetrics displayMetrics = new DisplayMetrics();
+//        windowManager.getDefaultDisplay().getMetrics(displayMetrics);
+//        int screenWidth = displayMetrics.widthPixels;
+//        int screenHeight = displayMetrics.heightPixels;
+//        Log.d("EEEE", "screen width: " + screenWidth + " screen height: " + screenHeight);
     }
 
     public void editStudent_inStudentManagement(View v) {

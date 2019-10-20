@@ -72,7 +72,7 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
         Log.d("EEEE", "Preparation: onNewIntent has been called!");
         myAdapterDefaultlistView.notifyDataSetChanged();
         if (indexToSend == -999){
-            resetDetailView();
+            init();
         } else {
             showOtherInfo(indexToSend);
         }
