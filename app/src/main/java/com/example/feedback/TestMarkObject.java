@@ -7,7 +7,7 @@ import dbclass.Mark;
 import dbclass.ShortText;
 import dbclass.SubSection;
 
-public class testMarkObject {
+public class TestMarkObject {
 	
 	static public Criteria createCriteria(){
 		Criteria c = new Criteria();

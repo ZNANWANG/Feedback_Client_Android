@@ -2,7 +2,6 @@ package adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -63,7 +62,7 @@ public class UserBeanAdapter extends BaseAdapter {
                     String password = checkedUser.getPassword();
                     mUserBeanList.remove(position);
                     notifyDataSetChanged();
-                    Activity_Login.mUserinfoOpertor.deleteUserInfo(email, password);
+                    Activity_Login.mUserInfoOpertor.deleteUserInfo(email, password);
                 }
             });
             convertView.setTag(holder);

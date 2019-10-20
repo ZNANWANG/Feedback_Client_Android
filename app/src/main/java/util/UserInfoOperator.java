@@ -10,11 +10,11 @@ import java.util.Map;
 
 import util.AESEncrypter;
 
-public class UserinfoOperator {
+public class UserInfoOperator {
 
     private Context mContext;
 
-    public UserinfoOperator(Context context) {
+    public UserInfoOperator(Context context) {
         mContext = context;
     }
 
@@ -31,7 +31,7 @@ public class UserinfoOperator {
                     String value = (String) jsonObject.get(key);
                     userInfo.put(key, value);
                 }
-                Log.d("RRRR", userInfo.toString());
+                Log.d("EEEE", userInfo.toString());
                 String encryptedEmail = AESEncrypter.encrypt(email);
                 String encryptedPassword = AESEncrypter.encrypt(password);
                 userInfo.put(encryptedEmail, encryptedPassword);
@@ -44,7 +44,7 @@ public class UserinfoOperator {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("RRRR", "YYYY");
+            Log.d("EEEE", "YYYY");
         }
     }
 
@@ -54,8 +54,8 @@ public class UserinfoOperator {
         try {
             if (sp != null) {
                 String jsonString = sp.getString("userinfo", (new JSONObject()).toString());
-                Log.d("RRRR", (jsonString.equals((new JSONObject()).toString())) + "");
-                Log.d("RRRR", jsonString.getBytes() + "");
+//                Log.d("EEEE", (jsonString.equals((new JSONObject()).toString())) + "");
+//                Log.d("EEEE", jsonString.getBytes() + "");
                 JSONObject jsonObject = new JSONObject(jsonString);
                 Iterator<String> keysItr = jsonObject.keys();
                 while (keysItr.hasNext()) {
@@ -65,11 +65,11 @@ public class UserinfoOperator {
                     String decryptedValue = AESEncrypter.decrypt(value);
                     userInfo.put(decryptedKey, decryptedValue);
                 }
-                Log.d("RRRR", "EEE" + userInfo.toString());
+//                Log.d("EEEE", "EEE" + userInfo.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("RRRR", "XXXX");
+//            Log.d("EEEE", "XXXX");
         }
         return userInfo;
     }

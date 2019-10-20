@@ -26,16 +26,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import adapter.UserBeanAdapter;
 import bean.UserBean;
-import dbclass.DefaultCriteriaList;
 import main.AllFunctions;
-import util.UserinfoOperator;
+import util.UserInfoOperator;
 import widget.LoginVideoView;
 
 public class Activity_Login extends AppCompatActivity {
@@ -55,7 +52,7 @@ public class Activity_Login extends AppCompatActivity {
     private Button mLoginButton;
     private List<View> mDropDownInvisibleViews;
     private HashMap<String, String> mAccounts;
-    public static UserinfoOperator mUserinfoOpertor;
+    public static UserInfoOperator mUserInfoOpertor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +176,7 @@ public class Activity_Login extends AppCompatActivity {
 //        android:onClick="login"
         mLoginButton = findViewById(R.id.buttonLogin_inlogin);
 
-        mUserinfoOpertor = new UserinfoOperator(Activity_Login.this);
+        mUserInfoOpertor = new UserInfoOperator(Activity_Login.this);
     }
 
     public void initVideoView() {
@@ -259,7 +256,7 @@ public class Activity_Login extends AppCompatActivity {
 
     private void showDropDownWindow() {
         final PopupWindow window = new PopupWindow(mDropdownCheckBox);
-        mAccounts = mUserinfoOpertor.getUserInfo();
+        mAccounts = mUserInfoOpertor.getUserInfo();
         List<UserBean> userBeanList = new ArrayList<>();
         for (String key : mAccounts.keySet()) {
             userBeanList.add(new UserBean(key, mAccounts.get(key)));
@@ -279,7 +276,7 @@ public class Activity_Login extends AppCompatActivity {
                 window.dismiss();
             }
         });
-        userListView.addFooterView(new TextView(this));
+//        userListView.addFooterView(new TextView(this));
 
         window.setContentView(userListView);
         window.setAnimationStyle(0);
@@ -312,10 +309,10 @@ public class Activity_Login extends AppCompatActivity {
         }
     }
 
-//    public static UserinfoOperator getObject() {
-//        if (mUserinfoOpertor == null) {
-//            mUserinfoOpertor = new UserinfoOperator();
+//    public static UserInfoOperator getObject() {
+//        if (mUserInfoOpertor == null) {
+//            mUserInfoOpertor = new UserInfoOperator();
 //        }
-//        return mUserinfoOpertor;
+//        return mUserInfoOpertor;
 //    }
 }

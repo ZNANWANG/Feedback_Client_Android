@@ -35,8 +35,8 @@ public class CommunicationForClient {
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("audio/mpeg");
 
     public CommunicationForClient(AllFunctions functions) {
-        host = "http://10.13.88.39:8080/RapidFeedback/";
-//        host = "http://192.168.0.13:8080/RapidFeedback/";
+//        host = "http://10.13.88.39:8080/RapidFeedback/";
+        host = "http://192.168.0.13:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
     }
@@ -89,7 +89,7 @@ public class CommunicationForClient {
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             int login_ACK = Integer.parseInt(jsonReceive.get("login_ACK").toString());
             if (login_ACK > 0) {
-                Activity_Login.mUserinfoOpertor.saveUserInfo(username, password);
+                Activity_Login.mUserInfoOpertor.saveUserInfo(username, password);
                 //get projectlist from jsonReceive
                 String projectListString = jsonReceive.get("projectList").toString();
                 String firstName = jsonReceive.getString("firstName");

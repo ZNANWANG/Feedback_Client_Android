@@ -112,23 +112,6 @@ public class Activity_Assessment_Comment extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-//                if (indexOfCriteria == -999) {
-//                    if (Activity_Assessment.commentOnlySelectedAll(indexOfComment)) {
-//                        finish();
-//                        Intent intent = new Intent(Activity_Assessment_Comment.this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                        startActivity(intent);
-//                    } else {
-//                        Toast.makeText(Activity_Assessment_Comment.this, "You need to select a comment for each subsection", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    if (Activity_Assessment.markedCriteriaSelectedAll(indexOfCriteria)) {
-//                        finish();
-//                        Intent intent = new Intent(Activity_Assessment_Comment.this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//                        startActivity(intent);
-//                    } else {
-//                        Toast.makeText(Activity_Assessment_Comment.this, "You need to select a comment for each subsection", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
                 finish();
                 Intent intent = new Intent(Activity_Assessment_Comment.this, Activity_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 startActivity(intent);
