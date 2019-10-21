@@ -27,6 +27,9 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
     private int indexOfStudent;
     private ArrayList<StudentInfo> studentInfoArrayList;
     private Toolbar mToolbar;
+    private String from;
+    public static final String FROMREALTIMEEDIT= "realtime_edit";
+    public static final String FROMREVIEWEDIT= "review_edit";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
         indexOfMark = Integer.parseInt(intent.getStringExtra("indexOfMark"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
+        from = intent.getStringExtra("from");
         studentInfoArrayList = new ArrayList<StudentInfo>();
         for (int i = 0; i < project.getStudentInfo().size(); i++) {
             if (project.getStudentInfo().get(i).getGroup() == indexOfGroup)
@@ -92,12 +96,23 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
         button_finalReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_SendReport_Group.class);
-                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-                intent.putExtra("indexMark", String.valueOf(indexOfMark));
-                startActivity(intent);
+                if (from.equals(Activity_Display_Mark.FROMREALTIME)) {
+                    Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_SendReport_Group.class);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("indexMark", String.valueOf(indexOfMark));
+                    intent.putExtra("from", FROMREALTIMEEDIT);
+                    startActivity(intent);
+                } else if (from.equals(Activity_Display_Mark.FROMREVIEW)) {
+                    Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_SendReport_Group.class);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("indexMark", String.valueOf(indexOfMark));
+                    intent.putExtra("from", FROMREVIEWEDIT);
+                    startActivity(intent);
+                }
             }
         });
         if (!AllFunctions.getObject().getProjectList().get(indexOfProject).getAssistant().get(0).equals
@@ -109,17 +124,31 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
         button_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_Assessment.class);
-                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-                intent.putExtra("from", "edit");
-                for (int i = 0; i < project.getStudentInfo().size(); i++) {
-                    if (project.getStudentInfo().get(i).getGroup() == indexOfGroup)
-                        project.getStudentInfo().get(i).setMark(mark);
+                if (from.equals(Activity_Display_Mark.FROMREALTIME)) {
+                    Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_Assessment.class);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("from", FROMREALTIMEEDIT);
+                    for (int i = 0; i < project.getStudentInfo().size(); i++) {
+                        if (project.getStudentInfo().get(i).getGroup() == indexOfGroup)
+                            project.getStudentInfo().get(i).setMark(mark);
+                    }
+                    startActivity(intent);
+                    finish();
+                } else if (from.equals(Activity_Display_Mark.FROMREVIEW)) {
+                    Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_Assessment.class);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("from", FROMREVIEWEDIT);
+                    for (int i = 0; i < project.getStudentInfo().size(); i++) {
+                        if (project.getStudentInfo().get(i).getGroup() == indexOfGroup)
+                            project.getStudentInfo().get(i).setMark(mark);
+                    }
+                    startActivity(intent);
+                    finish();
                 }
-                startActivity(intent);
-                finish();
             }
         });
         if (!mark.getLecturerEmail().equals(AllFunctions.getObject().getMyEmail())) {

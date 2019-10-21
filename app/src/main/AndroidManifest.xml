@@ -19,8 +19,11 @@
         <activity android:name=".Activity_ShowComment_MarkAllocation" />
         <activity android:name=".Activity_SendReport_Individual" />
         <activity android:name=".Activity_Editable_Individual_Report" />
-        <activity android:name=".Activity_Review_Report" />
-        <activity android:name=".Activity_Display_Mark"
+        <activity
+            android:name=".Activity_Review_Report"
+            android:launchMode="singleTask"/>
+        <activity
+            android:name=".Activity_Display_Mark"
             android:launchMode="singleTask"/>
         <activity
             android:name=".Activity_Realtime_Assessment"
@@ -29,7 +32,9 @@
             android:name=".Activity_Homepage"
             android:launchMode="singleTask" />
         <activity android:name=".Activity_Mark_Allocation" />
-        <activity android:name=".Activity_Criteria" />
+        <activity
+            android:name=".Activity_Criteria"
+            android:launchMode="singleTask"/>
         <activity android:name=".Activity_About" />
         <activity android:name=".Activity_About_New" />
         <activity android:name=".Activity_Marker_Management" />

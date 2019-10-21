@@ -105,7 +105,6 @@ public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
         expandableListView_comments_left.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-                Toast.makeText(getApplicationContext(), "Click", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -327,6 +326,8 @@ public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
                     listView_longText.setAdapter(myAdapterForLongText);
                     indexOfSubsection = groupPosition;
                     indexOfShortText = childPosition;
+                    Log.d("EEEE", "child position； " + childPosition);
+                    Log.d("EEEE", "child count: " + parent.getChildCount());
                     convertView2.setSelected(true);
                 }
             });

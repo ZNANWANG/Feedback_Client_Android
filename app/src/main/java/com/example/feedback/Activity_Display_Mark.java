@@ -1,5 +1,6 @@
 package com.example.feedback;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -37,6 +38,9 @@ public class Activity_Display_Mark extends AppCompatActivity {
     private Toolbar mToolbar;
     private ProjectInfo project;
     private StudentInfo student;
+    private String from;
+    public static final String FROMREALTIME = "realtime";
+    public static final String FROMREVIEW = "review";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
-
+        from = intent.getStringExtra("from");
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -71,6 +75,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
+        from = intent.getStringExtra("from");
         Log.d("EEEE", "new display mark activity");
         handler = new Handler() {
             public void handleMessage(Message msg) {
@@ -102,9 +107,17 @@ public class Activity_Display_Mark extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_Display_Mark.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                if (from.equals(Activity_Assessment.FROMREALTIME)
+                        || from.equals(Activity_SendReport_Individual.FROMREALTIMESEND)) {
+                    Intent intent = new Intent(Activity_Display_Mark.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                } else if (from.equals(Activity_Assessment.FROMREVIEW)
+                        || from.equals(Activity_SendReport_Individual.FROMREVIEWSEND)) {
+                    Intent intent = new Intent(Activity_Display_Mark.this, Activity_Review_Report.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
         mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
@@ -187,20 +200,42 @@ public class Activity_Display_Mark extends AppCompatActivity {
             button_viewReport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (indexOfGroup == -999) {
-                        Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Individual_Report.class);
-                        intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-                        intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                        intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-                        intent.putExtra("indexOfMark", String.valueOf(position));
-                        startActivity(intent);
-                    } else {
-                        Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Group_Report.class);
-                        intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-                        intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                        intent.putExtra("indexOfMark", String.valueOf(position));
-                        intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-                        startActivity(intent);
+                    if (from.equals(Activity_Assessment.FROMREALTIME)) {
+                        if (indexOfGroup == -999) {
+                            Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Individual_Report.class);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("indexOfMark", String.valueOf(position));
+                            intent.putExtra("from", FROMREALTIME);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Group_Report.class);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            intent.putExtra("indexOfMark", String.valueOf(position));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("from", FROMREALTIME);
+                            startActivity(intent);
+                        }
+                    } else if (from.equals(FROMREVIEW)) {
+                        if (indexOfGroup == -999) {
+                            Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Individual_Report.class);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("indexOfMark", String.valueOf(position));
+                            intent.putExtra("from", FROMREVIEW);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Group_Report.class);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            intent.putExtra("indexOfMark", String.valueOf(position));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("from", FROMREVIEW);
+                            startActivity(intent);
+                        }
                     }
                 }
             });
@@ -273,8 +308,16 @@ public class Activity_Display_Mark extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        Intent intent = new Intent(Activity_Display_Mark.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
-        finish();
+        if (from.equals(Activity_Assessment.FROMREALTIME)
+                || from.equals(Activity_SendReport_Individual.FROMREALTIMESEND)) {
+            Intent intent = new Intent(Activity_Display_Mark.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        } else if (from.equals(Activity_Assessment.FROMREVIEW)
+                || from.equals(Activity_SendReport_Individual.FROMREVIEWSEND)) {
+            Intent intent = new Intent(Activity_Display_Mark.this, Activity_Review_Report.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
     }
 }

@@ -34,6 +34,7 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
     private MyAdapter myAdapter;
     private TextView textView_duration_title;
     private TextView textView_numCandicateAndMarker;
+    public static final String FROMREALTIME = "realtime";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,8 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                Intent intent = new Intent(Activity_Realtime_Assessment.this, Activity_Homepage.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         });
@@ -81,6 +84,13 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Activity_Realtime_Assessment.this, Activity_Homepage.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     public void init() {
@@ -171,7 +181,7 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroup()));
-                    intent.putExtra("from", "realtime");
+                    intent.putExtra("from", FROMREALTIME);
                     Log.d("EEEE", "project: " + indexOfProject);
                     Log.d("EEEE", "student: " + position);
                     Log.d("EEEE", "group: " + studentList.get(position).getGroup());

@@ -28,6 +28,9 @@ public class Activity_SendReport_Group extends AppCompatActivity {
     //    private int indexOfMark;
     private ArrayList<StudentInfo> studentInfoArrayList;
     private Toolbar mToolbar;
+    private String from;
+    public static final String FROMREALTIMESEND= "realtime_send";
+    public static final String FROMREVIEWSEND= "review_send";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
+        from = intent.getStringExtra("from");
 //        indexOfMark = Integer.parseInt(intent.getStringExtra("indexOfMark"));
         studentInfoArrayList = new ArrayList<StudentInfo>();
         for (int i = 0; i < project.getStudentInfo().size(); i++) {
@@ -100,34 +104,77 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         button_sendSingle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (int i = 0; i < studentInfoArrayList.size(); i++)
-                    AllFunctions.getObject().sendPDF(project, studentInfoArrayList.get(i).getNumber(), 1);
-                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                if (from.equals(Activity_Editable_Group_Report.FROMREALTIMEEDIT)) {
+                    for (int i = 0; i < studentInfoArrayList.size(); i++)
+                        AllFunctions.getObject().sendPDF(project, studentInfoArrayList.get(i).getNumber(), 1);
+                    Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("from", FROMREALTIMESEND);
+                    startActivity(intent);
+                    finish();
+                } else if (from.equals(Activity_Editable_Group_Report.FROMREVIEWEDIT)) {
+                    for (int i = 0; i < studentInfoArrayList.size(); i++)
+                        AllFunctions.getObject().sendPDF(project, studentInfoArrayList.get(i).getNumber(), 1);
+                    Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("from", FROMREVIEWSEND);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
         Button button_sendBoth = findViewById(R.id.button_sendBoth_sendReportGroup);
         button_sendBoth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                for (int i = 0; i < studentInfoArrayList.size(); i++)
-                    AllFunctions.getObject().sendPDF(project, studentInfoArrayList.get(i).getNumber(), 2);
-                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                if (from.equals(Activity_Editable_Group_Report.FROMREALTIMEEDIT)) {
+                    for (int i = 0; i < studentInfoArrayList.size(); i++)
+                        AllFunctions.getObject().sendPDF(project, studentInfoArrayList.get(i).getNumber(), 2);
+                    Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("from", FROMREALTIMESEND);
+                    startActivity(intent);
+                    finish();
+                } else if (from.equals(Activity_Editable_Group_Report.FROMREVIEWEDIT)) {
+                    for (int i = 0; i < studentInfoArrayList.size(); i++)
+                        AllFunctions.getObject().sendPDF(project, studentInfoArrayList.get(i).getNumber(), 2);
+                    Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("from", FROMREVIEWSEND);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
         Button button_finish = findViewById(R.id.btn_finish_sendReportGroup);
         button_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-                startActivity(intent);
-                finish();
+                if (from.equals(Activity_Editable_Group_Report.FROMREALTIMEEDIT)) {
+                    Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("from", FROMREALTIMESEND);
+                    startActivity(intent);
+                    finish();
+                } else if (from.equals(Activity_Editable_Group_Report.FROMREVIEWEDIT)) {
+                    Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                    intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                    intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                    intent.putExtra("from", FROMREVIEWSEND);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -185,7 +232,11 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         double sumMark = 0;
         double markers = markList.size();
         for (int i = 0; i < markers; i++) {
-            sumMark += markList.get(i).getMarkList().get(criteriaIndex);
+            if (markList.get(i).getMarkList().size() == 0) {
+                return markList.get(0).getMarkList().get(criteriaIndex);
+            } else {
+                sumMark += markList.get(i).getMarkList().get(criteriaIndex);
+            }
         }
         Log.d("EEEE", "sum of mark: " + sumMark);
         double avgMark = sumMark/markers;
@@ -200,7 +251,11 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         double sumMark = 0;
         double markers = markList.size();
         for (int i = 0; i < markers; i++) {
-            sumMark += markList.get(i).getTotalMark();
+            if (markList.get(i).getTotalMark() == -999) {
+                return markList.get(0).getTotalMark();
+            } else {
+                sumMark += markList.get(i).getTotalMark();
+            }
         }
         Log.d("EEEE", "sum of mark: " + sumMark);
         double avgMark = sumMark/markers;

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +31,7 @@ public class Activity_Review_Report extends AppCompatActivity {
     private ArrayList<ProjectInfo> projectList;
     private int indexOfProject;
     private Toolbar mToolbar;
+    private MyAdapter myAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class Activity_Review_Report extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                Intent intent = new Intent(Activity_Review_Report.this, Activity_Homepage.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         });
@@ -73,6 +77,19 @@ public class Activity_Review_Report extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(Activity_Review_Report.this, Activity_Homepage.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d("EEEE", "new review report");
+        myAdapter.notifyDataSetChanged();
+    }
+
     public void init() {
         projectList = AllFunctions.getObject().getProjectList();
         MyAdapterDefaultlistView myAdapterDefaultlistView = new MyAdapterDefaultlistView
@@ -88,7 +105,7 @@ public class Activity_Review_Report extends AppCompatActivity {
                 view.setBackgroundColor(getResources().getColor(R.color.check));
                 indexOfProject = position;
                 ProjectInfo project = projectList.get(position);
-                MyAdapter myAdapter = new MyAdapter(project.getStudentInfo(), Activity_Review_Report.this);
+                myAdapter = new MyAdapter(project.getStudentInfo(), Activity_Review_Report.this);
                 listView_students.setAdapter(myAdapter);
                 listView_students.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -163,6 +180,7 @@ public class Activity_Review_Report extends AppCompatActivity {
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroup()));
+                    intent.putExtra("from", "review");
                     startActivity(intent);
                 }
             });

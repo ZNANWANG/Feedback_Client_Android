@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import dbclass.Mark;
@@ -25,6 +26,9 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
     private int indexOfStudent;
     private int indexOfGroup;
     private Toolbar mToolbar;
+    private String from;
+    public static final String FROMREALTIMESEND= "realtime_send";
+    public static final String FROMREVIEWSEND= "review_send";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +100,10 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
                 AllFunctions.getObject().sendPDF(project, student.getNumber(), 1);
                 student.setSendEmail(true);
                 Intent intent = new Intent(Activity_SendReport_Individual.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                intent.putExtra("from", "send");
                 startActivity(intent);
                 finish();
             }
@@ -107,6 +115,10 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
                 AllFunctions.getObject().sendPDF(project, student.getNumber(), 2);
                 student.setSendEmail(true);
                 Intent intent = new Intent(Activity_SendReport_Individual.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                intent.putExtra("from", "send");
                 startActivity(intent);
                 finish();
             }
@@ -115,17 +127,18 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
         button_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Activity_SendReport_Individual.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Intent intent = new Intent(Activity_SendReport_Individual.this, Activity_Review_Report.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                 intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                intent.putExtra("from", "send");
                 startActivity(intent);
                 finish();
             }
         });
 
         TextView textView_totalMark = findViewById(R.id.textView_totalMark_sendReportIndividual);
-        textView_totalMark.setText("Mark:" + (int) markList.get(0).getTotalMark() + "%");
+        textView_totalMark.setText("Mark:" + (int) getAverageMark(markList) + "%");
 
         String htmlString =
                 "<html>" +
@@ -138,7 +151,7 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
                         "<h2 style=\"font-weight: normal\">Project</h2>" +
                         "<p>" + project.getProjectName() + "</p >" +
                         "<h2 style=\"font-weight: normal\">Mark Attained</h2>" +
-                        "<p>" + markList.get(0).getTotalMark() + "%</p >" +
+                        "<p>" + getAverageMark(markList) + "%</p >" +
                         "<h2 style=\"font-weight: normal\">Marker</h2>" + "<p>";
         for (int i = 0; i < project.getAssistant().size(); i++) {
             htmlString = htmlString + project.getAssistant().get(i) + "<br>";
@@ -151,7 +164,7 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
         htmlString += "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
         for (int i = 0; i < markList.get(0).getCriteriaList().size(); i++) {
             htmlString += "<h3 style=\"font-weight: normal\"><span style=\"float:left\">" + markList.get(0).getCriteriaList().get(i).getName() + "</span>" +
-                    "<span style=\"float:right\">" + "  ---  " + markList.get(0).getMarkList().get(i) + "/" + Double.valueOf(markList.get(0).getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
+                    "<span style=\"float:right\">" + "  ---  " + getAverageCriterionMark(markList, i) + "/" + Double.valueOf(markList.get(0).getCriteriaList().get(i).getMaximunMark()) + "</span></h3>";
             for (int j = 0; j < markList.size(); j++) {
                 htmlString += "<h4 style=\"font-weight: normal;color: #014085\">" + markList.get(j).getLecturerName() + ":</h4>";
                 if (markList.get(j).getCriteriaList().size() > 0)
@@ -169,5 +182,43 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
                         "</html>";
         TextView textView_pdfContent = findViewById(R.id.textView_pdfContent_sendReportIndividual);
         textView_pdfContent.setText(Html.fromHtml(htmlString));
+    }
+
+    public double getAverageCriterionMark(ArrayList<Mark> markList, int criteriaIndex) {
+        double sumMark = 0;
+        double markers = markList.size();
+        for (int i = 0; i < markers; i++) {
+            if (markList.get(i).getMarkList().size() == 0) {
+                return markList.get(0).getMarkList().get(criteriaIndex);
+            } else {
+                sumMark += markList.get(i).getMarkList().get(criteriaIndex);
+            }
+        }
+        Log.d("EEEE", "sum of mark: " + sumMark);
+        double avgMark = sumMark/markers;
+        Log.d("EEEE", "avg mark: " + avgMark);
+        BigDecimal bigDecimal = new BigDecimal(avgMark);
+        avgMark = bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+        Log.d("EEEE", "avg mark: " + avgMark);
+        return avgMark;
+    }
+
+    public double getAverageMark(ArrayList<Mark> markList) {
+        double sumMark = 0;
+        double markers = markList.size();
+        for (int i = 0; i < markers; i++) {
+            if (markList.get(i).getTotalMark() == -999) {
+                return markList.get(0).getTotalMark();
+            } else {
+                sumMark += markList.get(i).getTotalMark();
+            }
+        }
+        Log.d("EEEE", "sum of mark: " + sumMark);
+        double avgMark = sumMark/markers;
+        Log.d("EEEE", "avg mark: " + avgMark);
+        BigDecimal bigDecimal = new BigDecimal(avgMark);
+        avgMark = bigDecimal.setScale(0, BigDecimal.ROUND_HALF_UP).doubleValue();
+        Log.d("EEEE", "avg mark: " + avgMark);
+        return avgMark;
     }
 }

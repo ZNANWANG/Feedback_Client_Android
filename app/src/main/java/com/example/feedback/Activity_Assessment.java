@@ -72,6 +72,8 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
     private Handler handler;
     private AlertDialog dialog;
     private String from;
+    public static final String FROMREALTIME = "realtime";
+    public static final String FROMREVIEW = "review";
 
 
     @Override
@@ -222,9 +224,10 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     case 210:
                         Toast.makeText(Activity_Assessment.this,
                                 "Sync success.", Toast.LENGTH_SHORT).show();
-                        if (from.equals("realtime")) {
+                        if (from.equals(FROMREALTIME)) {
                             finish();
-                        } else if (from.equals("edit")) {
+                        } else if (from.equals(Activity_Editable_Individual_Report.FROMREALTIMEEDIT)
+                                || from.equals(Activity_Editable_Individual_Report.FROMREVIEWEDIT)) {
                             if (checkAllCriteria()) {
                                 addSubsectionToMarkObject();
                                 for (int i = 0; i < studentList.size(); i++) {
@@ -244,12 +247,31 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                         Toast.makeText(Activity_Assessment.this,
                                 "Record mark success", Toast.LENGTH_SHORT).show();
 //                        dialog.dismiss();
-                        Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
-                        intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
-                        intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
-                        startActivity(intent);
-                        finish();
+                        if (from.equals(Activity_Realtime_Assessment.FROMREALTIME)) {
+                            Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            intent.putExtra("from", FROMREALTIME);
+                            startActivity(intent);
+                            finish();
+                        } else if (from.equals(Activity_Editable_Individual_Report.FROMREALTIMEEDIT)) {
+                            Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            intent.putExtra("from", FROMREALTIME);
+                            startActivity(intent);
+                            finish();
+                        } else if (from.equals(Activity_Editable_Individual_Report.FROMREVIEWEDIT)) {
+                            Intent intent = new Intent(Activity_Assessment.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                            intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                            intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                            intent.putExtra("from", FROMREVIEW);
+                            startActivity(intent);
+                            finish();
+                        }
                     case 352:
                         Toast.makeText(Activity_Assessment.this,
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();

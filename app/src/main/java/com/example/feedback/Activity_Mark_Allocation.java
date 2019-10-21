@@ -106,6 +106,8 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Criteria.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         });

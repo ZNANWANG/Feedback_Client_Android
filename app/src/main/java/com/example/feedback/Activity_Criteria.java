@@ -82,6 +82,7 @@ public class Activity_Criteria extends AppCompatActivity {
                 if (from.equals("old")) {
                     discardWarning();
                 } else if (from.equals("new")) {
+                    Log.d("EEEE", "new criteria");
                     AllFunctions.getObject().deleteProject(indexOfProject);
                 }
             }
