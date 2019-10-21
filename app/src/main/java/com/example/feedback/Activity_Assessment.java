@@ -180,6 +180,8 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
     @Override
     protected void onNewIntent(Intent intent) {
+        allFunctions = AllFunctions.getObject();
+        allFunctions.setHandler(handler);
         lv_individual.setAdapter(myAdapter);
     }
 
@@ -272,6 +274,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                             startActivity(intent);
                             finish();
                         }
+                        break;
                     case 352:
                         Toast.makeText(Activity_Assessment.this,
                                 "Server error. Please try again", Toast.LENGTH_SHORT).show();

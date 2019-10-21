@@ -53,7 +53,6 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
         super.onNewIntent(intent);
         Log.d("EEEE", "new realtime assessment");
         myAdapter.notifyDataSetChanged();
-//        init();
     }
 
     private void initToolbar() {

@@ -69,7 +69,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                AllFunctions.getObject().syncProjectList();
+                finish();
             }
         });
         mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
@@ -92,32 +92,11 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        AllFunctions.getObject().syncProjectList();
+        finish();
     }
 
     private void init() {
         Log.d("EEEE", "send report group");
-
-        handler = new Handler() {
-            public void handleMessage(Message msg) {
-                switch (msg.what) {
-                    case 210:
-                        Toast.makeText(Activity_Send_Report_Group.this,
-                                "Sync success.", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_Send_Report_Group.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                        break;
-                    case 211:
-                        Toast.makeText(Activity_Send_Report_Group.this,
-                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-        AllFunctions.getObject().setHandler(handler);
 
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         ArrayList<Mark> markList = AllFunctions.getObject().getMarkListForMarkPage();
