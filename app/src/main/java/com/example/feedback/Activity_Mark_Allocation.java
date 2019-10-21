@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -272,7 +271,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                 button_commentDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_ShowComment_MarkAllocation.class);
+                        Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Show_Comment_Mark_Allocation.class);
                         intent.putExtra("indexOfProject",String.valueOf(indexOfProject));
                         intent.putExtra("indexOfCriteria",String.valueOf(position));
                         startActivity(intent);
@@ -288,7 +287,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                 button_commentDetail.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_ShowComment_MarkAllocation.class);
+                        Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Show_Comment_Mark_Allocation.class);
                         intent.putExtra("indexOfProject",String.valueOf(indexOfProject));
                         intent.putExtra("indexOfCriteria",String.valueOf(position));
                         startActivity(intent);

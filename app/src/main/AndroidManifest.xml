@@ -14,10 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity_SendReport_Group"></activity>
+        <activity android:name=".Activity_Send_Report_Group"></activity>
         <activity android:name=".Activity_Editable_Group_Report" />
-        <activity android:name=".Activity_ShowComment_MarkAllocation" />
-        <activity android:name=".Activity_SendReport_Individual" />
+        <activity android:name=".Activity_Show_Comment_Mark_Allocation" />
+        <activity android:name=".Activity_Send_Report_Individual" />
         <activity android:name=".Activity_Editable_Individual_Report" />
         <activity
             android:name=".Activity_Review_Report"

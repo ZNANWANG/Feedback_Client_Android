@@ -181,6 +181,9 @@ public class Activity_Review_Report extends AppCompatActivity {
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroup()));
                     intent.putExtra("from", "review");
+                    Log.d("EEEE", "project: " + indexOfProject);
+                    Log.d("EEEE", "student: " + position);
+                    Log.d("EEEE", "group: " + studentList.get(position).getGroup());
                     startActivity(intent);
                 }
             });

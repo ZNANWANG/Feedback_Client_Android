@@ -87,7 +87,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (from.equals(Activity_Display_Mark.FROMREALTIME)) {
-                    Intent intent = new Intent(Activity_Editable_Individual_Report.this, Activity_SendReport_Individual.class);
+                    Intent intent = new Intent(Activity_Editable_Individual_Report.this, Activity_Send_Report_Individual.class);
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                     intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                     intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
@@ -95,7 +95,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
                     intent.putExtra("from", FROMREALTIMEEDIT);
                     startActivity(intent);
                 } else if (from.equals(Activity_Display_Mark.FROMREVIEW)) {
-                    Intent intent = new Intent(Activity_Editable_Individual_Report.this, Activity_SendReport_Individual.class);
+                    Intent intent = new Intent(Activity_Editable_Individual_Report.this, Activity_Send_Report_Individual.class);
                     intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                     intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                     intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));

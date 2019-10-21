@@ -34,6 +34,8 @@ public class Activity_Record_Voice extends AppCompatActivity {
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
+        String from = intent.getStringExtra("from");
+        Log.d("EEEE", "from: " + from + "  " + indexOfStudent);
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {

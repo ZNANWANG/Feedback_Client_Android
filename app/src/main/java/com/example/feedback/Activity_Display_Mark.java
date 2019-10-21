@@ -1,6 +1,5 @@
 package com.example.feedback;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -108,12 +107,12 @@ public class Activity_Display_Mark extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (from.equals(Activity_Assessment.FROMREALTIME)
-                        || from.equals(Activity_SendReport_Individual.FROMREALTIMESEND)) {
+                        || from.equals(Activity_Send_Report_Individual.FROMREALTIMESEND)) {
                     Intent intent = new Intent(Activity_Display_Mark.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
                 } else if (from.equals(Activity_Assessment.FROMREVIEW)
-                        || from.equals(Activity_SendReport_Individual.FROMREVIEWSEND)) {
+                        || from.equals(Activity_Send_Report_Individual.FROMREVIEWSEND)) {
                     Intent intent = new Intent(Activity_Display_Mark.this, Activity_Review_Report.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
@@ -309,12 +308,12 @@ public class Activity_Display_Mark extends AppCompatActivity {
 
     public void onBackPressed() {
         if (from.equals(Activity_Assessment.FROMREALTIME)
-                || from.equals(Activity_SendReport_Individual.FROMREALTIMESEND)) {
+                || from.equals(Activity_Send_Report_Individual.FROMREALTIMESEND)) {
             Intent intent = new Intent(Activity_Display_Mark.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         } else if (from.equals(Activity_Assessment.FROMREVIEW)
-                || from.equals(Activity_SendReport_Individual.FROMREVIEWSEND)) {
+                || from.equals(Activity_Send_Report_Individual.FROMREVIEWSEND)) {
             Intent intent = new Intent(Activity_Display_Mark.this, Activity_Review_Report.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();

@@ -31,7 +31,7 @@ import dbclass.ShortText;
 import dbclass.SubSection;
 import main.AllFunctions;
 
-public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
+public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
     private Criteria criteria;
     private Toolbar mToolbar;
     private ListView listView_longText;
@@ -79,8 +79,8 @@ public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.action_logout:
-                        Toast.makeText(Activity_ShowComment_MarkAllocation.this, "Log out!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Activity_ShowComment_MarkAllocation.this,
+                        Toast.makeText(Activity_Show_Comment_Mark_Allocation.this, "Log out!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Show_Comment_Mark_Allocation.this,
                                 Activity_Login.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();
@@ -137,14 +137,14 @@ public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
         if (listView_longText.getCheckedItemPosition() == -1)
             Toast.makeText(this, "Please choose a comment.", Toast.LENGTH_SHORT).show();
         else {
-            LayoutInflater layoutInflater = LayoutInflater.from(Activity_ShowComment_MarkAllocation.this);//获得layoutInflater对象
-            View view2 = layoutInflater.from(Activity_ShowComment_MarkAllocation.this).inflate(R.layout.dialog_edit_comment, null);//获得view对象
+            LayoutInflater layoutInflater = LayoutInflater.from(Activity_Show_Comment_Mark_Allocation.this);//获得layoutInflater对象
+            View view2 = layoutInflater.from(Activity_Show_Comment_Mark_Allocation.this).inflate(R.layout.dialog_edit_comment, null);//获得view对象
 
             final EditText editText_editLongText = view2.findViewById(R.id.editText_editLongText_editComment);//获取控件
             editText_editLongText.setText(criteria.getSubsectionList().get(indexOfSubsection).getShortTextList().
                     get(indexOfShortText).getLongtext().get(listView_longText.getCheckedItemPosition()));
 
-            Dialog dialog = new AlertDialog.Builder(Activity_ShowComment_MarkAllocation.this).setTitle("Edit Comment").
+            Dialog dialog = new AlertDialog.Builder(Activity_Show_Comment_Mark_Allocation.this).setTitle("Edit Comment").
                     setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     String newLongText = editText_editLongText.getText().toString();
@@ -174,8 +174,8 @@ public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
     }
 
     public void add_showComment(View view) {
-        LayoutInflater layoutInflater = LayoutInflater.from(Activity_ShowComment_MarkAllocation.this);//获得layoutInflater对象
-        final View view2 = layoutInflater.from(Activity_ShowComment_MarkAllocation.this).
+        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Show_Comment_Mark_Allocation.this);//获得layoutInflater对象
+        final View view2 = layoutInflater.from(Activity_Show_Comment_Mark_Allocation.this).
                 inflate(R.layout.dialog_add_comment, null);//获得view对象
 
         final Spinner spinner_subsection = view2.findViewById(R.id.spinner_subsection_addComment);
@@ -202,7 +202,7 @@ public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
             }
         });
 
-        Dialog dialog = new AlertDialog.Builder(Activity_ShowComment_MarkAllocation.this).setTitle("Add Comment").setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
+        Dialog dialog = new AlertDialog.Builder(Activity_Show_Comment_Mark_Allocation.this).setTitle("Add Comment").setView(view2).setPositiveButton("Done", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 int whichSubsection = spinner_subsection.getSelectedItemPosition();
                 if (whichSubsection < criteria.getSubsectionList().size()) {
@@ -321,7 +321,7 @@ public class Activity_ShowComment_MarkAllocation extends AppCompatActivity {
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    myAdapterForLongText = new MyAdapterForLongText(Activity_ShowComment_MarkAllocation.this,
+                    myAdapterForLongText = new MyAdapterForLongText(Activity_Show_Comment_Mark_Allocation.this,
                             subSections.get(groupPosition).getShortTextList().get(childPosition).getLongtext());
                     listView_longText.setAdapter(myAdapterForLongText);
                     indexOfSubsection = groupPosition;
