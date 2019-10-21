@@ -61,14 +61,14 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                         Log.d("EEEE", "Successfully update the criteria of the project.");
                         Toast.makeText(Activity_Mark_Allocation.this,
                                 "Successfully update the criteria of the project.", Toast.LENGTH_SHORT).show();
-                        if (from.equals("old")) {
+                        if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
                             Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Assessment_Preparation.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
                             finish();
-                        } else if (from.equals("new")) {
+                        } else if (from.equals(Activity_Assessment_Preparation.FROMNEWPROJECT)) {
                             Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Marker_Management.class);
                             intent.putExtra("index", String.valueOf(indexOfProject));
-                            intent.putExtra("from", "new");
+                            intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
                             startActivity(intent);
                         }
                         break;
@@ -84,7 +84,7 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
         };
         AllFunctions.getObject().setHandler(handler);
         saveButton = findViewById(R.id.button_next_markAllocation);
-        if (from.equals("old")) {
+        if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
             saveButton.setText(R.string.save_button);
         }
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);
@@ -131,6 +131,12 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
         });
     }
 
+    public void onBackPressed() {
+        Intent intent = new Intent(Activity_Mark_Allocation.this, Activity_Criteria.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
+    }
+
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_toolbar, menu);
         return true;
@@ -156,7 +162,6 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
             AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
         }
     }
-
 
     public class MyAdapter extends BaseAdapter {
 

@@ -102,7 +102,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
 
     private void initToolbar() {
         mToolbar = findViewById(R.id.toolbar_reaper_mark);
-        mToolbar.setTitle("Assessment -- Welcome, " + AllFunctions.getObject().getUsername());
+        mToolbar.setTitle("Mark -- Welcome, " + AllFunctions.getObject().getUsername());
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {

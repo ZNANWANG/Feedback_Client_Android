@@ -246,7 +246,7 @@ public class Activity_About_New extends AppCompatActivity {
                                 "Successfully update the time setting of the project.", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(Activity_About_New.this, Activity_Criteria.class);
                         intent.putExtra("index", String.valueOf(index));
-                        intent.putExtra("from", "new");
+                        intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
                         startActivity(intent);
                         break;
                     case 204:

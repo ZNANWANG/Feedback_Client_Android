@@ -79,9 +79,9 @@ public class Activity_Criteria extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                if (from.equals("old")) {
+                if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
                     discardWarning();
-                } else if (from.equals("new")) {
+                } else if (from.equals(Activity_Assessment_Preparation.FROMNEWPROJECT)) {
                     Log.d("EEEE", "new criteria");
                     AllFunctions.getObject().deleteProject(indexOfProject);
                 }
@@ -543,9 +543,9 @@ public class Activity_Criteria extends AppCompatActivity {
     }
 
     public void onBackPressed() {
-        if (from.equals("old")) {
+        if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
             discardWarning();
-        } else if (from.equals("new")) {
+        } else if (from.equals(Activity_Assessment_Preparation.FROMNEWPROJECT)) {
             AllFunctions.getObject().deleteProject(indexOfProject);
         }
     }

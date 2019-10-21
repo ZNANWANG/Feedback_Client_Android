@@ -138,7 +138,7 @@ public class Activity_Student_Management extends AppCompatActivity {
         };
         AllFunctions.getObject().setHandler(handler);
         saveButton = findViewById(R.id.button_save_student_management);
-        if (from.equals("old")) {
+        if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
             saveButton.setVisibility(View.INVISIBLE);
         }
         project = AllFunctions.getObject().getProjectList().get(indexOfProject);

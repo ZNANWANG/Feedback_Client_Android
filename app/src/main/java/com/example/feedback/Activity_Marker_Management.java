@@ -109,7 +109,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
         mButtonInviteMarker = findViewById(R.id.button_marker_add_management);
         mListViewMarkers = findViewById(R.id.listView_marker_management);
         mButtonNextMarkers = findViewById(R.id.button_next_marker_management);
-        if (from.equals("old")) {
+        if (from.equals(Activity_Assessment_Preparation.FROMPREVIOUSPROJECT)) {
             mButtonNextMarkers.setVisibility(View.INVISIBLE);
         }
         mToolbar.setTitle(project.getProjectName());
@@ -319,7 +319,7 @@ public class Activity_Marker_Management extends AppCompatActivity implements Ada
     public void nextMarkerManagement(View view) {
         Intent intent = new Intent(Activity_Marker_Management.this, Activity_Student_Management.class);
         intent.putExtra("index", index);
-        intent.putExtra("from", "new");
+        intent.putExtra("from", Activity_Assessment_Preparation.FROMNEWPROJECT);
         startActivity(intent);
     }
 }

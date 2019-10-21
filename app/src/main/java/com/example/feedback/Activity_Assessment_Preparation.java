@@ -58,6 +58,8 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
     private EditText editText_assessorName;
     private AlertDialog dialog;
     private MyAdapterDefaultlistView myAdapterDefaultlistView;
+    public static final String FROMPREVIOUSPROJECT = "old";
+    public static final String FROMNEWPROJECT = "new";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -354,21 +356,21 @@ public class Activity_Assessment_Preparation extends AppCompatActivity implement
     public void studentManagementAssessmentPreparation(View view) {
         Intent intent = new Intent(this, Activity_Student_Management.class);
         intent.putExtra("index", String.valueOf(indexToSend));
-        intent.putExtra("from", "old");
+        intent.putExtra("from", FROMPREVIOUSPROJECT);
         startActivity(intent);
     }
 
     public void criteriaManagementAssessmentPreparation(View view) {
         Intent intent = new Intent(this, Activity_Criteria.class);
         intent.putExtra("index", String.valueOf(indexToSend));
-        intent.putExtra("from", "old");
+        intent.putExtra("from", FROMPREVIOUSPROJECT);
         startActivity(intent);
     }
 
     public void markerManagementAssessmentPreparation(View view) {
         Intent intent = new Intent(this, Activity_Marker_Management.class);
         intent.putExtra("index", String.valueOf(indexToSend));
-        intent.putExtra("from", "old");
+        intent.putExtra("from", FROMPREVIOUSPROJECT);
         startActivityForResult(intent, 1);
     }
 
