@@ -1,9 +1,12 @@
 package com.example.feedback;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -87,7 +90,32 @@ public class Activity_Login extends AppCompatActivity {
         AllFunctions.getObject().setHandler(handler);
     }
 
+    // 1、检查是否有读写sdcard的权限
+    private void checkWriteAndReadPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED ||
+                    checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+                requestPermissions(permissions, 1000);
+            }
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        for (int permission : grantResults) {
+            if (permission == PackageManager.PERMISSION_DENIED) {
+                Toast.makeText(this, "Permission denied", Toast.LENGTH_LONG).show();
+                break;
+            }
+        }
+    }
+
     private void init() {
+        checkWriteAndReadPermission();
+
         Log.d("EEEE", "start!!!!!");
 //        Full screen - no status bar
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,

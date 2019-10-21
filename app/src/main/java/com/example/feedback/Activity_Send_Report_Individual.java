@@ -1,6 +1,8 @@
 package com.example.feedback;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +31,7 @@ public class Activity_Send_Report_Individual extends AppCompatActivity {
     private String from;
     public static final String FROMREALTIMESEND= "realtime_send";
     public static final String FROMREVIEWSEND= "review_send";
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +59,7 @@ public class Activity_Send_Report_Individual extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                finish();
+                AllFunctions.getObject().syncProjectList();
             }
         });
         mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
@@ -78,8 +81,34 @@ public class Activity_Send_Report_Individual extends AppCompatActivity {
         });
     }
 
+    public void onBackPressed() {
+        AllFunctions.getObject().syncProjectList();
+    }
+
     private void init() {
         Log.d("EEEE", "send report individually");
+
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 210:
+                        Toast.makeText(Activity_Send_Report_Individual.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Send_Report_Individual.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case 211:
+                        Toast.makeText(Activity_Send_Report_Individual.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        AllFunctions.getObject().setHandler(handler);
+
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         StudentInfo student = AllFunctions.getObject().getProjectList().get(indexOfProject).getStudentInfo().get(indexOfStudent);
         ArrayList<Mark> markList = AllFunctions.getObject().getMarkListForMarkPage();

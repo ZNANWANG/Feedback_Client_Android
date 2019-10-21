@@ -1,6 +1,8 @@
 package com.example.feedback;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.xmlbeans.impl.xb.xsdschema.All;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -31,6 +35,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
     private String from;
     public static final String FROMREALTIMESEND= "realtime_send";
     public static final String FROMREVIEWSEND= "review_send";
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,7 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         mToolbar.setNavigationIcon(R.drawable.ic_back);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                finish();
+                AllFunctions.getObject().syncProjectList();
             }
         });
         mToolbar.setOnMenuItemClickListener(new android.support.v7.widget.Toolbar.OnMenuItemClickListener() {
@@ -86,8 +91,34 @@ public class Activity_Send_Report_Group extends AppCompatActivity {
         });
     }
 
+    public void onBackPressed() {
+        AllFunctions.getObject().syncProjectList();
+    }
+
     private void init() {
         Log.d("EEEE", "send report group");
+
+        handler = new Handler() {
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case 210:
+                        Toast.makeText(Activity_Send_Report_Group.this,
+                                "Sync success.", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(Activity_Send_Report_Group.this, Activity_Realtime_Assessment.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    case 211:
+                        Toast.makeText(Activity_Send_Report_Group.this,
+                                "Server error. Please try again", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
+        AllFunctions.getObject().setHandler(handler);
+
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         ArrayList<Mark> markList = AllFunctions.getObject().getMarkListForMarkPage();
         Button button_record = findViewById(R.id.button_record_group);

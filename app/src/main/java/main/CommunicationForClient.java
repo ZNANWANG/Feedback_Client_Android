@@ -23,6 +23,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import util.JSONUtil;
 
 
 public class CommunicationForClient {
@@ -35,8 +36,9 @@ public class CommunicationForClient {
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("audio/mpeg");
 
     public CommunicationForClient(AllFunctions functions) {
-        host = "http://10.13.88.39:8080/RapidFeedback/";
-//        host = "http://192.168.0.13:8080/RapidFeedback/";
+//        host = "http://10.13.88.39:8080/RapidFeedback/";
+        host = "http://192.168.0.13:8080/RapidFeedback/";
+//        host = "http://35.244.92.152:8080/RapidFeedback";
         client = new OkHttpClient();
         this.functions = functions;
     }
@@ -85,6 +87,7 @@ public class CommunicationForClient {
                 .build();
         try (Response response = client.newCall(request).execute()) {
             String receive = response.body().string();
+            JSONUtil.write(receive);
             Log.d("CommunicationForClient", "Receive: " + receive); //just for test
             JSONObject jsonReceive = JSONObject.parseObject(receive);
             int login_ACK = Integer.parseInt(jsonReceive.get("login_ACK").toString());

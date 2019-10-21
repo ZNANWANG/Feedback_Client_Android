@@ -53,6 +53,7 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
         super.onNewIntent(intent);
         Log.d("EEEE", "new realtime assessment");
         myAdapter.notifyDataSetChanged();
+//        init();
     }
 
     private void initToolbar() {
@@ -182,9 +183,6 @@ public class Activity_Realtime_Assessment extends AppCompatActivity {
                     intent.putExtra("indexOfStudent", String.valueOf(position));
                     intent.putExtra("indexOfGroup", String.valueOf(studentList.get(position).getGroup()));
                     intent.putExtra("from", FROMREALTIME);
-                    Log.d("EEEE", "project: " + indexOfProject);
-                    Log.d("EEEE", "student: " + position);
-                    Log.d("EEEE", "group: " + studentList.get(position).getGroup());
 //                    resetStudentListView();
                     startActivity(intent);
                 }

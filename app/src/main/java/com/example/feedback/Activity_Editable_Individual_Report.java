@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import dbclass.Mark;
 import dbclass.ProjectInfo;
 import dbclass.StudentInfo;
@@ -108,6 +110,19 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
         if (!AllFunctions.getObject().getProjectList().get(indexOfProject).getAssistant().get(0).equals
                 (AllFunctions.getObject().getMyEmail())) {
             button_finalReport.setVisibility(View.INVISIBLE);
+        }
+
+        ArrayList<Mark> markList = AllFunctions.getObject().getMarkListForMarkPage();
+        for (int i = 0; i < markList.size(); i++) {
+            if (markList.get(i).getTotalMark() == -999) {
+                button_finalReport.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(Activity_Editable_Individual_Report.this,
+                                "Other markers are still marking. Please wait for a moment.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
 
         Button button_editReport_individual = findViewById(R.id.button_edit_report);

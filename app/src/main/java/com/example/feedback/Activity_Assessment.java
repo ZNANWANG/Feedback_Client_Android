@@ -117,7 +117,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
 
         if (project.getStudentInfo().get(studentList.get(0)).getMark() != null) {
 
-            MarkObjectToMatrix(project.getStudentInfo().get(studentList.get(0)).getMark());
+            markObjectToMatrix(project.getStudentInfo().get(studentList.get(0)).getMark());
             for (int m = 0; m < studentList.size(); m++) {
                 for (int n = 0; n < project.getCriteria().size(); n++) {
                     Mark mark = project.getStudentInfo().get(studentList.get(m)).getMark();
@@ -360,7 +360,6 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
                     } else if (project.getCriteria().get(position).getSubsectionList().get(j).getShortTextList().get(m).getGrade() == 3) {
                         weightList.set(2, (weightList.get(2) + 1));
                     }
-
                 }
             }
 
@@ -727,7 +726,7 @@ public class Activity_Assessment extends AppCompatActivity implements View.OnCli
         return true;
     }
 
-    private void MarkObjectToMatrix(Mark mark) {
+    private void markObjectToMatrix(Mark mark) {
         initMatrix();
         for (int i = 0; i < mark.getCriteriaList().size(); i++) {
             //criteria layer

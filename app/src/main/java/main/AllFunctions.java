@@ -3,6 +3,8 @@ package main;
 import android.os.Handler;
 import android.util.Log;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -44,7 +46,7 @@ public class AllFunctions {
         }).start();
     }
 
-    public void submitRecorder(){
+    public void submitRecorder() {
         communication.submitFile();
     }
 
@@ -66,6 +68,8 @@ public class AllFunctions {
 
     public void setMarkListForMarkPage(ArrayList<Mark> markList) {
         this.markListForMarkPage = markList;
+        String json = new Gson().toJson(markList);
+        Log.d("EEEE", "marklist: " + json);
         handlerAllfunction.sendEmptyMessage(301);
     }
 
@@ -202,7 +206,6 @@ public class AllFunctions {
                 communication.getMarks(project, studentIDList);
             }
         }).start();
-
     }
 
     public void deleteProject(int index) {
@@ -434,8 +437,7 @@ public class AllFunctions {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                communication.groupStudent(project.getProjectName(),
-                        studentID, groupNumber);
+                communication.groupStudent(project.getProjectName(), studentID, groupNumber);
                 Log.d("groupStudent", "success");
             }
         }).start();
@@ -455,8 +457,7 @@ public class AllFunctions {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                communication.sendMark(project,
-                        studentID, mark);
+                communication.sendMark(project, studentID, mark);
                 Log.d("sendMark", "success");
             }
         }).start();
