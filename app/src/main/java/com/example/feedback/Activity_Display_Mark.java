@@ -190,6 +190,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
                     if (indexOfGroup == -999) {
                         Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Individual_Report.class);
                         intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                        intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                         intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                         intent.putExtra("indexOfMark", String.valueOf(position));
                         startActivity(intent);

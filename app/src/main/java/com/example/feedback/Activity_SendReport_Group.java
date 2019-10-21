@@ -24,6 +24,7 @@ import main.AllFunctions;
 public class Activity_SendReport_Group extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfGroup;
+    private int indexOfStudent;
     //    private int indexOfMark;
     private ArrayList<StudentInfo> studentInfoArrayList;
     private Toolbar mToolbar;
@@ -37,6 +38,7 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         ProjectInfo project = AllFunctions.getObject().getProjectList().get(indexOfProject);
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
+        indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
 //        indexOfMark = Integer.parseInt(intent.getStringExtra("indexOfMark"));
         studentInfoArrayList = new ArrayList<StudentInfo>();
         for (int i = 0; i < project.getStudentInfo().size(); i++) {
@@ -121,6 +123,9 @@ public class Activity_SendReport_Group extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Activity_SendReport_Group.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                 startActivity(intent);
                 finish();
             }
@@ -148,13 +153,10 @@ public class Activity_SendReport_Group extends AppCompatActivity {
         for (int i = 0; i < studentInfoArrayList.size(); i++)
             htmlString = htmlString + studentInfoArrayList.get(i).getNumber() + "---" + studentInfoArrayList.get(i).getFirstName() + " " + studentInfoArrayList.get(i).getMiddleName() + " " + studentInfoArrayList.get(i).getSurname() + "<br>";
 
-
         htmlString = htmlString +
                 "</p >" +
                 "<br><br><br><hr>" +
                 "<div>";
-
-
 
         htmlString += "<h2 style=\"font-weight: normal\">MarkedCriteria</h2>" + "<p>";
         for (int i = 0; i < markList.get(0).getCriteriaList().size(); i++) {

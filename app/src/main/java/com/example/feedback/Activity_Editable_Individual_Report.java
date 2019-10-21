@@ -22,6 +22,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfStudent;
     private int indexOfMark;
+    private int indexOfGroup;
     private Toolbar mToolbar;
 
     @Override
@@ -32,6 +33,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
+        indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
         indexOfMark = Integer.parseInt(intent.getStringExtra("indexOfMark"));
         init();
     }
@@ -83,6 +85,7 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
                 Intent intent = new Intent(Activity_Editable_Individual_Report.this, Activity_SendReport_Individual.class);
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
+                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
                 intent.putExtra("indexOfMark", String.valueOf(indexOfMark));
                 startActivity(intent);
             }

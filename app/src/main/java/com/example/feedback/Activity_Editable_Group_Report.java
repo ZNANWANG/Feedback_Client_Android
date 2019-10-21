@@ -95,6 +95,7 @@ public class Activity_Editable_Group_Report extends AppCompatActivity {
                 Intent intent = new Intent(Activity_Editable_Group_Report.this, Activity_SendReport_Group.class);
                 intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
                 intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                 intent.putExtra("indexMark", String.valueOf(indexOfMark));
                 startActivity(intent);
             }

@@ -23,6 +23,7 @@ import main.AllFunctions;
 public class Activity_SendReport_Individual extends AppCompatActivity {
     private int indexOfProject;
     private int indexOfStudent;
+    private int indexOfGroup;
     private Toolbar mToolbar;
 
     @Override
@@ -35,6 +36,7 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
         Intent intent = getIntent();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
+        indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
         init();
     }
 
@@ -114,6 +116,9 @@ public class Activity_SendReport_Individual extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Activity_SendReport_Individual.this, Activity_Display_Mark.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
+                intent.putExtra("indexOfGroup", String.valueOf(indexOfGroup));
+                intent.putExtra("indexOfStudent", String.valueOf(indexOfStudent));
                 startActivity(intent);
                 finish();
             }
