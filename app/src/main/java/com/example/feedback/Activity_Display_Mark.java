@@ -199,7 +199,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
             button_viewReport.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (from.equals(Activity_Assessment.FROMREALTIME)) {
+                    if (from.equals(Activity_Assessment.FROMREALTIME) || from.equals(Activity_Send_Report_Individual.FROMREALTIMESEND)) {
                         if (indexOfGroup == -999) {
                             Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Individual_Report.class);
                             intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
@@ -217,7 +217,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
                             intent.putExtra("from", FROMREALTIME);
                             startActivity(intent);
                         }
-                    } else if (from.equals(FROMREVIEW)) {
+                    } else if (from.equals(FROMREVIEW) || from.equals(Activity_Send_Report_Individual.FROMREVIEWSEND)) {
                         if (indexOfGroup == -999) {
                             Intent intent = new Intent(Activity_Display_Mark.this, Activity_Editable_Individual_Report.class);
                             intent.putExtra("indexOfProject", String.valueOf(indexOfProject));
