@@ -124,14 +124,107 @@
                         android:layout_below="@id/textView3"
                         android:background="@color/colorPrimary"/>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/divider10"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/translusentPrimary"
+                        android:id="@+id/heading_student_management"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textView_groupnum_instudentlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:clickable="false"
+                            android:text="Group No."
+                            android:padding="5dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/black" />
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textView_studentID_instudentlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="8"
+                            android:clickable="false"
+                            android:text="Student ID"
+                            android:padding="5dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textView_fullname_instudentlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="6"
+                            android:clickable="false"
+                            android:text="Student Name"
+                            android:padding="5dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                        <TextView
+                            android:id="@+id/textView_email_instudentlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="5"
+                            android:clickable="false"
+                            android:text="Email"
+                            android:padding="5dp"
+                            android:textSize="20sp"
+                            android:textColor="@color/black"/>
+
+                        <View
+                            android:layout_width="1dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/black"/>
+
+                    </LinearLayout>
+
                     <ListView
                         android:id="@+id/listView_ingroupStudent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/divider10"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_below="@id/heading_student_management"
                         android:choiceMode="multipleChoice"
-                        android:scrollbars="vertical"
-                        android:padding="10dp" />
+                        android:divider="@color/black"
+                        android:dividerHeight="1dp"
+                        android:scrollbars="vertical"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@id/listView_ingroupStudent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:background="@color/black"/>
+
                 </RelativeLayout>
 
                 <RelativeLayout
