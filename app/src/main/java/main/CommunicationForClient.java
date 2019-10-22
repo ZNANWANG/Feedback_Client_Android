@@ -35,8 +35,8 @@ public class CommunicationForClient {
     public static final MediaType MEDIA_TYPE_MARKDOWN = MediaType.parse("audio/mpeg");
 
     public CommunicationForClient(AllFunctions functions) {
-//        host = "http://10.13.88.39:8080/RapidFeedback/";
-        host = "http://192.168.0.13:8080/RapidFeedback/";
+        //host = "http://10.13.88.39:8080/RapidFeedback/";
+        host = "http://10.12.102.155:8080/RapidFeedback/";
         client = new OkHttpClient();
         this.functions = functions;
     }
@@ -96,9 +96,9 @@ public class CommunicationForClient {
                 List<ProjectInfo> projectList = JSONObject.parseArray(projectListString, ProjectInfo.class);
                 ArrayList<ProjectInfo> arrayList = new ArrayList();
                 arrayList.addAll(projectList);
-//                for (int i = 0; i < arrayList.size(); i++) {
-//                    Log.d("EEEE", "project info: " + arrayList.get(i).getCriteria().get(0).getSubsectionList().get(0).getShortTextList().get(0).getLongtext().toString());
-//                }
+//              for (int i = 0; i < arrayList.size(); i++) {
+//                  Log.d("EEEE", "project info: " + arrayList.get(i).getCriteria().get(0).getSubsectionList().get(0).getShortTextList().get(0).getLongtext().toString());
+//              }
                 functions.setUsername(firstName);
                 functions.setMyEmail(username);
                 Log.d("CommunicationForClient", "when login firstName received is: " + firstName);
