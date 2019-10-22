@@ -28,8 +28,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/help_add_comment"
             android:layout_toRightOf="@id/textView_subsetion_addComment"
             android:spinnerMode="dropdown"/>
+
+        <Button
+            android:id="@+id/help_add_comment"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/ic_help"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="20dp"
+            android:layout_height="20dp" />
     </RelativeLayout>
 
     <View
@@ -94,6 +105,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@id/textView_shortText_addComment" />
 
         <TextView

@@ -15,11 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -190,6 +193,32 @@ public class Activity_Show_Comment_Mark_Allocation extends AppCompatActivity {
         spinner_subsection.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Button helpButton = view2.findViewById(R.id.help_add_comment);
+                helpButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Show_Comment_Mark_Allocation.this);
+                        final View view2 = layoutInflater.from(Activity_Show_Comment_Mark_Allocation.this).inflate(R.layout.dialog_help, null);
+                        AlertDialog.Builder builder = new AlertDialog.Builder(Activity_Show_Comment_Mark_Allocation.this);
+
+                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        });
+                        AlertDialog dialog = builder.create();
+                        dialog.setCancelable(false);
+                        dialog.setView(view2);
+                        dialog.show();
+                        ImageView imageView = view2.findViewById(R.id.imageView_dialog_help);
+                        imageView.setBackgroundResource(R.drawable.criteria);
+                        WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
+                        params.width = 1700;
+                        params.height = 1550;
+                        dialog.getWindow().setAttributes(params);
+                    }
+                });
                 if (position >= criteria.getSubsectionList().size()) {
                     spinner_shortText = view2.findViewById(R.id.spinner_shortText_addComment);
                     //MyAdapterForShortTextSpinner myAdapterForShortTextSpinner = new MyAdapterForShortTextSpinner(view2.getContext(), null);

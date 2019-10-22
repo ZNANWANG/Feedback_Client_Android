@@ -203,7 +203,7 @@ public class Activity_Criteria extends AppCompatActivity {
         imageView.setBackgroundResource(R.drawable.criteria);
         WindowManager.LayoutParams params = dialog.getWindow().getAttributes();
         params.width = 1700;
-        params.height = 1000;
+        params.height = 1550;
         dialog.getWindow().setAttributes(params);
     }
 

@@ -12,6 +12,7 @@
         android:textSize="24dp"
         android:paddingTop="10dp"
         android:paddingLeft="15dp"
+        android:textColor="@color/black"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <View
@@ -28,5 +29,6 @@
         android:textSize="18dp"
         android:paddingLeft="15dp"
         android:inputType="textPersonName"
+        android:textColor="@color/black"
         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 </LinearLayout>
