@@ -56,6 +56,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 301: //means getMark success
+                        Log.d("EEEE", "get mark success");
                         init();
                         break;
                     default:
@@ -80,6 +81,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
                     case 301: //means getMark success
+                        Log.d("EEEE", "get mark success new intent");
                         init();
                         break;
                     default:
