@@ -159,7 +159,7 @@
                             android:id="@+id/textView_studentID_instudentlist"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="8"
+                            android:layout_weight="7"
                             android:clickable="false"
                             android:text="Student ID"
                             android:padding="5dp"
