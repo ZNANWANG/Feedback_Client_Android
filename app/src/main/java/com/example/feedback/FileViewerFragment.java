@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import dbclass.RecordingDatabaseHelper;
 import dbclass.StudentInfo;
 import main.AllFunctions;
 
@@ -33,6 +34,8 @@ public class FileViewerFragment extends Fragment {
     private int indexOfProject;
     private int indexOfStudent;
     private int position;
+    private RecordingDatabaseHelper mDatabase;
+    private static RecordingItem recordingItem;
 
     public static FileViewerFragment newInstance(int position) {
         FileViewerFragment f = new FileViewerFragment();
@@ -49,6 +52,7 @@ public class FileViewerFragment extends Fragment {
         Activity_Record_Voice activity = (Activity_Record_Voice) getActivity();
         indexOfProject = activity.getIndexOfProject();
         indexOfStudent = activity.getIndexOfStudent();
+        mDatabase = new RecordingDatabaseHelper(getContext(), "RecordingStore", null, 1);
     }
 
     @Override
@@ -74,9 +78,17 @@ public class FileViewerFragment extends Fragment {
                     StudentInfo student = AllFunctions.getObject().getProjectList().
                             get(indexOfProject).getStudentInfo().
                             get(indexOfStudent);
+                    String project = AllFunctions.getObject().getProjectList().get(indexOfProject).getSubjectCode();
+
+                    String email = student.getEmail();
+                    recordingItem = new RecordingItem();
+                    student.setRecordingItem(mDatabase.getItemAt(project, email, recordingItem));
                     if (student.getRecordingItem() == null) {
                         Toast.makeText(getActivity(), "there is no file of your record", Toast.LENGTH_LONG).show();
-                    } else {
+                    } else if(student.getRecordingItem().getName() == null){
+
+                        Toast.makeText(getActivity(), "there is no file of your record", Toast.LENGTH_LONG).show();
+                    }else {
                         PlaybackFragment playbackFragment =
                                 new PlaybackFragment().newInstance(student.getRecordingItem());
 

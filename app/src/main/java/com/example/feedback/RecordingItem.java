@@ -13,9 +13,6 @@ public class RecordingItem implements Parcelable {
     private String mFilePath; //file path
     //private int mId; //id in database
     private int mLength; // length of recording in seconds
-    private String subjectCode;
-    private String projectName;
-    private String studentCode;
 
     public RecordingItem() {
     }

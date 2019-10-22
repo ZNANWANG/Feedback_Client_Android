@@ -20,6 +20,7 @@ import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import dbclass.RecordingDatabaseHelper;
 import dbclass.StudentInfo;
 import main.AllFunctions;
 
@@ -35,6 +36,7 @@ public class RecordingService extends Service {
     private long mStartingTimeMillis = 0;
     private long mElapsedMillis = 0;
     private int mElapsedSeconds = 0;
+    private RecordingDatabaseHelper mDatabase;
     private OnTimerChangedListener onTimerChangedListener = null;
     private static final SimpleDateFormat mTimerFormat = new SimpleDateFormat("mm:ss", Locale.getDefault());
     private Timer mTimer = null;
@@ -54,6 +56,7 @@ public class RecordingService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        mDatabase = new RecordingDatabaseHelper(this, "RecordingStore", null, 1);
     }
 
     @Override
@@ -134,14 +137,20 @@ public class RecordingService extends Service {
             mIncrementTimerTask = null;
         }
 
+        String project = AllFunctions.getObject().getProjectList().
+                get(indexOfProject).getSubjectCode();
         StudentInfo student = AllFunctions.getObject().getProjectList().
                 get(indexOfProject).getStudentInfo().
                 get(indexOfStudent);
+        String email = student.getEmail();
         RecordingItem item = new RecordingItem();
         item.setFilePath(mFilePath);
         item.setName(mFileName);
         item.setLength((int) mElapsedMillis);
         student.setRecordingItem(item);
+        //if exist in the database delete the file;
+        //mDatabase.deleteRecording(project,email);
+        mDatabase.addRecording(mFileName, mFilePath, mElapsedMillis,email, project);
         mRecorder = null;
     }
 
