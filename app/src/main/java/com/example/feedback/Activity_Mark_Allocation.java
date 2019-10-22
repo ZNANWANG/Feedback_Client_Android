@@ -25,6 +25,8 @@ import java.util.ArrayList;
 
 import dbclass.Criteria;
 import dbclass.ProjectInfo;
+import dbclass.ShortText;
+import dbclass.SubSection;
 import main.AllFunctions;
 
 
@@ -158,8 +160,39 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
     //button 'next'.
     public void nextMarkAllocation(View view) {
         if(isValidIncrementAndMaxMark() == true) {
-            AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
+            if (isValidCriteriaList()) {
+                AllFunctions.getObject().projectCriteria(project, project.getCriteria(), project.getCommentList());
+            } else {
+                Toast.makeText(Activity_Mark_Allocation.this, "Some crieria is not complete. Please check and try again.", Toast.LENGTH_SHORT).show();
+            }
         }
+    }
+
+    public boolean isValidCriteriaList() {
+        Log.d("EEEE", "check criteria list");
+        ArrayList<Criteria> criteriaList = AllFunctions.getObject().getProjectList().get(indexOfProject).getCriteria();
+        for (int i = 0; i < criteriaList.size(); i++) {
+            ArrayList<SubSection> subsectionList = criteriaList.get(i).getSubsectionList();
+            if (subsectionList.size() == 0) {
+                return false;
+            } else {
+                for (int j = 0; j < subsectionList.size(); j++) {
+                    ArrayList<ShortText> commentList = subsectionList.get(j).getShortTextList();
+                    if (commentList.size() == 0) {
+                        return false;
+                    } else {
+                        for (int m = 0; m < commentList.size(); m++) {
+                            ArrayList<String> expandedCommentList = commentList.get(m).getLongtext();
+                            if (expandedCommentList.size() == 0) {
+                                Log.d("EEEE", "empty longtext");
+                                return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public class MyAdapter extends BaseAdapter {
@@ -218,7 +251,6 @@ public class Activity_Mark_Allocation extends AppCompatActivity {
                         default:
                             break;
                     }
-
 
                 RadioGroup radioGroup = convertView.findViewById(R.id.radioGroup_markIncrement_gridItem);
                 radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
