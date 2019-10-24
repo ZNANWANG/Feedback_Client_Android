@@ -168,10 +168,8 @@ public class Activity_Editable_Individual_Report extends AppCompatActivity {
                         "<h2 style=\"font-weight: normal\">Project</h2>" +
                         "<p>" + project.getProjectName() + "</p >" +
                         "<h2 style=\"font-weight: normal\">Mark</h2>" +
-                        "<p>" + mark.getTotalMark() + "%</p >" +
-                        "<h2 style=\"font-weight: normal\">Assessor</h2>" + "<p>";
-        for (int i = 0; i < project.getAssistant().size(); i++)
-            htmlString = htmlString + project.getAssistant().get(i) + "<br>";
+                        "<p>" + mark.getTotalMark() + "%</p >";
+
         htmlString = htmlString +
                 "</p >" +
                 "<br><br><br><hr>" +

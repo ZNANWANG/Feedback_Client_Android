@@ -2,15 +2,12 @@ package main;
 
 import android.os.Environment;
 import android.util.Log;
-
 import com.alibaba.fastjson.JSONObject;
 import com.example.feedback.Activity_Login;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import dbclass.Criteria;
 import dbclass.Mark;
 import dbclass.ProjectInfo;
@@ -491,6 +488,7 @@ public class CommunicationForClient {
                 //失败跳出
             }
         } catch (Exception e1) {
+            e1.printStackTrace();
             AllFunctions.getObject().exceptionWithServer();
         }
     }

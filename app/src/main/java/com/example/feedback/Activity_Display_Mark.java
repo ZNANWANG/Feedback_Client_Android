@@ -72,11 +72,12 @@ public class Activity_Display_Mark extends AppCompatActivity {
     }
 
     public void onNewIntent(Intent intent) {
+        initToolbar();
         indexOfProject = Integer.parseInt(intent.getStringExtra("indexOfProject"));
         indexOfStudent = Integer.parseInt(intent.getStringExtra("indexOfStudent"));
         indexOfGroup = Integer.parseInt(intent.getStringExtra("indexOfGroup"));
         from = intent.getStringExtra("from");
-        Log.d("EEEE", "new display mark activity");
+        Log.d("EEEE", "new display mark activity " + from);
         handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch (msg.what) {
@@ -141,6 +142,7 @@ public class Activity_Display_Mark extends AppCompatActivity {
     }
 
     private void init() {
+        Log.d("EEEE", "display mark init");
         marks = AllFunctions.getObject().getMarkListForMarkPage();
         MyAdapterForGridView myAdapterForGridView = new MyAdapterForGridView(marks, this);
         GridView gridViewMark = findViewById(R.id.listView_markItem_markPage);

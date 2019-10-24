@@ -98,7 +98,6 @@ public class Activity_Login extends AppCompatActivity {
                 String[] permissions = new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
                 requestPermissions(permissions, 1000);
             }
-
         }
     }
 
